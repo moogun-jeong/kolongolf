@@ -1,14 +1,380 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hello World</title>
-  <link href='/style.css' rel='stylesheet'>
+  <title>코오롱 스크린 동호회</title>
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Gowun+Dodum&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <button onclick="console.log('hello');">Press me</button>
-  <script defer type="text/javascript" src="/main.js"></script>
+  <div class="grain"></div>
+  <header class="hero">
+    <nav class="nav">
+      <div class="logo">
+        <span class="logo-mark">K</span>
+        <div>
+          <p class="logo-title">코오롱 스크린 동호회</p>
+          <p class="logo-sub">KOLON SCREEN GOLF SOCIETY</p>
+        </div>
+      </div>
+      <div class="nav-links">
+        <a href="#schedule">일정</a>
+        <a href="#members">회원명부</a>
+        <a href="#archive">아카이브</a>
+        <button class="ghost">가입 문의</button>
+      </div>
+    </nav>
+
+    <div class="hero-content">
+      <div>
+        <p class="eyebrow">정기 라운드 · 친선 매치 · 기록 보관</p>
+        <h1>우리는 스크린에서 만나 <br />기억을 남긴다.</h1>
+        <p class="lead">
+          코오롱 스크린 동호회는 일정 공유, 회원 네트워크, 기록 아카이브를 한 곳에 모아
+          매 순간을 더 깊게 즐기는 커뮤니티입니다.
+        </p>
+        <div class="hero-actions">
+          <a class="primary" href="#schedule">이번 달 일정 보기</a>
+          <a class="secondary" href="#archive">아카이브 둘러보기</a>
+        </div>
+        <div class="hero-metrics">
+          <div>
+            <p class="metric">87</p>
+            <p class="metric-label">활동 회원</p>
+          </div>
+          <div>
+            <p class="metric">142</p>
+            <p class="metric-label">누적 라운드</p>
+          </div>
+          <div>
+            <p class="metric">12</p>
+            <p class="metric-label">공식 대회</p>
+          </div>
+        </div>
+      </div>
+      <div class="hero-card">
+        <p class="card-title">Next Tee Time</p>
+        <div class="date-block">
+          <p class="date-day">03</p>
+          <div>
+            <p class="date-month">3월 토요일</p>
+            <p class="date-time">19:30 · 코오롱 스크린 CC</p>
+          </div>
+        </div>
+        <div class="card-row">
+          <div>
+            <p class="label">포맷</p>
+            <p class="value">스크램블 2인</p>
+          </div>
+          <div>
+            <p class="label">모집</p>
+            <p class="value">D-7, 4석</p>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="pill">참석 확정 11명</div>
+          <button class="primary small">참석 신청</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="schedule" class="section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">SCHEDULE</p>
+          <h2>다가오는 일정</h2>
+        </div>
+        <button class="ghost">캘린더 다운로드</button>
+      </div>
+      <div class="schedule-grid">
+        <article class="schedule-card">
+          <p class="tag">정기 라운드</p>
+          <h3>3월 정기 스크린 라운드</h3>
+          <p class="meta">2026.03.04 (수) · 17:00 · 삼산동 울산골프존</p>
+          <p class="desc">
+            주소:
+            <a class="map-link" href="https://map.kakao.com/?urlX=1030847.0000007318&urlY=572354.00000002&urlLevel=3&itemId=17605703&q=%EC%9A%B8%EC%82%B0%EA%B3%A8%ED%94%84%EC%A1%B4&srcid=17605703&map_type=TYPE_MAP" target="_blank" rel="noopener noreferrer">
+              울산광역시 남구 삼산동 1603-5
+            </a>
+          </p>
+          <div class="card-footer">
+            <span class="pill">스트로크 플레이</span>
+            <span class="pill">참여인원 11명</span>
+            <span class="pill" data-dday="2026-03-04">D-</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="members" class="section alt">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">MEMBERS</p>
+          <h2>회원명부</h2>
+        </div>
+        <div class="search">
+          <input id="memberSearch" type="text" placeholder="이름 또는 분야로 검색" />
+          <button class="primary small" id="memberReset">초기화</button>
+        </div>
+      </div>
+      <div class="member-grid" id="memberGrid">
+        <article class="member">
+          <div class="avatar">덕</div>
+          <div>
+            <h4>덕충안길</h4>
+            <p>정회원 · 드라이버 탄도</p>
+            <div class="badges">
+              <span>핸디 10</span><span>페이드 장인</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">살</div>
+          <div>
+            <h4>살려줘제바알</h4>
+            <p>정회원 · 위기관리</p>
+            <div class="badges">
+              <span>핸디 10</span><span>벙커 탈출 1위</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">오</div>
+          <div>
+            <h4>오!건2</h4>
+            <p>회장 · 경기 운영</p>
+            <div class="badges">
+              <span>핸디 10</span><span>롱퍼팅 성공률↑</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">인</div>
+          <div>
+            <h4>인생무생</h4>
+            <p>정회원 · 멘탈 코어</p>
+            <div class="badges">
+              <span>핸디 10</span><span>후반 집중력</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">울</div>
+          <div>
+            <h4>울산땡주</h4>
+            <p>정회원 · 파3 스페셜</p>
+            <div class="badges">
+              <span>핸디 10</span><span>핀 근접 1m</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">원</div>
+          <div>
+            <h4>원조가가멜</h4>
+            <p>정회원 · 리듬 스윙</p>
+            <div class="badges">
+              <span>핸디 10</span><span>백스핀 컨트롤</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">김</div>
+          <div>
+            <h4>김**</h4>
+            <p>정회원 · 정확한 어프로치</p>
+            <div class="badges">
+              <span>핸디 10</span><span>그린 적중률↑</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">준</div>
+          <div>
+            <h4>준빵</h4>
+            <p>정회원 · 스윙 템포</p>
+            <div class="badges">
+              <span>핸디 10</span><span>드라이브 230m</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">빽</div>
+          <div>
+            <h4>빽스윙쫌만더</h4>
+            <p>정회원 · 장타 본능</p>
+            <div class="badges">
+              <span>핸디 10</span><span>캐리 거리↑</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">날</div>
+          <div>
+            <h4>날아라호</h4>
+            <p>정회원 · 탄도 조절</p>
+            <div class="badges">
+              <span>핸디 10</span><span>런치앵글 최적</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">오</div>
+          <div>
+            <h4>오**</h4>
+            <p>정회원 · 코스 매니지먼트</p>
+            <div class="badges">
+              <span>핸디 10</span><span>더블보기 회피</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">필</div>
+          <div>
+            <h4>필드난폭자</h4>
+            <p>정회원 · 공격적 플레이</p>
+            <div class="badges">
+              <span>핸디 10</span><span>이글 경험</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">타</div>
+          <div>
+            <h4>타키온</h4>
+            <p>정회원 · 빠른 리듬</p>
+            <div class="badges">
+              <span>핸디 10</span><span>퍼팅 스트로크</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">무</div>
+          <div>
+            <h4>무근정</h4>
+            <p>총무 · 운영 관리</p>
+            <div class="badges">
+              <span>핸디 10</span><span>정확한 루틴</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">울</div>
+          <div>
+            <h4>울산정쁘로</h4>
+            <p>정회원 · 아이언 정밀도</p>
+            <div class="badges">
+              <span>핸디 10</span><span>피치샷 컨트롤</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">원</div>
+          <div>
+            <h4>원펀쓰리강냉</h4>
+            <p>정회원 · 파워 스윙</p>
+            <div class="badges">
+              <span>핸디 10</span><span>스매시 팩터↑</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">무</div>
+          <div>
+            <h4>무적부대</h4>
+            <p>정회원 · 멀리건 사냥꾼</p>
+            <div class="badges">
+              <span>핸디 10</span><span>위기 탈출</span>
+            </div>
+          </div>
+        </article>
+        <article class="member">
+          <div class="avatar">장</div>
+          <div>
+            <h4>장금이에이스</h4>
+            <p>정회원 · 정교한 퍼터</p>
+            <div class="badges">
+              <span>핸디 10</span><span>버디 찬스↑</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="archive" class="section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">ARCHIVE</p>
+          <h2>과거 일정 & 사진 기록</h2>
+        </div>
+        <button class="ghost">전체 기록 보기</button>
+      </div>
+      <div class="archive-grid">
+        <div class="timeline">
+          <article class="timeline-item">
+            <div class="dot"></div>
+            <div>
+              <p class="meta">2026.02.15</p>
+              <h3>겨울 시즌 파이널</h3>
+              <p class="desc">18홀 매치. 베스트 스코어 74타, 팀전 4:3 승리.</p>
+            </div>
+          </article>
+          <article class="timeline-item">
+            <div class="dot"></div>
+            <div>
+              <p class="meta">2026.01.18</p>
+              <h3>신년 스타트 라운드</h3>
+              <p class="desc">신년 목표 공유와 룰 업데이트. 드라이버 챌린지 진행.</p>
+            </div>
+          </article>
+          <article class="timeline-item">
+            <div class="dot"></div>
+            <div>
+              <p class="meta">2025.12.21</p>
+              <h3>연말 감사 라운드</h3>
+              <p class="desc">월간 MVP 시상, 한 해 기록 공유와 사진전.</p>
+            </div>
+          </article>
+        </div>
+        <div class="gallery">
+          <div class="photo large">
+            <span>Winter Final</span>
+          </div>
+          <div class="photo">
+            <span>New Year Match</span>
+          </div>
+          <div class="photo">
+            <span>Drive Challenge</span>
+          </div>
+          <div class="photo">
+            <span>Team Scramble</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>
+      <h3>코오롱 스크린 동호회</h3>
+      <p>함께 스윙하고, 기록하고, 성장합니다.</p>
+    </div>
+    <div>
+      <p class="label">문의</p>
+      <p class="value">회장 김무건 · gun77@kolon.com</p>
+      <p class="value">총무 정무근 · moogunjeong@kolon.com</p>
+    </div>
+    <div>
+      <p class="label">정기 일정</p>
+      <p class="value">매 분기 1회</p>
+    </div>
+  </footer>
+
+  <script defer src="/main.js"></script>
 </body>
 </html>
