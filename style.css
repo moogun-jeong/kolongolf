@@ -212,13 +212,20 @@ button {
 }
 
 .metric {
-  font-size: 2rem;
+  font-size: 1.3rem;
   font-weight: 700;
+  line-height: 1.3;
 }
 
 .metric-label {
   color: var(--muted);
   font-size: 13px;
+}
+
+.metric-note {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 4px;
 }
 
 .hero-card {
@@ -623,6 +630,10 @@ button {
 
   .photo.large {
     grid-column: span 1;
+  }
+
+  .metric {
+    font-size: 1.05rem;
   }
 }
 
