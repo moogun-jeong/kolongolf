@@ -70,26 +70,24 @@ const lightboxPrev = document.getElementById("lightboxPrev");
 const lightboxNext = document.getElementById("lightboxNext");
 const lightboxThumbs = document.getElementById("lightboxThumbs");
 const KAKAO_JS_KEY = "b8632f1a142a8d6e3f172f23b0d5ed5c";
-const NAVI_DEST_NAME = "울산골프존 스크린골프연습장";
+const NAVI_DEST_NAME = "삼산골프존";
 const NAVI_DEST_X = 129.3357;
 const NAVI_DEST_Y = 35.5383;
 const NAVI_COORD_TYPE = "wgs84";
-const isMobileDevice = () =>
-  /Android|iPhone|iPad|iPod|Windows Phone|webOS/i.test(navigator.userAgent);
 
 const canUseKakaoNavi = () =>
   typeof window !== "undefined" && window.Kakao && window.Kakao.Navi;
 
-const ensureKakaoInitialized = () => {
+const initializeKakao = () => {
   if (!canUseKakaoNavi()) return false;
-  if (!window.Kakao.isInitialized()) {
-    window.Kakao.init(KAKAO_JS_KEY);
-  }
+  if (!window.Kakao.isInitialized()) window.Kakao.init(KAKAO_JS_KEY);
   return true;
 };
 
+initializeKakao();
+
 const startKakaoNavi = () => {
-  if (!ensureKakaoInitialized()) throw new Error("Kakao SDK unavailable");
+  if (!initializeKakao()) throw new Error("Kakao SDK unavailable");
   window.Kakao.Navi.start({
     name: NAVI_DEST_NAME,
     x: NAVI_DEST_X,
@@ -160,16 +158,11 @@ locationClose?.addEventListener("click", () => closeModal(locationModal));
 locationConfirm?.addEventListener("click", () => closeModal(locationModal));
 locationNaviLink?.addEventListener("click", (event) => {
   event.preventDefault();
-  if (!isMobileDevice()) {
-    window.open(locationNaviLink.href, "_blank", "noopener,noreferrer");
-    return;
-  }
   try {
     startKakaoNavi();
   } catch (error) {
     console.error("Kakao Navi start failed:", error);
-    alert("카카오내비 실행에 실패해 웹 길안내로 이동합니다.");
-    window.open(locationNaviLink.href, "_blank", "noopener,noreferrer");
+    alert("카카오내비 실행에 실패했습니다. 카카오 디벨로퍼스 Web 플랫폼 도메인 등록 상태를 확인해주세요.");
   }
 });
 rsvpModal?.addEventListener("click", (event) => {
