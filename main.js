@@ -67,16 +67,14 @@ const lightboxNext = document.getElementById("lightboxNext");
 const lightboxThumbs = document.getElementById("lightboxThumbs");
 const KAKAO_JS_KEY = "b8632f1a142a8d6e3f172f23b0d5ed5c";
 const NAVI_DEST_NAME = "울산골프존 스크린골프연습장";
-const NAVI_DEST_ADDRESS = "울산 남구 화합로 108";
+const NAVI_DEST_X = "1030847.0000007318";
+const NAVI_DEST_Y = "572354.00000002";
+const NAVI_COORD_TYPE = "katec";
 const isMobileDevice = () =>
   /Android|iPhone|iPad|iPod|Windows Phone|webOS/i.test(navigator.userAgent);
 
 const canUseKakaoNavi = () =>
-  typeof window !== "undefined" &&
-  window.Kakao &&
-  window.kakao &&
-  window.kakao.maps &&
-  window.kakao.maps.services;
+  typeof window !== "undefined" && window.Kakao && window.Kakao.Navi;
 
 const ensureKakaoInitialized = () => {
   if (!canUseKakaoNavi()) return false;
@@ -86,30 +84,13 @@ const ensureKakaoInitialized = () => {
   return true;
 };
 
-const geocodeAddress = (address) =>
-  new Promise((resolve, reject) => {
-    try {
-      const geocoder = new window.kakao.maps.services.Geocoder();
-      geocoder.addressSearch(address, (result, status) => {
-        if (status !== window.kakao.maps.services.Status.OK || !result?.length) {
-          reject(new Error("Address geocoding failed"));
-          return;
-        }
-        resolve({ x: result[0].x, y: result[0].y });
-      });
-    } catch (error) {
-      reject(error);
-    }
-  });
-
-const startKakaoNavi = async () => {
+const startKakaoNavi = () => {
   if (!ensureKakaoInitialized()) throw new Error("Kakao SDK unavailable");
-  const { x, y } = await geocodeAddress(NAVI_DEST_ADDRESS);
   window.Kakao.Navi.start({
     name: NAVI_DEST_NAME,
-    x,
-    y,
-    coordType: "wgs84",
+    x: NAVI_DEST_X,
+    y: NAVI_DEST_Y,
+    coordType: NAVI_COORD_TYPE,
   });
 };
 
@@ -170,14 +151,14 @@ joinClose?.addEventListener("click", () => closeModal(joinModal));
 joinConfirm?.addEventListener("click", () => closeModal(joinModal));
 locationClose?.addEventListener("click", () => closeModal(locationModal));
 locationConfirm?.addEventListener("click", () => closeModal(locationModal));
-locationNaviLink?.addEventListener("click", async (event) => {
+locationNaviLink?.addEventListener("click", (event) => {
   event.preventDefault();
   if (!isMobileDevice()) {
     window.open(locationNaviLink.href, "_blank", "noopener,noreferrer");
     return;
   }
   try {
-    await startKakaoNavi();
+    startKakaoNavi();
   } catch (error) {
     window.open(locationNaviLink.href, "_blank", "noopener,noreferrer");
   }
