@@ -60,7 +60,6 @@ const joinClose = document.getElementById("joinClose");
 const joinConfirm = document.getElementById("joinConfirm");
 const locationClose = document.getElementById("locationClose");
 const locationConfirm = document.getElementById("locationConfirm");
-const locationNaviLink = document.getElementById("locationNaviLink");
 const photoLightbox = document.getElementById("photoLightbox");
 const lightboxImage = document.getElementById("lightboxImage");
 const lightboxTitle = document.getElementById("lightboxTitle");
@@ -69,35 +68,6 @@ const lightboxClose = document.getElementById("lightboxClose");
 const lightboxPrev = document.getElementById("lightboxPrev");
 const lightboxNext = document.getElementById("lightboxNext");
 const lightboxThumbs = document.getElementById("lightboxThumbs");
-const KAKAO_JS_KEY = "b8632f1a142a8d6e3f172f23b0d5ed5c";
-const NAVI_DEST_NAME = "삼산골프존";
-const NAVI_DEST_X = 129.3411059;
-const NAVI_DEST_Y = 35.5346226;
-const NAVI_COORD_TYPE = "wgs84";
-
-const canUseKakaoNavi = () =>
-  typeof window !== "undefined" && window.Kakao && window.Kakao.Navi;
-
-const initializeKakao = () => {
-  try {
-    if (!canUseKakaoNavi()) return false;
-    if (!window.Kakao.isInitialized()) window.Kakao.init(KAKAO_JS_KEY);
-    return true;
-  } catch (error) {
-    console.error("Kakao init failed:", error);
-    return false;
-  }
-};
-
-const startKakaoNavi = () => {
-  if (!initializeKakao()) throw new Error("Kakao SDK unavailable");
-  window.Kakao.Navi.start({
-    name: NAVI_DEST_NAME,
-    x: NAVI_DEST_X,
-    y: NAVI_DEST_Y,
-    coordType: NAVI_COORD_TYPE,
-  });
-};
 
 const openModal = (modal) => {
   if (!modal) return;
@@ -159,15 +129,6 @@ joinClose?.addEventListener("click", () => closeModal(joinModal));
 joinConfirm?.addEventListener("click", () => closeModal(joinModal));
 locationClose?.addEventListener("click", () => closeModal(locationModal));
 locationConfirm?.addEventListener("click", () => closeModal(locationModal));
-locationNaviLink?.addEventListener("click", (event) => {
-  event.preventDefault();
-  try {
-    startKakaoNavi();
-  } catch (error) {
-    console.error("Kakao Navi start failed:", error);
-    alert("카카오내비 실행에 실패했습니다.\n카카오 디벨로퍼스 Web 플랫폼 도메인 등록과 JavaScript 키를 확인해주세요.");
-  }
-});
 rsvpModal?.addEventListener("click", (event) => {
   if (event.target === rsvpModal) closeModal(rsvpModal);
 });
