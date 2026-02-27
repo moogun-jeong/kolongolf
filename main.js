@@ -68,6 +68,8 @@ const lightboxThumbs = document.getElementById("lightboxThumbs");
 const KAKAO_JS_KEY = "b8632f1a142a8d6e3f172f23b0d5ed5c";
 const NAVI_DEST_NAME = "울산골프존 스크린골프연습장";
 const NAVI_DEST_ADDRESS = "울산 남구 화합로 108";
+const isMobileDevice = () =>
+  /Android|iPhone|iPad|iPod|Windows Phone|webOS/i.test(navigator.userAgent);
 
 const canUseKakaoNavi = () =>
   typeof window !== "undefined" &&
@@ -170,6 +172,10 @@ locationClose?.addEventListener("click", () => closeModal(locationModal));
 locationConfirm?.addEventListener("click", () => closeModal(locationModal));
 locationNaviLink?.addEventListener("click", async (event) => {
   event.preventDefault();
+  if (!isMobileDevice()) {
+    window.open(locationNaviLink.href, "_blank", "noopener,noreferrer");
+    return;
+  }
   try {
     await startKakaoNavi();
   } catch (error) {
