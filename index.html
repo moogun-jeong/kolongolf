@@ -87,7 +87,7 @@
           </div>
         </div>
         <div class="card-footer">
-          <div class="pill">참석 확정 11명</div>
+          <button class="pill pill-action" id="attendanceOpen" type="button">참석 확정 11명</button>
           <button class="primary small" id="rsvpOpen">참석 신청</button>
         </div>
       </div>
@@ -492,6 +492,36 @@
       <div class="modal-actions">
         <a class="secondary" id="locationNaviLink" href="https://kko.to/DEqRkmSEfK" target="_blank" rel="noopener noreferrer">카카오내비 길안내</a>
         <button class="primary" id="locationConfirm">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="attendanceModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="attendanceTitle">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">CONFIRMED PLAYERS</p>
+          <h3 id="attendanceTitle">참석 확정 멤버 11명</h3>
+        </div>
+        <button class="ghost small" id="attendanceClose" aria-label="닫기">닫기</button>
+      </div>
+      <div class="modal-body">
+        <div class="attendance-list">
+          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">무근정 (정무근)</p></article>
+          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">덕충안길 (권순노)</p></article>
+          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">살려줘제바알 (김경수)</p></article>
+          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">오!건2 (김무건)</p></article>
+          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">원조가가멜 (김정훈)</p></article>
+          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">준빵 (김효준)</p></article>
+          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">빽스윙쫌만더 (서무환)</p></article>
+          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">날아라호 (심재호)</p></article>
+          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">타키온 (이동수)</p></article>
+          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">원펀쓰리강냉 (천기준)</p></article>
+          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">장금이에이스 (하선재)</p></article>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="primary" id="attendanceConfirm">확인</button>
       </div>
     </div>
   </div>

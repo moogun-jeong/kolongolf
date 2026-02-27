@@ -45,13 +45,17 @@ const updateDday = () => {
 updateDday();
 
 const rsvpOpen = document.getElementById("rsvpOpen");
+const attendanceOpen = document.getElementById("attendanceOpen");
 const joinOpen = document.getElementById("joinOpen");
 const mapPopupTrigger = document.getElementById("mapPopupTrigger");
 const rsvpModal = document.getElementById("rsvpModal");
+const attendanceModal = document.getElementById("attendanceModal");
 const joinModal = document.getElementById("joinModal");
 const locationModal = document.getElementById("locationModal");
 const rsvpClose = document.getElementById("rsvpClose");
 const rsvpConfirm = document.getElementById("rsvpConfirm");
+const attendanceClose = document.getElementById("attendanceClose");
+const attendanceConfirm = document.getElementById("attendanceConfirm");
 const joinClose = document.getElementById("joinClose");
 const joinConfirm = document.getElementById("joinConfirm");
 const locationClose = document.getElementById("locationClose");
@@ -140,6 +144,7 @@ const closeLightbox = () => {
 };
 
 rsvpOpen?.addEventListener("click", () => openModal(rsvpModal));
+attendanceOpen?.addEventListener("click", () => openModal(attendanceModal));
 joinOpen?.addEventListener("click", () => openModal(joinModal));
 mapPopupTrigger?.addEventListener("click", (event) => {
   event.preventDefault();
@@ -147,6 +152,8 @@ mapPopupTrigger?.addEventListener("click", (event) => {
 });
 rsvpClose?.addEventListener("click", () => closeModal(rsvpModal));
 rsvpConfirm?.addEventListener("click", () => closeModal(rsvpModal));
+attendanceClose?.addEventListener("click", () => closeModal(attendanceModal));
+attendanceConfirm?.addEventListener("click", () => closeModal(attendanceModal));
 joinClose?.addEventListener("click", () => closeModal(joinModal));
 joinConfirm?.addEventListener("click", () => closeModal(joinModal));
 locationClose?.addEventListener("click", () => closeModal(locationModal));
@@ -167,6 +174,9 @@ locationNaviLink?.addEventListener("click", (event) => {
 });
 rsvpModal?.addEventListener("click", (event) => {
   if (event.target === rsvpModal) closeModal(rsvpModal);
+});
+attendanceModal?.addEventListener("click", (event) => {
+  if (event.target === attendanceModal) closeModal(attendanceModal);
 });
 joinModal?.addEventListener("click", (event) => {
   if (event.target === joinModal) closeModal(joinModal);
@@ -233,6 +243,7 @@ document.addEventListener("keydown", (event) => {
   const isLightboxOpen = photoLightbox?.classList.contains("open");
   if (event.key === "Escape") {
     closeModal(rsvpModal);
+    closeModal(attendanceModal);
     closeModal(joinModal);
     closeModal(locationModal);
     closeLightbox();
