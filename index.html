@@ -1,4 +1,4 @@
- <!doctype html>
+<!doctype html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
@@ -94,6 +94,44 @@
   </header>
 
   <main>
+    <section class="club-marquee" aria-label="동호회 핵심 안내">
+      <div class="marquee-track">
+        <span>Quarterly League Match</span>
+        <span>•</span>
+        <span>On-Time Tee Off Culture</span>
+        <span>•</span>
+        <span>Play Fair, Record Sharp</span>
+        <span>•</span>
+        <span>코오롱 스크린 골프 동호회</span>
+      </div>
+    </section>
+
+    <section class="section feature-section">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">CLUB DNA</p>
+          <h2>우리가 지키는 플레이 기준</h2>
+        </div>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card">
+          <p class="feature-index">01</p>
+          <h3>정시 티오프</h3>
+          <p class="desc">모든 모임은 시작 10분 전 집합, 라운드 몰입을 위한 일정 준수를 기본으로 합니다.</p>
+        </article>
+        <article class="feature-card">
+          <p class="feature-index">02</p>
+          <h3>기록 공유</h3>
+          <p class="desc">매 모임마다 스코어와 현장 사진을 기록해 팀의 성장 데이터를 남깁니다.</p>
+        </article>
+        <article class="feature-card">
+          <p class="feature-index">03</p>
+          <h3>상호 피드백</h3>
+          <p class="desc">샷 리뷰와 코스 매니지먼트를 함께 점검하며 실전 감각을 끌어올립니다.</p>
+        </article>
+      </div>
+    </section>
+
     <section id="schedule" class="section">
       <div class="section-head">
         <div>
@@ -109,9 +147,10 @@
           <p class="meta">2026.03.04 (수) · 17:00 · 삼산동 울산골프존</p>
           <p class="desc">
             주소:
-            <a class="map-link" href="https://map.kakao.com/?urlX=1030847.0000007318&urlY=572354.00000002&urlLevel=3&itemId=17605703&q=%EC%9A%B8%EC%82%B0%EA%B3%A8%ED%94%84%EC%A1%B4&srcid=17605703&map_type=TYPE_MAP" target="_blank" rel="noopener noreferrer">
-              울산광역시 남구 삼산동 1603-5
+            <a class="map-link" id="mapPopupTrigger" href="https://map.kakao.com/?q=%EC%9A%B8%EC%82%B0%EA%B3%A8%ED%94%84%EC%A1%B4+%EC%8A%A4%ED%81%AC%EB%A6%B0%EA%B3%A8%ED%94%84%EC%97%B0%EC%8A%B5%EC%9E%A5" target="_blank" rel="noopener noreferrer">
+              울산 남구 화합로 108 (삼산동 1604-1)
             </a>
+            <span class="map-hint">클릭 시 위치 팝업</span>
           </p>
           <div class="card-footer">
             <span class="pill">스트로크 플레이</span>
@@ -335,7 +374,7 @@
               <p class="desc">일시: 2025년 12월 9일 (화) 16:30</p>
               <p class="desc">장소: 삼산동 울산골프존 (울산 남구 화합로 108)</p>
               <p class="desc">참석자(총 9명): 살려줘제바알, 준빵, 무근정, 허니완, 박재만(OB), 빽스윙쫌만더, 오!건2, 무적부대, 장금이에이스</p>
-              <div class="timeline-photo" style="background-image: url('images/archive-2025-12.webp');"></div>
+              <div class="timeline-photo" style="background-image: url('images/archive-2025-12.webp');" data-caption="2025.12 송년회 · 삼산동 울산골프존"></div>
             </div>
           </article>
           <article class="timeline-item">
@@ -346,7 +385,7 @@
               <p class="desc">일시: 2025년 9월 30일 (화) 17:00</p>
               <p class="desc">장소: 골프존파크 선암 솔밭스크린 (울산 남구 두왕로92번길 11-5)</p>
               <p class="desc">참가자(총 9명): 원조가가멜, 타키온, 빽스윙쫌만더, 오!건2, 준빵, 날아라호, 무적부대, 장금이에이스, 무근정</p>
-              <div class="timeline-photo" style="background-image: url('images/archive-2025-09.webp');"></div>
+              <div class="timeline-photo" style="background-image: url('images/archive-2025-09.webp');" data-caption="2025.09 3분기 정기전 · 선암 솔밭스크린"></div>
             </div>
           </article>
           <article class="timeline-item">
@@ -357,7 +396,7 @@
               <p class="desc">일시: 2025년 5월 1일 (목)</p>
               <p class="desc">장소: 힐스카이CC (구, 루나엑스)</p>
               <p class="desc">참가자(총 8명): 오!건2, 인생무생, 무근정, 원펀쓰리강냉, 원조가가멜, 준빵, 필드난폭자, 타키온</p>
-              <div class="timeline-photo" style="background-image: url('images/archive-2025-05.webp');"></div>
+              <div class="timeline-photo" style="background-image: url('images/archive-2025-05.JPG');" data-caption="2025.05 상반기 필드 라운딩 · 힐스카이CC"></div>
             </div>
           </article>
           <article class="timeline-item">
@@ -368,7 +407,7 @@
               <p class="desc">일시: 2025년 2월 25일 (화) 16:30</p>
               <p class="desc">장소: 골프존파크 두왕테크노골프점 (울산 남구 테크노산업로 78-11, 2층)</p>
               <p class="desc">참가자(총 13명): 준빵, 날아라호, 타키온, 장금이에이스, 살려줘제바알, 울산땡주, 무근정, 오!건2, 인생무생, 허니완, 원조가가멜, 빽스윙쫌만더, 원영민, 필드난폭자</p>
-              <div class="timeline-photo" style="background-image: url('images/archive-2025-02.webp');"></div>
+              <div class="timeline-photo" style="background-image: url('images/archive-2025-02.webp');" data-caption="2025.02 1분기 정기 모임 · 두왕테크노골프점"></div>
             </div>
           </article>
         </div>
@@ -432,6 +471,47 @@
       <div class="modal-actions">
         <button class="primary" id="joinConfirm">확인했어요</button>
       </div>
+    </div>
+  </div>
+
+  <div class="modal" id="locationModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="locationTitle">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">ROUND LOCATION</p>
+          <h3 id="locationTitle">정기 라운드 장소 안내</h3>
+        </div>
+        <button class="ghost small" id="locationClose" aria-label="닫기">닫기</button>
+      </div>
+      <div class="modal-body">
+        <p class="desc">장소: 울산골프존 스크린골프연습장</p>
+        <p class="desc">주소: 울산 남구 화합로 108 (지번: 삼산동 1604-1)</p>
+        <p class="desc">연락처: 052-273-0072</p>
+        <p class="desc">일시: 2026.03.04 (수) · 17:00</p>
+      </div>
+      <div class="modal-actions">
+        <a class="secondary" href="https://map.kakao.com/?q=%EC%9A%B8%EC%82%B0%EA%B3%A8%ED%94%84%EC%A1%B4+%EC%8A%A4%ED%81%AC%EB%A6%B0%EA%B3%A8%ED%94%84%EC%97%B0%EC%8A%B5%EC%9E%A5" target="_blank" rel="noopener noreferrer">카카오맵 길찾기</a>
+        <button class="primary" id="locationConfirm">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="lightbox" id="photoLightbox" aria-hidden="true">
+    <div class="lightbox-card" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
+      <div class="lightbox-head">
+        <div>
+          <p class="eyebrow">ARCHIVE PHOTO</p>
+          <h3 id="lightboxTitle">행사 사진</h3>
+          <p class="desc" id="lightboxCaption">행사 기록</p>
+        </div>
+        <button class="ghost small lightbox-close" id="lightboxClose" aria-label="닫기">닫기</button>
+      </div>
+      <div class="lightbox-stage">
+        <button class="lightbox-nav prev" id="lightboxPrev" aria-label="이전 사진">‹</button>
+        <img id="lightboxImage" src="" alt="동호회 아카이브 사진" />
+        <button class="lightbox-nav next" id="lightboxNext" aria-label="다음 사진">›</button>
+      </div>
+      <div class="lightbox-thumbs" id="lightboxThumbs" aria-label="썸네일 목록"></div>
     </div>
   </div>
 
