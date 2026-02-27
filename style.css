@@ -298,6 +298,7 @@ button {
   padding: 24px;
   z-index: 40;
   backdrop-filter: blur(6px);
+  overflow-y: auto;
 }
 
 .modal.open {
@@ -426,6 +427,8 @@ button {
   padding: 28px;
   display: grid;
   gap: 20px;
+  max-height: min(88dvh, 760px);
+  overflow-y: auto;
 }
 
 .modal-head {
@@ -1003,6 +1006,26 @@ button {
     width: 36px;
     height: 36px;
     font-size: 22px;
+  }
+
+  .modal {
+    align-items: flex-start;
+    padding: max(10px, env(safe-area-inset-top)) 14px max(14px, env(safe-area-inset-bottom));
+  }
+
+  .modal-card {
+    width: 100%;
+    max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 20px);
+    padding: 18px;
+    gap: 14px;
+  }
+
+  .modal-head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--card);
+    padding-bottom: 8px;
   }
 
 }
