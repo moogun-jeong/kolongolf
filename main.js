@@ -2,34 +2,23 @@ const searchInput = document.getElementById("memberSearch");
 const memberGrid = document.getElementById("memberGrid");
 const resetBtn = document.getElementById("memberReset");
 const themeToggle = document.getElementById("themeToggle");
-const THEME_KEY = "kolon_theme";
+const colorSchemeQuery = window.matchMedia?.("(prefers-color-scheme: dark)");
 
 const applyTheme = (theme) => {
   document.documentElement.setAttribute("data-theme", theme);
   if (!themeToggle) return;
   const isDark = theme === "dark";
   themeToggle.textContent = isDark ? "🌙" : "☀️";
-  themeToggle.setAttribute("aria-label", isDark ? "라이트 모드로 변경" : "다크 모드로 변경");
+  themeToggle.setAttribute("aria-label", isDark ? "시스템 다크 모드 적용 중" : "시스템 라이트 모드 적용 중");
 };
 
-const initializeTheme = () => {
-  const saved = localStorage.getItem(THEME_KEY);
-  if (saved === "light" || saved === "dark") {
-    applyTheme(saved);
-    return;
-  }
-  const systemDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+const syncSystemTheme = () => {
+  const systemDark = colorSchemeQuery?.matches;
   applyTheme(systemDark ? "dark" : "light");
 };
 
-initializeTheme();
-
-themeToggle?.addEventListener("click", () => {
-  const current = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
-  const next = current === "dark" ? "light" : "dark";
-  localStorage.setItem(THEME_KEY, next);
-  applyTheme(next);
-});
+syncSystemTheme();
+colorSchemeQuery?.addEventListener("change", syncSystemTheme);
 
 const filterMembers = () => {
   const query = searchInput.value.trim().toLowerCase();
