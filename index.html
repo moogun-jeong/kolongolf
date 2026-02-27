@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Gowun+Dodum&display=swap" rel="stylesheet" />
+  <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+  <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=b8632f1a142a8d6e3f172f23b0d5ed5c&libraries=services"></script>
 </head>
 <body>
   <div class="grain"></div>
@@ -112,7 +114,6 @@
           <p class="eyebrow">SCHEDULE</p>
           <h2>다가오는 일정</h2>
         </div>
-        <button class="ghost">캘린더 다운로드</button>
       </div>
       <div class="schedule-grid">
         <article class="schedule-card">
@@ -490,7 +491,7 @@
         <p class="desc">일시: 2026.03.04 (수) · 17:00</p>
       </div>
       <div class="modal-actions">
-        <a class="secondary" href="https://kko.to/DEqRkmSEfK" target="_blank" rel="noopener noreferrer">카카오내비 길안내</a>
+        <a class="secondary" id="locationNaviLink" href="https://kko.to/DEqRkmSEfK" target="_blank" rel="noopener noreferrer">카카오내비 길안내</a>
         <button class="primary" id="locationConfirm">확인</button>
       </div>
     </div>

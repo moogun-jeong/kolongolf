@@ -56,6 +56,7 @@ const joinClose = document.getElementById("joinClose");
 const joinConfirm = document.getElementById("joinConfirm");
 const locationClose = document.getElementById("locationClose");
 const locationConfirm = document.getElementById("locationConfirm");
+const locationNaviLink = document.getElementById("locationNaviLink");
 const photoLightbox = document.getElementById("photoLightbox");
 const lightboxImage = document.getElementById("lightboxImage");
 const lightboxTitle = document.getElementById("lightboxTitle");
@@ -64,6 +65,51 @@ const lightboxClose = document.getElementById("lightboxClose");
 const lightboxPrev = document.getElementById("lightboxPrev");
 const lightboxNext = document.getElementById("lightboxNext");
 const lightboxThumbs = document.getElementById("lightboxThumbs");
+const KAKAO_JS_KEY = "b8632f1a142a8d6e3f172f23b0d5ed5c";
+const NAVI_DEST_NAME = "울산골프존 스크린골프연습장";
+const NAVI_DEST_ADDRESS = "울산 남구 화합로 108";
+
+const canUseKakaoNavi = () =>
+  typeof window !== "undefined" &&
+  window.Kakao &&
+  window.kakao &&
+  window.kakao.maps &&
+  window.kakao.maps.services;
+
+const ensureKakaoInitialized = () => {
+  if (!canUseKakaoNavi()) return false;
+  if (!window.Kakao.isInitialized()) {
+    window.Kakao.init(KAKAO_JS_KEY);
+  }
+  return true;
+};
+
+const geocodeAddress = (address) =>
+  new Promise((resolve, reject) => {
+    try {
+      const geocoder = new window.kakao.maps.services.Geocoder();
+      geocoder.addressSearch(address, (result, status) => {
+        if (status !== window.kakao.maps.services.Status.OK || !result?.length) {
+          reject(new Error("Address geocoding failed"));
+          return;
+        }
+        resolve({ x: result[0].x, y: result[0].y });
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+const startKakaoNavi = async () => {
+  if (!ensureKakaoInitialized()) throw new Error("Kakao SDK unavailable");
+  const { x, y } = await geocodeAddress(NAVI_DEST_ADDRESS);
+  window.Kakao.Navi.start({
+    name: NAVI_DEST_NAME,
+    x,
+    y,
+    coordType: "wgs84",
+  });
+};
 
 const openModal = (modal) => {
   if (!modal) return;
@@ -122,6 +168,14 @@ joinClose?.addEventListener("click", () => closeModal(joinModal));
 joinConfirm?.addEventListener("click", () => closeModal(joinModal));
 locationClose?.addEventListener("click", () => closeModal(locationModal));
 locationConfirm?.addEventListener("click", () => closeModal(locationModal));
+locationNaviLink?.addEventListener("click", async (event) => {
+  event.preventDefault();
+  try {
+    await startKakaoNavi();
+  } catch (error) {
+    window.open(locationNaviLink.href, "_blank", "noopener,noreferrer");
+  }
+});
 rsvpModal?.addEventListener("click", (event) => {
   if (event.target === rsvpModal) closeModal(rsvpModal);
 });
