@@ -79,12 +79,15 @@ const canUseKakaoNavi = () =>
   typeof window !== "undefined" && window.Kakao && window.Kakao.Navi;
 
 const initializeKakao = () => {
-  if (!canUseKakaoNavi()) return false;
-  if (!window.Kakao.isInitialized()) window.Kakao.init(KAKAO_JS_KEY);
-  return true;
+  try {
+    if (!canUseKakaoNavi()) return false;
+    if (!window.Kakao.isInitialized()) window.Kakao.init(KAKAO_JS_KEY);
+    return true;
+  } catch (error) {
+    console.error("Kakao init failed:", error);
+    return false;
+  }
 };
-
-initializeKakao();
 
 const startKakaoNavi = () => {
   if (!initializeKakao()) throw new Error("Kakao SDK unavailable");
@@ -162,7 +165,7 @@ locationNaviLink?.addEventListener("click", (event) => {
     startKakaoNavi();
   } catch (error) {
     console.error("Kakao Navi start failed:", error);
-    alert("카카오내비 실행에 실패했습니다. 카카오 디벨로퍼스 Web 플랫폼 도메인 등록 상태를 확인해주세요.");
+    alert("카카오내비 실행에 실패했습니다.\n카카오 디벨로퍼스 Web 플랫폼 도메인 등록과 JavaScript 키를 확인해주세요.");
   }
 });
 rsvpModal?.addEventListener("click", (event) => {
