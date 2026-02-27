@@ -43,3 +43,33 @@ const updateDday = () => {
 };
 
 updateDday();
+
+const rsvpOpen = document.getElementById("rsvpOpen");
+const rsvpModal = document.getElementById("rsvpModal");
+const rsvpClose = document.getElementById("rsvpClose");
+const rsvpConfirm = document.getElementById("rsvpConfirm");
+
+const openModal = () => {
+  if (!rsvpModal) return;
+  rsvpModal.classList.add("open");
+  rsvpModal.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+};
+
+const closeModal = () => {
+  if (!rsvpModal) return;
+  rsvpModal.classList.remove("open");
+  rsvpModal.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+};
+
+rsvpOpen?.addEventListener("click", openModal);
+rsvpClose?.addEventListener("click", closeModal);
+rsvpConfirm?.addEventListener("click", closeModal);
+rsvpModal?.addEventListener("click", (event) => {
+  if (event.target === rsvpModal) closeModal();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeModal();
+});

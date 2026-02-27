@@ -239,6 +239,58 @@ button {
   overflow: hidden;
 }
 
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(14, 12, 10, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 40;
+  backdrop-filter: blur(6px);
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-card {
+  width: min(560px, 92vw);
+  background: var(--card);
+  border-radius: 22px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+  padding: 28px;
+  display: grid;
+  gap: 20px;
+}
+
+.modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.modal-body {
+  display: grid;
+  gap: 10px;
+}
+
+.modal-contacts {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .hero-card::after {
   content: "";
   position: absolute;
@@ -534,6 +586,20 @@ button {
   display: grid;
   grid-template-columns: 24px 1fr;
   gap: 16px;
+}
+
+.timeline-content {
+  display: grid;
+  gap: 6px;
+}
+
+.timeline-photo {
+  margin-top: 12px;
+  height: 180px;
+  border-radius: 18px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
 }
 
 .dot {

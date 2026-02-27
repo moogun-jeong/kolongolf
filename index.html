@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>코오롱 스크린 동호회</title>
+  <title>코오롱 스크린 골프 동호회</title>
   <link rel="stylesheet" href="/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,7 +16,7 @@
       <div class="logo">
         <span class="logo-mark">K</span>
         <div>
-          <p class="logo-title">코오롱 스크린 동호회</p>
+          <p class="logo-title">코오롱 스크린 골프 동호회</p>
           <p class="logo-sub">KOLON SCREEN GOLF SOCIETY</p>
         </div>
       </div>
@@ -33,7 +33,7 @@
         <p class="eyebrow">정기 라운드 · 친선 매치 · 기록 보관</p>
         <h1>우리는 스크린에서 만나 <br />기억을 남긴다.</h1>
         <p class="lead">
-          코오롱 스크린 동호회는 일정 공유, 회원 네트워크, 기록 아카이브를 한 곳에 모아
+          코오롱 스크린 골프 동호회는 일정 공유, 회원 네트워크, 기록 아카이브를 한 곳에 모아
           매 순간을 더 깊게 즐기는 커뮤니티입니다.
         </p>
         <div class="hero-actions">
@@ -87,7 +87,7 @@
         </div>
         <div class="card-footer">
           <div class="pill">참석 확정 11명</div>
-          <button class="primary small">참석 신청</button>
+          <button class="primary small" id="rsvpOpen">참석 신청</button>
         </div>
       </div>
     </div>
@@ -137,7 +137,7 @@
         <article class="member">
           <div class="avatar">덕</div>
           <div>
-            <h4>덕충안길</h4>
+            <h4>덕충안길(권순노)</h4>
             <p>정회원 · 드라이버 탄도</p>
             <div class="badges">
               <span>핸디 10</span><span>페이드 장인</span>
@@ -147,7 +147,7 @@
         <article class="member">
           <div class="avatar">살</div>
           <div>
-            <h4>살려줘제바알</h4>
+            <h4>살려줘제바알(김경수)</h4>
             <p>정회원 · 위기관리</p>
             <div class="badges">
               <span>핸디 10</span><span>벙커 탈출 1위</span>
@@ -157,7 +157,7 @@
         <article class="member">
           <div class="avatar">오</div>
           <div>
-            <h4>오!건2</h4>
+            <h4>오!건2(김무건)</h4>
             <p>회장 · 경기 운영</p>
             <div class="badges">
               <span>핸디 10</span><span>롱퍼팅 성공률↑</span>
@@ -167,7 +167,7 @@
         <article class="member">
           <div class="avatar">인</div>
           <div>
-            <h4>인생무생</h4>
+            <h4>인생무생(김무생)</h4>
             <p>정회원 · 멘탈 코어</p>
             <div class="badges">
               <span>핸디 10</span><span>후반 집중력</span>
@@ -177,7 +177,7 @@
         <article class="member">
           <div class="avatar">울</div>
           <div>
-            <h4>울산땡주</h4>
+            <h4>울산땡주(김영주)</h4>
             <p>정회원 · 파3 스페셜</p>
             <div class="badges">
               <span>핸디 10</span><span>핀 근접 1m</span>
@@ -187,7 +187,7 @@
         <article class="member">
           <div class="avatar">원</div>
           <div>
-            <h4>원조가가멜</h4>
+            <h4>원조가가멜(김정훈)</h4>
             <p>정회원 · 리듬 스윙</p>
             <div class="badges">
               <span>핸디 10</span><span>백스핀 컨트롤</span>
@@ -197,7 +197,7 @@
         <article class="member">
           <div class="avatar">김</div>
           <div>
-            <h4>백돌이깬다</h4>
+            <h4>백돌이깬다(김태연)</h4>
             <p>정회원 · 정확한 어프로치</p>
             <div class="badges">
               <span>핸디 10</span><span>그린 적중률↑</span>
@@ -207,7 +207,7 @@
         <article class="member">
           <div class="avatar">준</div>
           <div>
-            <h4>준빵</h4>
+            <h4>준빵(김효준)</h4>
             <p>정회원 · 스윙 템포</p>
             <div class="badges">
               <span>핸디 10</span><span>드라이브 230m</span>
@@ -217,7 +217,7 @@
         <article class="member">
           <div class="avatar">빽</div>
           <div>
-            <h4>빽스윙쫌만더</h4>
+            <h4>빽스윙쫌만더(서무환)</h4>
             <p>정회원 · 장타 본능</p>
             <div class="badges">
               <span>핸디 10</span><span>캐리 거리↑</span>
@@ -227,7 +227,7 @@
         <article class="member">
           <div class="avatar">날</div>
           <div>
-            <h4>날아라호</h4>
+            <h4>날아라호(심재호)</h4>
             <p>정회원 · 탄도 조절</p>
             <div class="badges">
               <span>핸디 10</span><span>런치앵글 최적</span>
@@ -237,7 +237,7 @@
         <article class="member">
           <div class="avatar">오</div>
           <div>
-            <h4>오**</h4>
+            <h4>오상택</h4>
             <p>정회원 · 코스 매니지먼트</p>
             <div class="badges">
               <span>핸디 10</span><span>더블보기 회피</span>
@@ -247,7 +247,7 @@
         <article class="member">
           <div class="avatar">필</div>
           <div>
-            <h4>필드난폭자</h4>
+            <h4>필드난폭자(윤석현)</h4>
             <p>정회원 · 공격적 플레이</p>
             <div class="badges">
               <span>핸디 10</span><span>이글 경험</span>
@@ -257,7 +257,7 @@
         <article class="member">
           <div class="avatar">타</div>
           <div>
-            <h4>타키온</h4>
+            <h4>타키온(이동수)</h4>
             <p>정회원 · 빠른 리듬</p>
             <div class="badges">
               <span>핸디 10</span><span>퍼팅 스트로크</span>
@@ -267,7 +267,7 @@
         <article class="member">
           <div class="avatar">무</div>
           <div>
-            <h4>무근정</h4>
+            <h4>무근정(정무근)</h4>
             <p>총무 · 운영 관리</p>
             <div class="badges">
               <span>핸디 10</span><span>정확한 루틴</span>
@@ -277,7 +277,7 @@
         <article class="member">
           <div class="avatar">울</div>
           <div>
-            <h4>울산정쁘로</h4>
+            <h4>울산정쁘로(정성원)</h4>
             <p>정회원 · 아이언 정밀도</p>
             <div class="badges">
               <span>핸디 10</span><span>피치샷 컨트롤</span>
@@ -287,7 +287,7 @@
         <article class="member">
           <div class="avatar">원</div>
           <div>
-            <h4>원펀쓰리강냉</h4>
+            <h4>원펀쓰리강냉(천기준)</h4>
             <p>정회원 · 파워 스윙</p>
             <div class="badges">
               <span>핸디 10</span><span>스매시 팩터↑</span>
@@ -297,7 +297,7 @@
         <article class="member">
           <div class="avatar">무</div>
           <div>
-            <h4>무적부대</h4>
+            <h4>무적부대(추정술)</h4>
             <p>정회원 · 멀리건 사냥꾼</p>
             <div class="badges">
               <span>핸디 10</span><span>위기 탈출</span>
@@ -307,7 +307,7 @@
         <article class="member">
           <div class="avatar">장</div>
           <div>
-            <h4>장금이에이스</h4>
+            <h4>장금이에이스(하선재)</h4>
             <p>정회원 · 정교한 퍼터</p>
             <div class="badges">
               <span>핸디 10</span><span>버디 찬스↑</span>
@@ -329,66 +329,86 @@
         <div class="timeline">
           <article class="timeline-item">
             <div class="dot"></div>
-            <div>
+            <div class="timeline-content">
               <p class="meta">2025.12.09</p>
               <h3>2025년 12월 행사 (송년회)</h3>
               <p class="desc">일시: 2025년 12월 9일 (화) 16:30</p>
               <p class="desc">장소: 삼산동 울산골프존 (울산 남구 화합로 108)</p>
               <p class="desc">참석자(총 9명): 살려줘제바알, 준빵, 무근정, 허니완, 박재만(OB), 빽스윙쫌만더, 오!건2, 무적부대, 장금이에이스</p>
+              <div class="timeline-photo" style="background-image: url('images/archive-2025-12.jpg');"></div>
             </div>
           </article>
           <article class="timeline-item">
             <div class="dot"></div>
-            <div>
+            <div class="timeline-content">
               <p class="meta">2025.09.30</p>
               <h3>2025년 9월 행사 (3분기 스크린 정기전)</h3>
               <p class="desc">일시: 2025년 9월 30일 (화) 17:00</p>
               <p class="desc">장소: 골프존파크 선암 솔밭스크린 (울산 남구 두왕로92번길 11-5)</p>
               <p class="desc">참가자(총 9명): 원조가가멜, 타키온, 빽스윙쫌만더, 오!건2, 준빵, 날아라호, 무적부대, 장금이에이스, 무근정</p>
+              <div class="timeline-photo" style="background-image: url('images/archive-2025-09.jpg');"></div>
             </div>
           </article>
           <article class="timeline-item">
             <div class="dot"></div>
-            <div>
+            <div class="timeline-content">
               <p class="meta">2025.05.01</p>
               <h3>2025년 5월 행사 (상반기 필드 라운딩)</h3>
               <p class="desc">일시: 2025년 5월 1일 (목)</p>
               <p class="desc">장소: 힐스카이CC (구, 루나엑스)</p>
               <p class="desc">참가자(총 8명): 오!건2, 인생무생, 무근정, 원펀쓰리강냉, 원조가가멜, 준빵, 필드난폭자, 타키온</p>
+              <div class="timeline-photo" style="background-image: url('images/archive-2025-05.jpg');"></div>
             </div>
           </article>
           <article class="timeline-item">
             <div class="dot"></div>
-            <div>
+            <div class="timeline-content">
               <p class="meta">2025.02.25</p>
               <h3>2025년 2월 행사 (1분기 정기 모임)</h3>
               <p class="desc">일시: 2025년 2월 25일 (화) 16:30</p>
               <p class="desc">장소: 골프존파크 두왕테크노골프점 (울산 남구 테크노산업로 78-11, 2층)</p>
               <p class="desc">참가자(총 13명): 준빵, 날아라호, 타키온, 장금이에이스, 살려줘제바알, 울산땡주, 무근정, 오!건2, 인생무생, 허니완, 원조가가멜, 빽스윙쫌만더, 원영민, 필드난폭자</p>
+              <div class="timeline-photo" style="background-image: url('images/archive-2025-02.jpg');"></div>
             </div>
           </article>
-        </div>
-        <div class="gallery">
-          <div class="photo large">
-            <span>Winter Final</span>
-          </div>
-          <div class="photo">
-            <span>New Year Match</span>
-          </div>
-          <div class="photo">
-            <span>Drive Challenge</span>
-          </div>
-          <div class="photo">
-            <span>Team Scramble</span>
-          </div>
         </div>
       </div>
     </section>
   </main>
 
+  <div class="modal" id="rsvpModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="rsvpTitle">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">NEXT TEE TIME</p>
+          <h3 id="rsvpTitle">참석 신청 안내</h3>
+        </div>
+        <button class="ghost small" id="rsvpClose" aria-label="닫기">닫기</button>
+      </div>
+      <div class="modal-body">
+        <p class="desc">일시: 3월 4일 수요일 17:00 · 군자리CC (가상)</p>
+        <p class="desc">모집: 12명 · 참석 확정 11명</p>
+        <p class="desc">참석을 원하시면 회장 또는 총무에게 연락해주세요.</p>
+        <div class="modal-contacts">
+          <div>
+            <p class="label">회장</p>
+            <p class="value">김무건 · gun77@kolon.com</p>
+          </div>
+          <div>
+            <p class="label">총무</p>
+            <p class="value">정무근 · moogunjeong@kolon.com</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="primary" id="rsvpConfirm">확인했어요</button>
+      </div>
+    </div>
+  </div>
+
   <footer class="footer">
     <div>
-      <h3>코오롱 스크린 동호회</h3>
+      <h3>코오롱 스크린 골프 동호회</h3>
       <p>함께 스윙하고, 기록하고, 성장합니다.</p>
     </div>
     <div>
