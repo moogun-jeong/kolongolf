@@ -24,7 +24,7 @@
         <a href="#schedule">일정</a>
         <a href="#members">회원명부</a>
         <a href="#archive">아카이브</a>
-        <button class="ghost">가입 문의</button>
+        <button class="ghost" id="joinOpen">가입 문의</button>
       </div>
     </nav>
 
@@ -402,6 +402,35 @@
       </div>
       <div class="modal-actions">
         <button class="primary" id="rsvpConfirm">확인했어요</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="joinModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="joinTitle">
+      <div class="modal-head">
+        <div>
+          <p class="eyebrow">JOIN US</p>
+          <h3 id="joinTitle">가입 문의</h3>
+        </div>
+        <button class="ghost small" id="joinClose" aria-label="닫기">닫기</button>
+      </div>
+      <div class="modal-body">
+        <p class="desc">코오롱 스크린 골프 동호회는 정기 라운드와 기록 공유를 함께합니다.</p>
+        <p class="desc">가입 문의는 회장 또는 총무에게 연락 바랍니다.</p>
+        <div class="modal-contacts">
+          <div>
+            <p class="label">회장</p>
+            <p class="value">김무건 · gun77@kolon.com</p>
+          </div>
+          <div>
+            <p class="label">총무</p>
+            <p class="value">정무근 · moogunjeong@kolon.com</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="primary" id="joinConfirm">확인했어요</button>
       </div>
     </div>
   </div>

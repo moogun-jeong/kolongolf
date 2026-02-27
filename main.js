@@ -45,31 +45,44 @@ const updateDday = () => {
 updateDday();
 
 const rsvpOpen = document.getElementById("rsvpOpen");
+const joinOpen = document.getElementById("joinOpen");
 const rsvpModal = document.getElementById("rsvpModal");
+const joinModal = document.getElementById("joinModal");
 const rsvpClose = document.getElementById("rsvpClose");
 const rsvpConfirm = document.getElementById("rsvpConfirm");
+const joinClose = document.getElementById("joinClose");
+const joinConfirm = document.getElementById("joinConfirm");
 
-const openModal = () => {
-  if (!rsvpModal) return;
-  rsvpModal.classList.add("open");
-  rsvpModal.setAttribute("aria-hidden", "false");
+const openModal = (modal) => {
+  if (!modal) return;
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
   document.body.style.overflow = "hidden";
 };
 
-const closeModal = () => {
-  if (!rsvpModal) return;
-  rsvpModal.classList.remove("open");
-  rsvpModal.setAttribute("aria-hidden", "true");
+const closeModal = (modal) => {
+  if (!modal) return;
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
 };
 
-rsvpOpen?.addEventListener("click", openModal);
-rsvpClose?.addEventListener("click", closeModal);
-rsvpConfirm?.addEventListener("click", closeModal);
+rsvpOpen?.addEventListener("click", () => openModal(rsvpModal));
+joinOpen?.addEventListener("click", () => openModal(joinModal));
+rsvpClose?.addEventListener("click", () => closeModal(rsvpModal));
+rsvpConfirm?.addEventListener("click", () => closeModal(rsvpModal));
+joinClose?.addEventListener("click", () => closeModal(joinModal));
+joinConfirm?.addEventListener("click", () => closeModal(joinModal));
 rsvpModal?.addEventListener("click", (event) => {
-  if (event.target === rsvpModal) closeModal();
+  if (event.target === rsvpModal) closeModal(rsvpModal);
+});
+joinModal?.addEventListener("click", (event) => {
+  if (event.target === joinModal) closeModal(joinModal);
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") closeModal();
+  if (event.key === "Escape") {
+    closeModal(rsvpModal);
+    closeModal(joinModal);
+  }
 });
