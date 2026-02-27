@@ -71,8 +71,8 @@ const lightboxNext = document.getElementById("lightboxNext");
 const lightboxThumbs = document.getElementById("lightboxThumbs");
 const KAKAO_JS_KEY = "b8632f1a142a8d6e3f172f23b0d5ed5c";
 const NAVI_DEST_NAME = "삼산골프존";
-const NAVI_DEST_X = 129.3357;
-const NAVI_DEST_Y = 35.5383;
+const NAVI_DEST_X = 129.3411059;
+const NAVI_DEST_Y = 35.5346226;
 const NAVI_COORD_TYPE = "wgs84";
 
 const canUseKakaoNavi = () =>
