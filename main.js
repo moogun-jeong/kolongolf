@@ -127,46 +127,40 @@ const setupMobileFirstSwipeUnlock = () => {
   if (!touchCapable) return;
 
   let startY = null;
-
-  const cleanup = () => {
-    window.removeEventListener("touchstart", onTouchStart);
-    window.removeEventListener("touchmove", onTouchMove);
-    window.removeEventListener("scroll", onFirstScroll);
-  };
-
-  const onFirstScroll = () => {
-    if (window.scrollY > 2) cleanup();
-  };
+  let lastUnlockAt = 0;
 
   const onTouchStart = (event) => {
     startY = event.touches[0]?.clientY ?? null;
   };
 
+  const onTouchEnd = () => {
+    startY = null;
+  };
+
   const onTouchMove = (event) => {
-    if (window.scrollY > 2 || startY === null) {
-      cleanup();
-      return;
-    }
+    if (window.scrollY > 2 || startY === null) return;
+    if (document.body.classList.contains("modal-open")) return;
 
     const currentY = event.touches[0]?.clientY;
     if (typeof currentY !== "number") return;
     const swipeUpDistance = startY - currentY;
-    if (swipeUpDistance < 10) return;
+    if (swipeUpDistance < 12) return;
 
     const maxScroll = getMaxScrollableDistance();
-    if (maxScroll < 20) {
-      cleanup();
-      return;
-    }
+    if (maxScroll < 20) return;
+
+    const now = Date.now();
+    if (now - lastUnlockAt < 450) return;
 
     const unlockOffset = Math.min(56, maxScroll);
     window.scrollTo({ top: unlockOffset, behavior: "auto" });
-    cleanup();
+    lastUnlockAt = now;
+    startY = currentY;
   };
 
   window.addEventListener("touchstart", onTouchStart, { passive: true });
   window.addEventListener("touchmove", onTouchMove, { passive: true });
-  window.addEventListener("scroll", onFirstScroll, { passive: true });
+  window.addEventListener("touchend", onTouchEnd, { passive: true });
 };
 
 const renderLightbox = (index) => {
