@@ -46,6 +46,51 @@ body.modal-open {
   overflow: hidden;
 }
 
+body.low-motion-mobile .site-header {
+  backdrop-filter: none;
+}
+
+body.low-motion-mobile .ticker-track {
+  animation: none;
+  transform: none;
+}
+
+body.low-motion-mobile .waacky-main::before,
+body.low-motion-mobile .waacky-main::after,
+body.low-motion-mobile .waacky-main img,
+body.low-motion-mobile .waacky-trail img,
+body.low-motion-mobile .waacky-mini img,
+body.low-motion-mobile .waacky-drive-lines {
+  animation: none !important;
+}
+
+body.low-motion-mobile .waacky-drive {
+  height: clamp(96px, 16vh, 142px);
+  margin-top: 0.8rem;
+}
+
+body.low-motion-mobile .waacky-drive-sticky {
+  position: relative;
+  top: auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.low-motion-mobile .waacky-drive-lines,
+body.low-motion-mobile .waacky-drive-step,
+body.low-motion-mobile .waacky-drive-char.ghost {
+  display: none;
+}
+
+body.low-motion-mobile .waacky-drive-char.main {
+  opacity: 1;
+  left: 50%;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0) rotate(-5deg) scale(0.88) !important;
+}
+
 ::selection {
   background: rgba(17, 116, 79, 0.2);
   color: var(--ink);

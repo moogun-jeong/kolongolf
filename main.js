@@ -33,6 +33,15 @@ const waackyDriveStepMain = document.querySelector("[data-waacky-drive-step='mai
 const waackyDriveStepGhostA = document.querySelector("[data-waacky-drive-step='ghost-a']");
 const waackyDriveStepGhostB = document.querySelector("[data-waacky-drive-step='ghost-b']");
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+const isMobileViewport = window.matchMedia?.("(max-width: 920px)")?.matches ?? false;
+const isCoarsePointer = window.matchMedia?.("(hover: none) and (pointer: coarse)")?.matches ?? false;
+const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+const disableHeavyScrollEffects = prefersReducedMotion || (isMobileViewport && isCoarsePointer);
+let heavyEffectsMuted = false;
+
+if (disableHeavyScrollEffects) {
+  document.body.classList.add("low-motion-mobile");
+}
 
 revealTargets.forEach((target, index) => {
   target.classList.add("reveal-ready");
@@ -215,6 +224,14 @@ const updateScrollEffects = () => {
   const progress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
   if (scrollProgress) {
     scrollProgress.style.setProperty("--progress", progress.toFixed(4));
+  }
+
+  if (disableHeavyScrollEffects) {
+    if (!heavyEffectsMuted) {
+      parallaxTargets.forEach((target) => target.style.setProperty("--parallax-y", "0px"));
+      heavyEffectsMuted = true;
+    }
+    return;
   }
 
   parallaxTargets.forEach((target) => {
