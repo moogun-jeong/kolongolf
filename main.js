@@ -33,7 +33,6 @@ const waackyDriveStepMain = document.querySelector("[data-waacky-drive-step='mai
 const waackyDriveStepGhostA = document.querySelector("[data-waacky-drive-step='ghost-a']");
 const waackyDriveStepGhostB = document.querySelector("[data-waacky-drive-step='ghost-b']");
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
-const initialScrollHintKey = "kolongolf.mobile.scrollHint.v1";
 
 revealTargets.forEach((target, index) => {
   target.classList.add("reveal-ready");
@@ -112,16 +111,6 @@ const runMobileScrollHint = () => {
   const maxScroll = getMaxScrollableDistance();
   if (maxScroll < 60) return;
 
-  let shouldRunHint = true;
-  try {
-    shouldRunHint = sessionStorage.getItem(initialScrollHintKey) !== "1";
-  } catch {}
-  if (!shouldRunHint) return;
-
-  try {
-    sessionStorage.setItem(initialScrollHintKey, "1");
-  } catch {}
-
   window.setTimeout(() => {
     if (document.body.classList.contains("modal-open")) return;
     if (window.scrollY > 2) return;
@@ -130,6 +119,54 @@ const runMobileScrollHint = () => {
     const hintOffset = Math.min(48, refreshedMaxScroll);
     window.scrollTo({ top: hintOffset, behavior: "smooth" });
   }, 420);
+};
+
+const setupMobileFirstSwipeUnlock = () => {
+  const isTouchViewport = window.matchMedia?.("(hover: none) and (pointer: coarse)")?.matches ?? false;
+  const touchCapable = isTouchViewport || navigator.maxTouchPoints > 0;
+  if (!touchCapable) return;
+
+  let startY = null;
+
+  const cleanup = () => {
+    window.removeEventListener("touchstart", onTouchStart);
+    window.removeEventListener("touchmove", onTouchMove);
+    window.removeEventListener("scroll", onFirstScroll);
+  };
+
+  const onFirstScroll = () => {
+    if (window.scrollY > 2) cleanup();
+  };
+
+  const onTouchStart = (event) => {
+    startY = event.touches[0]?.clientY ?? null;
+  };
+
+  const onTouchMove = (event) => {
+    if (window.scrollY > 2 || startY === null) {
+      cleanup();
+      return;
+    }
+
+    const currentY = event.touches[0]?.clientY;
+    if (typeof currentY !== "number") return;
+    const swipeUpDistance = startY - currentY;
+    if (swipeUpDistance < 10) return;
+
+    const maxScroll = getMaxScrollableDistance();
+    if (maxScroll < 20) {
+      cleanup();
+      return;
+    }
+
+    const unlockOffset = Math.min(56, maxScroll);
+    window.scrollTo({ top: unlockOffset, behavior: "auto" });
+    cleanup();
+  };
+
+  window.addEventListener("touchstart", onTouchStart, { passive: true });
+  window.addEventListener("touchmove", onTouchMove, { passive: true });
+  window.addEventListener("scroll", onFirstScroll, { passive: true });
 };
 
 const renderLightbox = (index) => {
@@ -373,3 +410,4 @@ syncModalState();
 updateDday();
 requestScrollUpdate();
 runMobileScrollHint();
+setupMobileFirstSwipeUnlock();
