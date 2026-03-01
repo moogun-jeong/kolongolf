@@ -101,68 +101,6 @@ const closeAllModals = () => {
   syncModalState();
 };
 
-const getMaxScrollableDistance = () => Math.max(document.documentElement.scrollHeight - window.innerHeight, 0);
-
-const runMobileScrollHint = () => {
-  const isTouchViewport = window.matchMedia?.("(hover: none) and (pointer: coarse)")?.matches ?? false;
-  const touchCapable = isTouchViewport || navigator.maxTouchPoints > 0;
-  if (!touchCapable || window.scrollY > 2) return;
-
-  const maxScroll = getMaxScrollableDistance();
-  if (maxScroll < 60) return;
-
-  window.setTimeout(() => {
-    if (document.body.classList.contains("modal-open")) return;
-    if (window.scrollY > 2) return;
-    const refreshedMaxScroll = getMaxScrollableDistance();
-    if (refreshedMaxScroll < 20) return;
-    const hintOffset = Math.min(48, refreshedMaxScroll);
-    window.scrollTo({ top: hintOffset, behavior: "smooth" });
-  }, 420);
-};
-
-const setupMobileFirstSwipeUnlock = () => {
-  const isTouchViewport = window.matchMedia?.("(hover: none) and (pointer: coarse)")?.matches ?? false;
-  const touchCapable = isTouchViewport || navigator.maxTouchPoints > 0;
-  if (!touchCapable) return;
-
-  let startY = null;
-  let lastUnlockAt = 0;
-
-  const onTouchStart = (event) => {
-    startY = event.touches[0]?.clientY ?? null;
-  };
-
-  const onTouchEnd = () => {
-    startY = null;
-  };
-
-  const onTouchMove = (event) => {
-    if (window.scrollY > 2 || startY === null) return;
-    if (document.body.classList.contains("modal-open")) return;
-
-    const currentY = event.touches[0]?.clientY;
-    if (typeof currentY !== "number") return;
-    const swipeUpDistance = startY - currentY;
-    if (swipeUpDistance < 12) return;
-
-    const maxScroll = getMaxScrollableDistance();
-    if (maxScroll < 20) return;
-
-    const now = Date.now();
-    if (now - lastUnlockAt < 450) return;
-
-    const unlockOffset = Math.min(56, maxScroll);
-    window.scrollTo({ top: unlockOffset, behavior: "auto" });
-    lastUnlockAt = now;
-    startY = currentY;
-  };
-
-  window.addEventListener("touchstart", onTouchStart, { passive: true });
-  window.addEventListener("touchmove", onTouchMove, { passive: true });
-  window.addEventListener("touchend", onTouchEnd, { passive: true });
-};
-
 const renderLightbox = (index) => {
   if (!galleryItems.length || !lightboxImage) return;
   currentLightboxIndex = (index + galleryItems.length) % galleryItems.length;
@@ -403,5 +341,3 @@ window.addEventListener("pageshow", () => {
 syncModalState();
 updateDday();
 requestScrollUpdate();
-runMobileScrollHint();
-setupMobileFirstSwipeUnlock();
