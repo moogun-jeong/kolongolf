@@ -33,6 +33,7 @@ const waackyDriveStepMain = document.querySelector("[data-waacky-drive-step='mai
 const waackyDriveStepGhostA = document.querySelector("[data-waacky-drive-step='ghost-a']");
 const waackyDriveStepGhostB = document.querySelector("[data-waacky-drive-step='ghost-b']");
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+const initialScrollHintKey = "kolongolf.mobile.scrollHint.v1";
 
 revealTargets.forEach((target, index) => {
   target.classList.add("reveal-ready");
@@ -99,6 +100,36 @@ const closeAllModals = () => {
     modal.setAttribute("aria-hidden", "true");
   });
   syncModalState();
+};
+
+const getMaxScrollableDistance = () => Math.max(document.documentElement.scrollHeight - window.innerHeight, 0);
+
+const runMobileScrollHint = () => {
+  const isTouchViewport = window.matchMedia?.("(hover: none) and (pointer: coarse)")?.matches ?? false;
+  const touchCapable = isTouchViewport || navigator.maxTouchPoints > 0;
+  if (!touchCapable || window.scrollY > 2) return;
+
+  const maxScroll = getMaxScrollableDistance();
+  if (maxScroll < 60) return;
+
+  let shouldRunHint = true;
+  try {
+    shouldRunHint = sessionStorage.getItem(initialScrollHintKey) !== "1";
+  } catch {}
+  if (!shouldRunHint) return;
+
+  try {
+    sessionStorage.setItem(initialScrollHintKey, "1");
+  } catch {}
+
+  window.setTimeout(() => {
+    if (document.body.classList.contains("modal-open")) return;
+    if (window.scrollY > 2) return;
+    const refreshedMaxScroll = getMaxScrollableDistance();
+    if (refreshedMaxScroll < 20) return;
+    const hintOffset = Math.min(48, refreshedMaxScroll);
+    window.scrollTo({ top: hintOffset, behavior: "smooth" });
+  }, 420);
 };
 
 const renderLightbox = (index) => {
@@ -333,6 +364,12 @@ const requestScrollUpdate = () => {
 
 window.addEventListener("scroll", requestScrollUpdate, { passive: true });
 window.addEventListener("resize", requestScrollUpdate);
+window.addEventListener("pageshow", () => {
+  syncModalState();
+  requestScrollUpdate();
+});
 
+syncModalState();
 updateDday();
 requestScrollUpdate();
+runMobileScrollHint();
