@@ -4,102 +4,103 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>코오롱 스크린 골프 동호회</title>
-  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="./style.css?v=20260301" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Gowun+Dodum&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Montserrat:wght@500;700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <div class="grain"></div>
-  <header class="hero">
-    <nav class="nav">
-      <div class="logo">
-        <span class="logo-mark" aria-hidden="true"><span class="logo-k">K</span></span>
-        <div>
-          <p class="logo-title">코오롱 스크린 골프 동호회</p>
-          <p class="logo-sub">KOLON SCREEN GOLF SOCIETY</p>
-        </div>
-      </div>
-      <div class="nav-links">
-        <a href="#schedule">일정</a>
-        <a href="#members">회원명부</a>
-        <a href="#archive">아카이브</a>
-        <button class="ghost" id="themeToggle" aria-label="테마 변경">🌓</button>
-        <button class="ghost" id="joinOpen">가입 문의</button>
-      </div>
-    </nav>
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+  <div class="page-noise" aria-hidden="true"></div>
 
-    <div class="hero-content">
-      <div>
-        <p class="eyebrow">정기 라운드 · 친선 매치 · 기록 보관</p>
-        <h1>우리는 스크린에서 만나 <br />기억을 남긴다.</h1>
-        <p class="lead">
-          코오롱 스크린 골프 동호회는 일정 공유, 회원 네트워크, 기록 아카이브를 한 곳에 모아
-          매 순간을 더 깊게 즐기는 커뮤니티입니다.
-        </p>
-        <div class="hero-actions">
-          <a class="primary" href="#schedule">이번 달 일정 보기</a>
-          <a class="secondary" href="#archive">아카이브 둘러보기</a>
-        </div>
-        <div class="hero-metrics">
-          <div>
-            <p class="metric">18</p>
-            <p class="metric-label">활동 회원</p>
-          </div>
-          <div>
-            <p class="metric">스크린 4회, 필드 1회</p>
-            <p class="metric-label">누적 라운드</p>
-            <p class="metric-note">(2025년 기준)</p>
-          </div>
-          <div>
-            <p class="metric">0</p>
-            <p class="metric-label">공식 대회</p>
-          </div>
-        </div>
-      </div>
-      <div class="hero-card">
-        <p class="card-title">Next Tee Time</p>
-        <div class="date-block">
-          <p class="date-day">04</p>
-          <div>
-            <p class="date-month">3월 수요일</p>
-            <p class="date-time">17:00 · 군자리CC (가상)</p>
-          </div>
-        </div>
-        <div class="card-row">
-          <div>
-            <p class="label">상세</p>
-            <p class="value">
-              대회 코스: 군자리CC
-              <br />
-              경기방식: 18홀 스트로크
-              <br />
-              난이도/티: G투어모드/화이트
-              <br />
-              바람/핀: 랜덤/랜덤(컨시드 1.5m)
-              <br />
-              그린 스피드: 약간 빠름
-            </p>
-          </div>
-          <div>
-            <p class="label">모집</p>
-            <p class="value">12명</p>
-          </div>
-        </div>
-        <div class="card-footer">
-          <button class="pill pill-action" id="attendanceOpen" type="button">참석 확정 11명</button>
-          <button class="primary small" id="rsvpOpen">참석 신청</button>
-        </div>
-      </div>
-    </div>
+  <header class="site-header">
+    <a class="brand" href="#top">
+      <span class="brand-mark" aria-hidden="true">K</span>
+      <span class="brand-text">
+        <strong>코오롱 스크린 골프 동호회</strong>
+        <small>KOLON SCREEN GOLF SOCIETY</small>
+      </span>
+    </a>
+
+    <nav class="main-nav" aria-label="메인 메뉴">
+      <a href="#features">클럽 소개</a>
+      <a href="#schedule">일정</a>
+      <a href="#members">회원</a>
+      <a href="#archive">아카이브</a>
+    </nav>
   </header>
 
-  <main>
-    <section class="club-marquee" aria-label="동호회 핵심 안내">
-      <div class="marquee-track">
+  <main id="top">
+    <section class="hero section-shell">
+      <div class="hero-backdrop" aria-hidden="true">
+        <div class="hero-orb orb-a" data-parallax="0.55"></div>
+        <div class="hero-orb orb-b" data-parallax="-0.35"></div>
+        <div class="hero-grid-glow" data-parallax="0.18"></div>
+        <div class="waacky waacky-main" data-parallax="0.26">
+          <img src="images/waacky.png" alt="" />
+        </div>
+        <div class="waacky waacky-trail" data-parallax="-0.18">
+          <img src="images/waacky.png" alt="" />
+        </div>
+        <div class="waacky waacky-mini" data-parallax="0.12">
+          <img src="images/waacky.png" alt="" />
+        </div>
+      </div>
+
+      <div class="hero-copy">
+        <p class="eyebrow">KOLON SCREEN GOLF</p>
+        <h1 class="hero-title">
+          <span>스크린에서 시작하고</span>
+          <span>필드에서는 더 짜릿하게.</span>
+        </h1>
+        <p class="hero-lead">
+          우리는 스크린에서 만나<br />
+          기억을 남긴다.<br />
+          코오롱 스크린 골프 동호회는 일정 공유, 회원 네트워크, 기록 아카이브를 한 곳에 모아 매 순간을 더 깊게 즐기는 커뮤니티입니다.
+        </p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#features">클럽 소개 보기</a>
+          <a class="btn secondary" href="#schedule">3월 일정 바로 보기</a>
+        </div>
+        <dl class="hero-stats">
+          <div>
+            <dt>활동 멤버</dt>
+            <dd>18</dd>
+          </div>
+          <div>
+            <dt>2025 라운드</dt>
+            <dd>스크린 4회 + 필드 1회</dd>
+          </div>
+          <div>
+            <dt>현재 라운드 모집</dt>
+            <dd>12명 중 11명 확정</dd>
+          </div>
+        </dl>
+      </div>
+
+      <aside class="hero-panel" data-reveal>
+        <p class="panel-title">NEXT TEE TIME</p>
+        <h2>3월 정기 스크린 라운드</h2>
+        <p class="panel-meta">2026.03.04 (수) 17:00 · 울산골프존</p>
+        <div class="panel-chip-row">
+          <span class="chip">군자리CC</span>
+          <span class="chip">18홀 스트로크</span>
+          <span class="chip" data-dday="2026-03-04">D-</span>
+        </div>
+        <p class="panel-note">G투어모드 / 화이트티 / 컨시드 1.5m / 그린스피드 약간 빠름</p>
+        <div class="panel-actions">
+          <button class="btn ghost small" type="button" data-open-modal="attendanceModal">참석 확정 11명</button>
+          <button class="btn primary small" type="button" data-open-modal="rsvpModal">참석 신청</button>
+        </div>
+      </aside>
+
+    </section>
+
+    <section class="ticker" aria-label="동호회 핵심 메시지">
+      <div class="ticker-track">
         <span>Quarterly League Match</span>
         <span>•</span>
-        <span>On-Time Tee Off Culture</span>
+        <span>On-Time Tee Off</span>
         <span>•</span>
         <span>Play Fair, Record Sharp</span>
         <span>•</span>
@@ -107,313 +108,205 @@
       </div>
     </section>
 
-    <section id="schedule" class="section">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">SCHEDULE</p>
-          <h2>다가오는 일정</h2>
-        </div>
+    <section class="features section-shell" id="features">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">CLUB DNA</p>
+        <h2>라운드 전개처럼 읽히는 핵심 규칙</h2>
       </div>
-      <div class="schedule-grid">
-        <article class="schedule-card">
-          <p class="tag">정기 라운드</p>
-          <h3>3월 정기 스크린 라운드</h3>
-          <p class="meta">2026.03.04 (수) · 17:00 · 울산골프존</p>
-          <p class="desc">
-            주소:
-            <a class="map-link" id="mapPopupTrigger" href="https://map.kakao.com/?urlX=1030847.0000007318&urlY=572354.00000002&urlLevel=3&itemId=17605703&q=%EC%9A%B8%EC%82%B0%EA%B3%A8%ED%94%84%EC%A1%B4&srcid=17605703&map_type=TYPE_MAP" target="_blank" rel="noopener noreferrer">
-              울산 남구 화합로 108 (삼산동 1604-1)
-            </a>
-            <span class="map-hint">🗺️ 클릭시 카카오맵 바로가기</span>
-          </p>
-          <div class="card-footer">
-            <span class="pill">스트로크 플레이</span>
-            <span class="pill">참여인원 11명</span>
-            <span class="pill" data-dday="2026-03-04">D-</span>
+
+      <div class="feature-grid">
+        <article class="feature-card" data-reveal>
+          <div class="feature-float" data-parallax="0.11">
+            <h3>시간 약속은 깔끔하게</h3>
+            <p>시작 10분 전 도착, 티오프 지연 없이 바로 플레이.</p>
+          </div>
+        </article>
+        <article class="feature-card" data-reveal>
+          <div class="feature-float" data-parallax="-0.09">
+            <h3>기록은 같이 남기기</h3>
+            <p>스코어와 사진을 누적 공유해 다음 매치를 더 재미있게.</p>
+          </div>
+        </article>
+        <article class="feature-card" data-reveal>
+          <div class="feature-float" data-parallax="0.13">
+            <h3>좋은 샷은 서로 한마디</h3>
+            <p>칭찬과 피드백이 섞이는 팀 플레이 문화.</p>
           </div>
         </article>
       </div>
     </section>
 
-    <section class="section feature-section">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">CLUB DNA</p>
-          <h2>우리끼리 지키는 라운드 룰</h2>
-        </div>
+    <section class="schedule section-shell" id="schedule">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">SCHEDULE</p>
+        <h2>다가오는 경기</h2>
       </div>
-      <div class="feature-grid">
-        <article class="feature-card">
-          <p class="feature-index">01</p>
-          <h3>시간 약속은 깔끔하게</h3>
-          <p class="desc">시작 10분 전 도착! 준비 딱 끝내고 바로 티오프합니다.</p>
+
+      <div class="schedule-layout">
+        <article class="schedule-card spotlight" data-reveal>
+          <p class="schedule-tag">정기 라운드</p>
+          <h3>3월 정기 스크린 라운드</h3>
+          <p class="schedule-meta">2026.03.04 (수) · 17:00 · 울산골프존</p>
+          <p>주소: 울산 남구 화합로 108 (삼산동 1604-1)</p>
+          <div class="schedule-chip-row">
+            <span class="chip">스트로크 플레이</span>
+            <span class="chip">참여인원 11명</span>
+            <span class="chip" data-dday="2026-03-04">D-</span>
+          </div>
+          <div class="schedule-actions">
+            <button class="btn secondary small" type="button" data-open-modal="locationModal">장소 상세 보기</button>
+            <a class="btn ghost small" href="https://map.kakao.com/?urlX=1030847.0000007318&urlY=572354.00000002&urlLevel=3&itemId=17605703&q=%EC%9A%B8%EC%82%B0%EA%B3%A8%ED%94%84%EC%A1%B4&srcid=17605703&map_type=TYPE_MAP" target="_blank" rel="noopener noreferrer">카카오맵 열기</a>
+          </div>
         </article>
-        <article class="feature-card">
-          <p class="feature-index">02</p>
-          <h3>기록은 같이 남기기</h3>
-          <p class="desc">스코어랑 사진은 매번 공유해서 다음 라운드 재미를 더합니다.</p>
-        </article>
-        <article class="feature-card">
-          <p class="feature-index">03</p>
-          <h3>좋은 샷은 서로 한마디</h3>
-          <p class="desc">팁 한 줄, 칭찬 한마디로 분위기 살리고 실력도 같이 올려요.</p>
-        </article>
+
+        <div class="schedule-side">
+          <article class="schedule-card mini" data-reveal>
+            <p class="schedule-tag">운영 메모</p>
+            <h3>경기 조건</h3>
+            <p>G투어모드 · 화이트티 · 바람/핀 랜덤 · 컨시드 1.5m</p>
+          </article>
+          <article class="schedule-card mini" data-reveal>
+            <p class="schedule-tag">참석 현황</p>
+            <h3>11 / 12 확정</h3>
+            <p>마지막 1자리 모집 중. 참여 희망 시 회장/총무에게 연락.</p>
+            <button class="btn primary small" type="button" data-open-modal="rsvpModal">참석 문의</button>
+          </article>
+        </div>
       </div>
     </section>
 
-    <section id="members" class="section alt">
-      <div class="section-head">
+    <section class="waacky-drive section-shell" data-waacky-drive aria-label="와키 스크롤 연출">
+      <div class="waacky-drive-sticky">
+        <div class="waacky-drive-lines" aria-hidden="true"></div>
+        <div class="waacky-drive-step main" data-waacky-drive-step="main" aria-hidden="true"></div>
+        <div class="waacky-drive-step ghost" data-waacky-drive-step="ghost-a" aria-hidden="true"></div>
+        <div class="waacky-drive-step ghost" data-waacky-drive-step="ghost-b" aria-hidden="true"></div>
+        <div class="waacky-drive-char main" data-waacky-drive-char="main">
+          <img src="images/waacky.png" alt="" />
+        </div>
+        <div class="waacky-drive-char ghost ghost-a" data-waacky-drive-char="ghost-a">
+          <img src="images/waacky.png" alt="" />
+        </div>
+        <div class="waacky-drive-char ghost ghost-b" data-waacky-drive-char="ghost-b">
+          <img src="images/waacky.png" alt="" />
+        </div>
+      </div>
+    </section>
+
+    <section class="members section-shell" id="members">
+      <div class="section-head" data-reveal>
         <div>
           <p class="eyebrow">MEMBERS</p>
           <h2>회원명부</h2>
         </div>
-        <div class="search">
-          <input id="memberSearch" type="text" placeholder="이름 또는 분야로 검색" />
-          <button class="primary small" id="memberReset">초기화</button>
+        <div class="search-wrap">
+          <input id="memberSearch" type="text" placeholder="이름 또는 역할 검색" />
+          <button class="btn secondary small" id="memberReset" type="button">초기화</button>
         </div>
       </div>
+
       <div class="member-grid" id="memberGrid">
-        <article class="member">
-          <div class="avatar">덕</div>
-          <div>
-            <h4>덕충안길(권순노)</h4>
-            <p>정회원 · 드라이버 탄도</p>
-            <div class="badges">
-              <span>핸디 10</span><span>페이드 장인</span>
-            </div>
+        <article class="member-card" data-reveal><h3>덕충안길 (권순노)</h3><p>정회원 · 페이드 장인</p></article>
+        <article class="member-card" data-reveal><h3>살려줘제바알 (김경수)</h3><p>정회원 · 벙커 탈출 1위</p></article>
+        <article class="member-card" data-reveal><h3>오!건2 (김무건)</h3><p>회장 · 경기 운영</p></article>
+        <article class="member-card" data-reveal><h3>인생무생 (김무생)</h3><p>정회원 · 후반 집중력</p></article>
+        <article class="member-card" data-reveal><h3>울산땡주 (김영주)</h3><p>정회원 · 파3 스페셜</p></article>
+        <article class="member-card" data-reveal><h3>원조가가멜 (김정훈)</h3><p>정회원 · 백스핀 컨트롤</p></article>
+        <article class="member-card" data-reveal><h3>백돌이깬다 (김태연)</h3><p>정회원 · 정확한 어프로치</p></article>
+        <article class="member-card" data-reveal><h3>준빵 (김효준)</h3><p>정회원 · 스윙 템포</p></article>
+        <article class="member-card" data-reveal><h3>빽스윙쫌만더 (서무환)</h3><p>정회원 · 장타 본능</p></article>
+        <article class="member-card" data-reveal><h3>날아라호 (심재호)</h3><p>정회원 · 탄도 조절</p></article>
+        <article class="member-card" data-reveal><h3>오상택</h3><p>정회원 · 코스 매니지먼트</p></article>
+        <article class="member-card" data-reveal><h3>필드난폭자 (윤석현)</h3><p>정회원 · 공격적 플레이</p></article>
+        <article class="member-card" data-reveal><h3>타키온 (이동수)</h3><p>정회원 · 퍼팅 스트로크</p></article>
+        <article class="member-card" data-reveal><h3>무근정 (정무근)</h3><p>총무 · 운영 관리</p></article>
+        <article class="member-card" data-reveal><h3>울산정쁘로 (정성원)</h3><p>정회원 · 아이언 정밀도</p></article>
+        <article class="member-card" data-reveal><h3>원펀쓰리강냉 (천기준)</h3><p>정회원 · 파워 스윙</p></article>
+        <article class="member-card" data-reveal><h3>무적부대 (추정술)</h3><p>정회원 · 위기 탈출</p></article>
+        <article class="member-card" data-reveal><h3>장금이에이스 (하선재)</h3><p>정회원 · 정교한 퍼터</p></article>
+      </div>
+    </section>
+
+    <section class="archive section-shell" id="archive">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">ARCHIVE</p>
+        <h2>지난 라운드 기록</h2>
+      </div>
+
+      <div class="archive-grid">
+        <article class="archive-card" data-reveal>
+          <div class="archive-head">
+            <p class="archive-date">2025.12.09</p>
+            <h3>2025년 12월 행사 (송년회)</h3>
           </div>
+          <p>일시: 2025년 12월 9일 (화) 16:30</p>
+          <p>장소: 삼산동 울산골프존 (울산 남구 화합로 108)</p>
+          <p>참석자(총 9명): 살려줘제바알, 준빵, 무근정, 허니완, 박재만(OB), 빽스윙쫌만더, 오!건2, 무적부대, 장금이에이스</p>
+          <button class="archive-shot" type="button" data-lightbox-src="images/archive-2025-12.webp" data-lightbox-title="2025년 12월 행사" data-lightbox-caption="2025.12 송년회 · 삼산동 울산골프존" style="background-image:url('images/archive-2025-12.webp');">
+            <span class="archive-zoom">VIEW PHOTO</span>
+          </button>
         </article>
-        <article class="member">
-          <div class="avatar">살</div>
-          <div>
-            <h4>살려줘제바알(김경수)</h4>
-            <p>정회원 · 위기관리</p>
-            <div class="badges">
-              <span>핸디 10</span><span>벙커 탈출 1위</span>
-            </div>
+
+        <article class="archive-card" data-reveal>
+          <div class="archive-head">
+            <p class="archive-date">2025.09.30</p>
+            <h3>2025년 9월 행사 (3분기 정기전)</h3>
           </div>
+          <p>일시: 2025년 9월 30일 (화) 17:00</p>
+          <p>장소: 골프존파크 선암 솔밭스크린 (울산 남구 두왕로92번길 11-5)</p>
+          <p>참가자(총 9명): 원조가가멜, 타키온, 빽스윙쫌만더, 오!건2, 준빵, 날아라호, 무적부대, 장금이에이스, 무근정</p>
+          <button class="archive-shot" type="button" data-lightbox-src="images/archive-2025-09.webp" data-lightbox-title="2025년 9월 행사" data-lightbox-caption="2025.09 3분기 정기전 · 선암 솔밭스크린" style="background-image:url('images/archive-2025-09.webp');">
+            <span class="archive-zoom">VIEW PHOTO</span>
+          </button>
         </article>
-        <article class="member">
-          <div class="avatar">오</div>
-          <div>
-            <h4>오!건2(김무건)</h4>
-            <p>회장 · 경기 운영</p>
-            <div class="badges">
-              <span>핸디 10</span><span>롱퍼팅 성공률↑</span>
-            </div>
+
+        <article class="archive-card" data-reveal>
+          <div class="archive-head">
+            <p class="archive-date">2025.05.01</p>
+            <h3>2025년 5월 행사 (상반기 필드 라운딩)</h3>
           </div>
+          <p>일시: 2025년 5월 1일 (목)</p>
+          <p>장소: 힐스카이CC (구, 루나엑스)</p>
+          <p>참가자(총 8명): 오!건2, 인생무생, 무근정, 원펀쓰리강냉, 원조가가멜, 준빵, 필드난폭자, 타키온</p>
+          <button class="archive-shot" type="button" data-lightbox-src="images/archive-2025-05.JPG" data-lightbox-title="2025년 5월 행사" data-lightbox-caption="2025.05 상반기 필드 라운딩 · 힐스카이CC" style="background-image:url('images/archive-2025-05.JPG');">
+            <span class="archive-zoom">VIEW PHOTO</span>
+          </button>
         </article>
-        <article class="member">
-          <div class="avatar">인</div>
-          <div>
-            <h4>인생무생(김무생)</h4>
-            <p>정회원 · 멘탈 코어</p>
-            <div class="badges">
-              <span>핸디 10</span><span>후반 집중력</span>
-            </div>
+
+        <article class="archive-card" data-reveal>
+          <div class="archive-head">
+            <p class="archive-date">2025.02.25</p>
+            <h3>2025년 2월 행사 (1분기 정기 모임)</h3>
           </div>
-        </article>
-        <article class="member">
-          <div class="avatar">울</div>
-          <div>
-            <h4>울산땡주(김영주)</h4>
-            <p>정회원 · 파3 스페셜</p>
-            <div class="badges">
-              <span>핸디 10</span><span>핀 근접 1m</span>
-            </div>
-          </div>
-        </article>
-        <article class="member">
-          <div class="avatar">원</div>
-          <div>
-            <h4>원조가가멜(김정훈)</h4>
-            <p>정회원 · 리듬 스윙</p>
-            <div class="badges">
-              <span>핸디 10</span><span>백스핀 컨트롤</span>
-            </div>
-          </div>
-        </article>
-        <article class="member">
-          <div class="avatar">김</div>
-          <div>
-            <h4>백돌이깬다(김태연)</h4>
-            <p>정회원 · 정확한 어프로치</p>
-            <div class="badges">
-              <span>핸디 10</span><span>그린 적중률↑</span>
-            </div>
-          </div>
-        </article>
-        <article class="member">
-          <div class="avatar">준</div>
-          <div>
-            <h4>준빵(김효준)</h4>
-            <p>정회원 · 스윙 템포</p>
-            <div class="badges">
-              <span>핸디 10</span><span>드라이브 230m</span>
-            </div>
-          </div>
-        </article>
-        <article class="member">
-          <div class="avatar">빽</div>
-          <div>
-            <h4>빽스윙쫌만더(서무환)</h4>
-            <p>정회원 · 장타 본능</p>
-            <div class="badges">
-              <span>핸디 10</span><span>캐리 거리↑</span>
-            </div>
-          </div>
-        </article>
-        <article class="member">
-          <div class="avatar">날</div>
-          <div>
-            <h4>날아라호(심재호)</h4>
-            <p>정회원 · 탄도 조절</p>
-            <div class="badges">
-              <span>핸디 10</span><span>런치앵글 최적</span>
-            </div>
-          </div>
-        </article>
-        <article class="member">
-          <div class="avatar">오</div>
-          <div>
-            <h4>오상택</h4>
-            <p>정회원 · 코스 매니지먼트</p>
-            <div class="badges">
-              <span>핸디 10</span><span>더블보기 회피</span>
-            </div>
-          </div>
-        </article>
-        <article class="member">
-          <div class="avatar">필</div>
-          <div>
-            <h4>필드난폭자(윤석현)</h4>
-            <p>정회원 · 공격적 플레이</p>
-            <div class="badges">
-              <span>핸디 10</span><span>이글 경험</span>
-            </div>
-          </div>
-        </article>
-        <article class="member">
-          <div class="avatar">타</div>
-          <div>
-            <h4>타키온(이동수)</h4>
-            <p>정회원 · 빠른 리듬</p>
-            <div class="badges">
-              <span>핸디 10</span><span>퍼팅 스트로크</span>
-            </div>
-          </div>
-        </article>
-        <article class="member">
-          <div class="avatar">무</div>
-          <div>
-            <h4>무근정(정무근)</h4>
-            <p>총무 · 운영 관리</p>
-            <div class="badges">
-              <span>핸디 10</span><span>정확한 루틴</span>
-            </div>
-          </div>
-        </article>
-        <article class="member">
-          <div class="avatar">울</div>
-          <div>
-            <h4>울산정쁘로(정성원)</h4>
-            <p>정회원 · 아이언 정밀도</p>
-            <div class="badges">
-              <span>핸디 10</span><span>피치샷 컨트롤</span>
-            </div>
-          </div>
-        </article>
-        <article class="member">
-          <div class="avatar">원</div>
-          <div>
-            <h4>원펀쓰리강냉(천기준)</h4>
-            <p>정회원 · 파워 스윙</p>
-            <div class="badges">
-              <span>핸디 10</span><span>스매시 팩터↑</span>
-            </div>
-          </div>
-        </article>
-        <article class="member">
-          <div class="avatar">무</div>
-          <div>
-            <h4>무적부대(추정술)</h4>
-            <p>정회원 · 멀리건 사냥꾼</p>
-            <div class="badges">
-              <span>핸디 10</span><span>위기 탈출</span>
-            </div>
-          </div>
-        </article>
-        <article class="member">
-          <div class="avatar">장</div>
-          <div>
-            <h4>장금이에이스(하선재)</h4>
-            <p>정회원 · 정교한 퍼터</p>
-            <div class="badges">
-              <span>핸디 10</span><span>버디 찬스↑</span>
-            </div>
-          </div>
+          <p>일시: 2025년 2월 25일 (화) 16:30</p>
+          <p>장소: 골프존파크 두왕테크노골프점 (울산 남구 테크노산업로 78-11, 2층)</p>
+          <p>참가자(총 13명): 준빵, 날아라호, 타키온, 장금이에이스, 살려줘제바알, 울산땡주, 무근정, 오!건2, 인생무생, 허니완, 원조가가멜, 빽스윙쫌만더, 원영민, 필드난폭자</p>
+          <button class="archive-shot" type="button" data-lightbox-src="images/archive-2025-02.webp" data-lightbox-title="2025년 2월 행사" data-lightbox-caption="2025.02 1분기 정기 모임 · 두왕테크노골프점" style="background-image:url('images/archive-2025-02.webp');">
+            <span class="archive-zoom">VIEW PHOTO</span>
+          </button>
         </article>
       </div>
     </section>
 
-    <section id="archive" class="section">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">ARCHIVE</p>
-          <h2>과거 일정 & 사진 기록</h2>
-        </div>
-        <button class="ghost">전체 기록 보기</button>
-      </div>
-      <div class="archive-grid">
-        <div class="timeline">
-          <article class="timeline-item">
-            <div class="dot"></div>
-            <div class="timeline-content">
-              <p class="meta">2025.12.09</p>
-              <h3>2025년 12월 행사 (송년회)</h3>
-              <p class="desc">일시: 2025년 12월 9일 (화) 16:30</p>
-              <p class="desc">장소: 삼산동 울산골프존 (울산 남구 화합로 108)</p>
-              <p class="desc">참석자(총 9명): 살려줘제바알, 준빵, 무근정, 허니완, 박재만(OB), 빽스윙쫌만더, 오!건2, 무적부대, 장금이에이스</p>
-              <div class="timeline-photo" style="background-image: url('images/archive-2025-12.webp');" data-caption="2025.12 송년회 · 삼산동 울산골프존"></div>
-            </div>
-          </article>
-          <article class="timeline-item">
-            <div class="dot"></div>
-            <div class="timeline-content">
-              <p class="meta">2025.09.30</p>
-              <h3>2025년 9월 행사 (3분기 스크린 정기전)</h3>
-              <p class="desc">일시: 2025년 9월 30일 (화) 17:00</p>
-              <p class="desc">장소: 골프존파크 선암 솔밭스크린 (울산 남구 두왕로92번길 11-5)</p>
-              <p class="desc">참가자(총 9명): 원조가가멜, 타키온, 빽스윙쫌만더, 오!건2, 준빵, 날아라호, 무적부대, 장금이에이스, 무근정</p>
-              <div class="timeline-photo" style="background-image: url('images/archive-2025-09.webp');" data-caption="2025.09 3분기 정기전 · 선암 솔밭스크린"></div>
-            </div>
-          </article>
-          <article class="timeline-item">
-            <div class="dot"></div>
-            <div class="timeline-content">
-              <p class="meta">2025.05.01</p>
-              <h3>2025년 5월 행사 (상반기 필드 라운딩)</h3>
-              <p class="desc">일시: 2025년 5월 1일 (목)</p>
-              <p class="desc">장소: 힐스카이CC (구, 루나엑스)</p>
-              <p class="desc">참가자(총 8명): 오!건2, 인생무생, 무근정, 원펀쓰리강냉, 원조가가멜, 준빵, 필드난폭자, 타키온</p>
-              <div class="timeline-photo" style="background-image: url('images/archive-2025-05.JPG');" data-caption="2025.05 상반기 필드 라운딩 · 힐스카이CC"></div>
-            </div>
-          </article>
-          <article class="timeline-item">
-            <div class="dot"></div>
-            <div class="timeline-content">
-              <p class="meta">2025.02.25</p>
-              <h3>2025년 2월 행사 (1분기 정기 모임)</h3>
-              <p class="desc">일시: 2025년 2월 25일 (화) 16:30</p>
-              <p class="desc">장소: 골프존파크 두왕테크노골프점 (울산 남구 테크노산업로 78-11, 2층)</p>
-              <p class="desc">참가자(총 13명): 준빵, 날아라호, 타키온, 장금이에이스, 살려줘제바알, 울산땡주, 무근정, 오!건2, 인생무생, 허니완, 원조가가멜, 빽스윙쫌만더, 원영민, 필드난폭자</p>
-              <div class="timeline-photo" style="background-image: url('images/archive-2025-02.webp');" data-caption="2025.02 1분기 정기 모임 · 두왕테크노골프점"></div>
-            </div>
-          </article>
-        </div>
+    <section class="join-banner section-shell" data-reveal>
+      <p class="eyebrow">JOIN US</p>
+      <h2>함께 스윙하고, 기록하고, 성장합니다.</h2>
+      <p>정기전 중심으로 운영되며, 초보부터 숙련자까지 환영합니다.</p>
+      <div class="join-actions">
+        <button class="btn primary" type="button" data-open-modal="joinModal">가입 문의하기</button>
+        <a class="btn secondary" href="#top">맨 위로</a>
       </div>
     </section>
   </main>
+
+  <footer class="site-footer">
+    <div>
+      <h3>코오롱 스크린 골프 동호회</h3>
+      <p>문의: 회장 김무건 · gun77@kolon.com</p>
+      <p>문의: 총무 정무근 · moogunjeong@kolon.com</p>
+    </div>
+    <p>정기 일정: 매 분기 1회</p>
+  </footer>
 
   <div class="modal" id="rsvpModal" aria-hidden="true">
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="rsvpTitle">
@@ -422,25 +315,12 @@
           <p class="eyebrow">NEXT TEE TIME</p>
           <h3 id="rsvpTitle">참석 신청 안내</h3>
         </div>
-        <button class="ghost small" id="rsvpClose" aria-label="닫기">닫기</button>
+        <button class="btn ghost small" type="button" data-close-modal>닫기</button>
       </div>
       <div class="modal-body">
-        <p class="desc">일시: 3월 4일 수요일 17:00 · 군자리CC (가상)</p>
-        <p class="desc">모집: 12명 · 참석 확정 11명</p>
-        <p class="desc">참석을 원하시면 회장 또는 총무에게 연락해주세요.</p>
-        <div class="modal-contacts">
-          <div>
-            <p class="label">회장</p>
-            <p class="value">김무건 · gun77@kolon.com</p>
-          </div>
-          <div>
-            <p class="label">총무</p>
-            <p class="value">정무근 · moogunjeong@kolon.com</p>
-          </div>
-        </div>
-      </div>
-      <div class="modal-actions">
-        <button class="primary" id="rsvpConfirm">확인했어요</button>
+        <p>일시: 2026년 3월 4일 (수) 17:00 · 군자리CC (가상)</p>
+        <p>모집: 12명 · 참석 확정 11명</p>
+        <p>참석을 원하시면 회장 또는 총무에게 연락해주세요.</p>
       </div>
     </div>
   </div>
@@ -449,27 +329,15 @@
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="joinTitle">
       <div class="modal-head">
         <div>
-          <p class="eyebrow">JOIN US</p>
+          <p class="eyebrow">JOIN</p>
           <h3 id="joinTitle">가입 문의</h3>
         </div>
-        <button class="ghost small" id="joinClose" aria-label="닫기">닫기</button>
+        <button class="btn ghost small" type="button" data-close-modal>닫기</button>
       </div>
       <div class="modal-body">
-        <p class="desc">코오롱 스크린 골프 동호회는 정기 라운드와 기록 공유를 함께합니다.</p>
-        <p class="desc">가입 문의는 회장 또는 총무에게 연락 바랍니다.</p>
-        <div class="modal-contacts">
-          <div>
-            <p class="label">회장</p>
-            <p class="value">김무건 · gun77@kolon.com</p>
-          </div>
-          <div>
-            <p class="label">총무</p>
-            <p class="value">정무근 · moogunjeong@kolon.com</p>
-          </div>
-        </div>
-      </div>
-      <div class="modal-actions">
-        <button class="primary" id="joinConfirm">확인했어요</button>
+        <p>정기 라운드, 기록 공유, 친선 매치를 함께합니다.</p>
+        <p>회장: 김무건 · gun77@kolon.com</p>
+        <p>총무: 정무근 · moogunjeong@kolon.com</p>
       </div>
     </div>
   </div>
@@ -481,17 +349,14 @@
           <p class="eyebrow">ROUND LOCATION</p>
           <h3 id="locationTitle">정기 라운드 장소 안내</h3>
         </div>
-        <button class="ghost small" id="locationClose" aria-label="닫기">닫기</button>
+        <button class="btn ghost small" type="button" data-close-modal>닫기</button>
       </div>
       <div class="modal-body">
-        <p class="desc">장소: 울산골프존</p>
-        <p class="desc">주소: 울산 남구 화합로 108 (지번: 삼산동 1604-1)</p>
-        <p class="desc">연락처: 052-273-0072</p>
-        <p class="desc">일시: 2026.03.04 (수) · 17:00</p>
-      </div>
-      <div class="modal-actions">
-        <a class="secondary" href="https://map.kakao.com/?urlX=1030847.0000007318&urlY=572354.00000002&urlLevel=3&itemId=17605703&q=%EC%9A%B8%EC%82%B0%EA%B3%A8%ED%94%84%EC%A1%B4&srcid=17605703&map_type=TYPE_MAP" target="_blank" rel="noopener noreferrer">카카오맵 바로가기</a>
-        <button class="primary" id="locationConfirm">확인</button>
+        <p>장소: 울산골프존</p>
+        <p>주소: 울산 남구 화합로 108 (삼산동 1604-1)</p>
+        <p>연락처: 052-273-0072</p>
+        <p>일시: 2026.03.04 (수) · 17:00</p>
+        <a class="btn secondary small" href="https://map.kakao.com/?urlX=1030847.0000007318&urlY=572354.00000002&urlLevel=3&itemId=17605703&q=%EC%9A%B8%EC%82%B0%EA%B3%A8%ED%94%84%EC%A1%B4&srcid=17605703&map_type=TYPE_MAP" target="_blank" rel="noopener noreferrer">카카오맵 바로가기</a>
       </div>
     </div>
   </div>
@@ -503,64 +368,45 @@
           <p class="eyebrow">CONFIRMED PLAYERS</p>
           <h3 id="attendanceTitle">참석 확정 멤버 11명</h3>
         </div>
-        <button class="ghost small" id="attendanceClose" aria-label="닫기">닫기</button>
+        <button class="btn ghost small" type="button" data-close-modal>닫기</button>
       </div>
       <div class="modal-body">
-        <div class="attendance-list">
-          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">무근정 (정무근)</p></article>
-          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">덕충안길 (권순노)</p></article>
-          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">살려줘제바알 (김경수)</p></article>
-          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">오!건2 (김무건)</p></article>
-          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">원조가가멜 (김정훈)</p></article>
-          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">준빵 (김효준)</p></article>
-          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">빽스윙쫌만더 (서무환)</p></article>
-          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">날아라호 (심재호)</p></article>
-          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">타키온 (이동수)</p></article>
-          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">원펀쓰리강냉 (천기준)</p></article>
-          <article class="attendee-card"><span class="attendee-dot"></span><p class="value">장금이에이스 (하선재)</p></article>
-        </div>
-      </div>
-      <div class="modal-actions">
-        <button class="primary" id="attendanceConfirm">확인</button>
+        <ul class="attendee-list">
+          <li>무근정 (정무근)</li>
+          <li>덕충안길 (권순노)</li>
+          <li>살려줘제바알 (김경수)</li>
+          <li>오!건2 (김무건)</li>
+          <li>원조가가멜 (김정훈)</li>
+          <li>준빵 (김효준)</li>
+          <li>빽스윙쫌만더 (서무환)</li>
+          <li>날아라호 (심재호)</li>
+          <li>타키온 (이동수)</li>
+          <li>원펀쓰리강냉 (천기준)</li>
+          <li>장금이에이스 (하선재)</li>
+        </ul>
       </div>
     </div>
   </div>
 
-  <div class="lightbox" id="photoLightbox" aria-hidden="true">
-    <div class="lightbox-card" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
-      <div class="lightbox-head">
+  <div class="modal lightbox" id="photoLightbox" aria-hidden="true">
+    <div class="modal-card lightbox-card" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
+      <div class="modal-head">
         <div>
           <p class="eyebrow">ARCHIVE PHOTO</p>
           <h3 id="lightboxTitle">행사 사진</h3>
-          <p class="desc" id="lightboxCaption">행사 기록</p>
+          <p id="lightboxCaption">기록 이미지</p>
         </div>
-        <button class="ghost small lightbox-close" id="lightboxClose" aria-label="닫기">닫기</button>
+        <button class="btn ghost small" type="button" data-close-modal>닫기</button>
       </div>
       <div class="lightbox-stage">
-        <button class="lightbox-nav prev" id="lightboxPrev" aria-label="이전 사진">‹</button>
+        <button class="lightbox-nav" id="lightboxPrev" type="button" aria-label="이전 사진">‹</button>
         <img id="lightboxImage" src="" alt="동호회 아카이브 사진" />
-        <button class="lightbox-nav next" id="lightboxNext" aria-label="다음 사진">›</button>
+        <button class="lightbox-nav" id="lightboxNext" type="button" aria-label="다음 사진">›</button>
       </div>
       <div class="lightbox-thumbs" id="lightboxThumbs" aria-label="썸네일 목록"></div>
     </div>
   </div>
 
-  <footer class="footer">
-    <div>
-      <h3>코오롱 스크린 골프 동호회</h3>
-      <p>함께 스윙하고, 기록하고, 성장합니다.</p>
-    </div>
-    <div>
-      <p class="label">문의</p>
-      <p class="value">회장 김무건 · gun77@kolon.com</p>
-      <p class="value">총무 정무근 · moogunjeong@kolon.com</p>
-    </div>
-    <div>
-      <p class="label">정기 일정</p>
-      <p class="value">매 분기 1회</p>
-    </div>
-  </footer>
-
-  <script defer src="/main.js"></script>
+  <script defer src="./main.js?v=20260301"></script>
 </body>
 </html>
