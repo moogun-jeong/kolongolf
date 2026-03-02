@@ -730,8 +730,7 @@ main {
   height: 60vh;
   position: relative;
   --drive-lines: 0.08;
-  /* Avoid sticky glitches on iOS when ancestor has non-visible overflow. */
-  overflow: visible;
+  overflow: hidden;
   width: 100%;
   max-width: 100%;
   isolation: isolate;
