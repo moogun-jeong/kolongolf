@@ -36,7 +36,11 @@ const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 const isMobileViewport = window.matchMedia?.("(max-width: 920px)")?.matches ?? false;
 const isCoarsePointer = window.matchMedia?.("(hover: none) and (pointer: coarse)")?.matches ?? false;
 const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
-const disableHeavyScrollEffects = prefersReducedMotion || (isMobileViewport && isCoarsePointer);
+const isIOSDevice =
+  /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const disableHeavyScrollEffects =
+  prefersReducedMotion || (isMobileViewport && isCoarsePointer && !isIOSDevice);
 let heavyEffectsMuted = false;
 
 if (disableHeavyScrollEffects) {
