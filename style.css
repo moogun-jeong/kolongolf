@@ -28,7 +28,6 @@ body {
 
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
 }
 
 body {
@@ -278,7 +277,6 @@ main section[id] {
 main {
   position: relative;
   z-index: 4;
-  overflow-x: hidden;
 }
 
 .hero {
