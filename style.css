@@ -950,6 +950,42 @@ main {
   box-shadow: inset 0 -54px 62px rgba(0, 0, 0, 0.34);
 }
 
+.archive-shot-main {
+  margin-top: 0.78rem;
+}
+
+.archive-shot-strip {
+  margin-top: 0.62rem;
+  display: flex;
+  gap: 0.56rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  padding-bottom: 0.22rem;
+}
+
+.archive-shot-thumb {
+  margin-top: 0;
+  flex: 0 0 min(74%, 210px);
+  scroll-snap-align: start;
+  border-radius: 12px;
+}
+
+.archive-shot-thumb.primary-slide {
+  display: none;
+}
+
+.archive-shot-strip::-webkit-scrollbar {
+  height: 7px;
+}
+
+.archive-shot-strip::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(17, 116, 79, 0.36);
+}
+
 .archive-shot::before {
   content: "";
   position: absolute;
@@ -1399,6 +1435,29 @@ main {
   .schedule-layout,
   .archive-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .archive-shot-main {
+    display: none;
+  }
+
+  .archive-shot-strip {
+    margin-top: 0.78rem;
+    gap: 0;
+    scrollbar-width: none;
+  }
+
+  .archive-shot-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .archive-shot-thumb,
+  .archive-shot-thumb.primary-slide {
+    flex-basis: 100%;
+  }
+
+  .archive-shot-thumb.primary-slide {
+    display: block;
   }
 
   .site-footer {

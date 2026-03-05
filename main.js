@@ -18,11 +18,26 @@ const lightboxPrev = document.getElementById("lightboxPrev");
 const lightboxNext = document.getElementById("lightboxNext");
 
 const archiveShots = Array.from(document.querySelectorAll(".archive-shot"));
-const galleryItems = archiveShots.map((shot) => ({
-  src: shot.dataset.lightboxSrc || "",
-  title: shot.dataset.lightboxTitle || "행사 사진",
-  caption: shot.dataset.lightboxCaption || "기록 이미지"
-}));
+const galleryItems = [];
+const shotGalleryIndex = new Map();
+const galleryItemIndexByKey = new Map();
+
+archiveShots.forEach((shot) => {
+  const src = shot.dataset.lightboxSrc || "";
+  if (!src) return;
+  const title = shot.dataset.lightboxTitle || "행사 사진";
+  const caption = shot.dataset.lightboxCaption || "기록 이미지";
+  const key = `${src}::${title}::${caption}`;
+  let galleryIndex = galleryItemIndexByKey.get(key);
+
+  if (galleryIndex === undefined) {
+    galleryIndex = galleryItems.length;
+    galleryItems.push({ src, title, caption });
+    galleryItemIndexByKey.set(key, galleryIndex);
+  }
+
+  shotGalleryIndex.set(shot, galleryIndex);
+});
 let currentLightboxIndex = 0;
 const waackyDrive = document.querySelector("[data-waacky-drive]");
 const waackyDriveSticky = document.querySelector(".waacky-drive-sticky");
@@ -147,8 +162,10 @@ if (lightboxThumbs) {
   });
 }
 
-archiveShots.forEach((shot, index) => {
-  shot.addEventListener("click", () => openLightbox(index));
+archiveShots.forEach((shot) => {
+  const galleryIndex = shotGalleryIndex.get(shot);
+  if (galleryIndex === undefined) return;
+  shot.addEventListener("click", () => openLightbox(galleryIndex));
 });
 
 lightboxPrev?.addEventListener("click", () => renderLightbox(currentLightboxIndex - 1));
