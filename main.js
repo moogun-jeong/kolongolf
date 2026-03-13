@@ -1,22 +1,22 @@
 document.documentElement.classList.add("js");
 
 const clubData = {
-  seasonLabel: "2026 CLUB OS",
+  seasonLabel: "2026 시즌",
   nextRound: {
     title: "2026년 2분기 정기 스크린 라운드",
-    status: "모집 준비",
+    status: "일정 조율 중",
     date: "",
-    scheduleLabel: "2026년 4~6월 중 일정 확정 예정",
+    scheduleLabel: "2026년 2분기 일정 조율 중",
     venue: "울산권 스크린장 후보 검토 중",
     lead:
-      "다음 라운드는 장소 후보를 먼저 좁힌 뒤 일정 확정과 참석 오픈을 같은 흐름에서 진행합니다. 공지 이후 바로 조 편성과 기록 업로드까지 이어지는 구조로 정리했습니다.",
+      "장소 후보와 시간대를 먼저 정리한 뒤 정기 라운드 일정을 확정할 예정입니다. 일정이 잡히면 참석 회신과 조 편성 안내까지 이어서 공유합니다.",
     note:
-      "일정이 확정되면 참석 신청, 조 편성, 행사 후 사진/참석 기록 업로드까지 같은 보드 안에서 이어집니다.",
+      "공지 확인 후 참석 여부를 먼저 남겨 주세요. 라운드가 끝나면 사진, 참석 닉네임, 간단한 메모를 기록에 반영합니다.",
     facts: [
-      { label: "예정 시기", value: "2026년 2분기" },
+      { label: "진행 시기", value: "2026년 2분기" },
       { label: "후보 지역", value: "울산 남구 중심" },
-      { label: "모집 방식", value: "공지 후 참석 의사 취합" },
-      { label: "기록 원칙", value: "당일 사진·참석·후기 정리" }
+      { label: "참여 방식", value: "공지 후 참석 의사 취합" },
+      { label: "기록 정리", value: "당일 사진·참석·후기 정리" }
     ],
     steps: [
       {
@@ -67,49 +67,49 @@ const clubData = {
   },
   guideCards: [
     {
-      kicker: "CLUB DNA",
-      title: "정기전 중심의 사내 동호회",
+      kicker: "동호회",
+      title: "분기별 정기 라운드를 기본으로 모입니다",
       body:
-        "정기 라운드를 중심으로 움직이고, 참석 흐름과 기록 업데이트를 놓치지 않는 구조를 지향합니다.",
+        "스크린 정기전과 친목 라운드를 이어가며 꾸준히 만나는 사내 동호회입니다.",
       accent: true
     },
     {
-      kicker: "OPERATING RHYTHM",
-      title: "공지 -> 참석 -> 조 편성 -> 기록 업로드",
+      kicker: "참여 방식",
+      title: "공지 확인 후 참석 의사만 남기면 됩니다",
       body:
-        "일정만 던지는 사이트가 아니라 운영 과정 전체가 자연스럽게 이어지도록 설계했습니다."
+        "일정이 확정되면 참석 회신을 받고, 조 편성과 장소 안내를 이어서 공유합니다."
     },
     {
-      kicker: "ARCHIVE RULE",
-      title: "사진과 참석 로그를 꾸준히 남기는 방식",
+      kicker: "기록 문화",
+      title: "사진과 참석 닉네임을 함께 남깁니다",
       body:
-        "지난 모임이 다음 모임을 더 기다리게 만들 수 있도록 사진, 참석자, 짧은 메모를 같이 보관합니다."
+        "지난 모임 사진, 참석 닉네임, 한 줄 메모를 보관해 다음 만남까지 흐름을 이어갑니다."
     },
     {
-      kicker: "CLUB MOOD",
-      title: "좋은 샷엔 반응하고 아쉬운 샷엔 다음 약속",
+      kicker: "모임 분위기",
+      title: "편하게 합류하고 자연스럽게 친해지는 분위기",
       body:
-        "장소 추천, 일정 제안, 한 줄 후기가 자연스럽게 오가는 분위기를 소개 섹션에 반영했습니다."
+        "좋은 샷엔 반응하고 장소 추천과 후기 공유가 자연스럽게 오가는 동호회입니다."
     }
   ],
   contacts: [
     {
       title: "가입 문의",
-      body: "정기전 참여, 친선 라운드, 기록 공유에 함께하고 싶다면 운영진 메일로 문의하면 됩니다.",
+      body: "가입을 원하면 운영진 메일로 간단히 문의해 주세요.",
       tags: ["신규 문의", "사내 동호회"],
       email: "gun77@kolon.com",
       href: "mailto:gun77@kolon.com?subject=%EC%BD%94%EC%98%A4%EB%A1%B1%20%EC%8A%A4%ED%81%AC%EB%A6%B0%20%EA%B3%A8%ED%94%84%20%EA%B0%80%EC%9E%85%20%EB%AC%B8%EC%9D%98"
     },
     {
       title: "운영 제안",
-      body: "장소 후보, 시간대 선호, 분기별 운영 방식에 대한 의견은 총무 메일로 바로 전달하면 됩니다.",
+      body: "장소 후보, 시간대 선호, 운영 의견은 총무 메일로 전달해 주세요.",
       tags: ["장소 제안", "운영 의견"],
       email: "moogunjeong@kolon.com",
       href: "mailto:moogunjeong@kolon.com?subject=%EC%BD%94%EC%98%A4%EB%A1%B1%20%EC%8A%A4%ED%81%AC%EB%A6%B0%20%EA%B3%A8%ED%94%84%20%EC%9A%B4%EC%98%81%20%EC%A0%9C%EC%95%88"
     },
     {
       title: "사진/기록 전달",
-      body: "행사 후 대표 사진이나 남기고 싶은 코멘트가 있으면 총무에게 전달해 아카이브에 반영합니다.",
+      body: "행사 후 대표 사진이나 남기고 싶은 한 줄 후기가 있으면 총무에게 보내 주세요.",
       tags: ["사진 업로드", "기록 전달"],
       email: "moogunjeong@kolon.com",
       href: "mailto:moogunjeong@kolon.com?subject=%EC%BD%94%EC%98%A4%EB%A1%B1%20%EC%8A%A4%ED%81%AC%EB%A6%B0%20%EA%B3%A8%ED%94%84%20%EA%B8%B0%EB%A1%9D%20%EC%A0%84%EB%8B%AC"
@@ -117,7 +117,7 @@ const clubData = {
   ],
   members: [
     { nickname: "오!건2", role: "회장", style: "경기 운영", note: "정기전 흐름을 매끄럽게 잡는 운영 중심 멤버입니다." },
-    { nickname: "무근정", role: "총무", style: "운영 관리", note: "일정 정리와 기록 업데이트를 꾸준히 챙기는 보드 관리자입니다." },
+    { nickname: "무근정", role: "총무", style: "운영 관리", note: "일정 정리와 기록 업데이트를 꾸준히 챙기는 운영 멤버입니다." },
     { nickname: "덕충안길", role: "정회원", style: "페이드 장인", note: "구질 컨트롤이 안정적이라 흐름을 잃지 않는 타입입니다." },
     { nickname: "살려줘제바알", role: "정회원", style: "벙커 탈출 1위", note: "위기 상황에서 분위기를 살리는 플레이가 강점입니다." },
     { nickname: "인생무생", role: "정회원", style: "후반 집중력", note: "후반부에 템포를 올리는 꾸준한 플레이가 돋보입니다." },
@@ -127,7 +127,7 @@ const clubData = {
     { nickname: "준빵", role: "정회원", style: "스윙 템포", note: "균형 잡힌 템포와 꾸준한 참석률이 인상적입니다." },
     { nickname: "빽스윙쫌만더", role: "정회원", style: "장타 본능", note: "과감한 스윙으로 라운드 분위기를 끌어올립니다." },
     { nickname: "날아라호", role: "정회원", style: "탄도 조절", note: "상황에 맞게 탄도 변화를 주는 컨트롤형입니다." },
-    { nickname: "오상택", role: "정회원", style: "코스 매니지먼트", note: "플랜을 세워 차분하게 공략하는 스타일입니다." },
+    { nickname: "택버디", role: "정회원", style: "코스 매니지먼트", note: "플랜을 세워 차분하게 공략하는 스타일입니다." },
     { nickname: "필드난폭자", role: "정회원", style: "공격적 플레이", note: "승부처에서 과감하게 밀어붙이는 타입입니다." },
     { nickname: "타키온", role: "정회원", style: "퍼팅 스트로크", note: "그린 주변과 마무리 감각이 좋은 멤버입니다." },
     { nickname: "울산정쁘로", role: "정회원", style: "아이언 정밀도", note: "중거리 공략의 정교함이 강점입니다." },
@@ -144,7 +144,7 @@ const clubData = {
       venue: "울산골프존",
       address: "울산 남구 화합로 108",
       summary:
-        "10명이 함께한 3월 정기 스크린 라운드입니다. 대표 사진 4장과 참석 닉네임을 정리해 최신 아카이브의 기준 사례로 삼았습니다.",
+        "10명이 함께한 3월 정기 스크린 라운드입니다. 대표 사진과 참석 닉네임을 남기고 다음 모임 이야기도 함께 나눈 자리였습니다.",
       notes: [
         "대표 사진 4장 업로드",
         "참석 닉네임 기록 정리 완료",
@@ -167,14 +167,14 @@ const clubData = {
       venue: "삼산동 울산골프존",
       address: "울산 남구 화합로 108",
       summary:
-        "연말 분위기에서 친목과 라운드를 함께 가져간 송년 행사입니다. 라운드 기록과 참석 닉네임을 한 장의 사진과 함께 보관했습니다.",
+        "연말 분위기 속에서 친목과 라운드를 함께한 송년 모임입니다. 참석 닉네임과 사진을 함께 남겼습니다.",
       notes: [
         "연말 친목 중심 모임",
         "참석 닉네임 기록 보관",
         "송년회 성격의 라운드"
       ],
       tags: ["송년회", "친목", "스크린"],
-      attendees: ["살려줘제바알", "준빵", "무근정", "허니완", "박재만(OB)", "빽스윙쫌만더", "오!건2", "무적부대", "장금이에이스"],
+      attendees: ["살려줘제바알", "준빵", "무근정", "허니완", "OB게스트", "빽스윙쫌만더", "오!건2", "무적부대", "장금이에이스"],
       photos: [{ src: "images/archive-2025-12.webp", thumb: "images/archive-2025-12.webp", caption: "2025.12 송년회 · 삼산동 울산골프존" }]
     },
     {
@@ -185,7 +185,7 @@ const clubData = {
       venue: "골프존파크 선암 솔밭스크린",
       address: "울산 남구 두왕로92번길 11-5",
       summary:
-        "3분기 정기전 기록입니다. 선암 솔밭스크린에서 9명이 함께했고, 분기별 정기전 흐름을 이어간 행사였습니다.",
+        "선암 솔밭스크린에서 9명이 함께한 3분기 정기전 기록입니다. 분기별 정기 라운드 흐름이 이어졌던 모임입니다.",
       notes: [
         "3분기 정기전 진행",
         "정기전 참석 기록 보관",
@@ -203,7 +203,7 @@ const clubData = {
       venue: "힐스카이CC",
       address: "구 루나엑스",
       summary:
-        "상반기 필드 라운딩 기록입니다. 8명이 함께했고, 스크린 중심 동호회가 필드에서도 연결되는 장면을 남긴 행사였습니다.",
+        "상반기 필드 라운딩 기록입니다. 8명이 함께했고, 스크린에서 이어진 인연이 필드까지 연결된 자리였습니다.",
       notes: [
         "상반기 필드 라운딩",
         "필드 행사 기록 보관",
@@ -221,14 +221,14 @@ const clubData = {
       venue: "골프존파크 두왕테크노골프점",
       address: "울산 남구 테크노산업로 78-11, 2층",
       summary:
-        "1분기 정기 모임으로 시즌의 출발을 만든 행사입니다. 참석자가 많았고, 이후 분기별 정기전 운영의 기준점이 된 기록입니다.",
+        "1분기 정기 모임으로 시즌의 출발을 만든 행사입니다. 참석 인원이 많았고 한 해 라운드 분위기를 여는 자리였습니다.",
       notes: [
         "시즌 스타트 성격의 정기 모임",
         "참석자 다수 기록",
         "분기 운영 기준점 역할"
       ],
       tags: ["스크린", "정기전", "1분기"],
-      attendees: ["준빵", "날아라호", "타키온", "장금이에이스", "살려줘제바알", "울산땡주", "무근정", "오!건2", "인생무생", "허니완", "원조가가멜", "빽스윙쫌만더", "원영민", "필드난폭자"],
+      attendees: ["준빵", "날아라호", "타키온", "장금이에이스", "살려줘제바알", "울산땡주", "무근정", "오!건2", "인생무생", "허니완", "원조가가멜", "빽스윙쫌만더", "버디헌터", "필드난폭자"],
       photos: [{ src: "images/archive-2025-02.webp", thumb: "images/archive-2025-02.webp", caption: "2025.02 1분기 정기 모임 · 두왕테크노골프점" }]
     }
   ]
@@ -271,6 +271,9 @@ const elements = {
   guideGrid: document.getElementById("guideGrid"),
   contactGrid: document.getElementById("contactGrid"),
   footerMeta: document.getElementById("footerMeta"),
+  headerShell: document.querySelector(".header-shell"),
+  mainNav: document.getElementById("mainNav"),
+  navToggle: document.getElementById("navToggle"),
   noticeDialog: document.getElementById("noticeDialog"),
   noticeDialogBody: document.getElementById("noticeDialogBody"),
   detailDialog: document.getElementById("detailDialog"),
@@ -320,7 +323,7 @@ function formatDateShort(dateString) {
 }
 
 function getDdayLabel(dateString) {
-  if (!dateString) return "DATE TBD";
+  if (!dateString) return "일정 조율 중";
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const target = parseLocalDate(dateString);
@@ -386,7 +389,7 @@ function renderHeadlineMetrics() {
   const metrics = [
     { label: "활동 멤버", value: `${clubData.members.length}명` },
     { label: "보관 라운드", value: `${stats.eventCount}회` },
-    { label: "누적 참석 로그", value: `${stats.totalAttendance}건` },
+    { label: "누적 참석", value: `${stats.totalAttendance}건` },
     { label: "최근 기록", value: latest ? formatDateShort(latest.date) : "-" }
   ];
 
@@ -440,8 +443,8 @@ function renderHeroBoard() {
 function renderBoardPanel() {
   const nextRound = clubData.nextRound;
   elements.boardPanel.innerHTML = `
-    <p class="panel-label">OPERATING FLOW</p>
-    <h3>다음 라운드를 준비하는 루틴은 단순하지만 끊기지 않게 설계했습니다.</h3>
+    <p class="panel-label">준비 순서</p>
+    <h3>다음 모임은 아래 흐름으로 안내합니다.</h3>
     <div class="ops-flow">
       ${nextRound.steps
         .map(
@@ -454,7 +457,7 @@ function renderBoardPanel() {
         )
         .join("")}
     </div>
-    <p class="rule-header">Participation Routine</p>
+    <p class="rule-header">참여 안내</p>
     <div class="rule-list">
       ${nextRound.participationRules
         .map(
@@ -478,7 +481,7 @@ function renderLatestRoundPanel() {
   elements.latestRoundPanel.innerHTML = `
     <div class="recap-card">
       <div>
-        <p class="panel-label">LATEST ARCHIVE</p>
+        <p class="panel-label">최근 기록</p>
         <h3>${escapeHtml(latest.title)}</h3>
       </div>
       <button
@@ -510,8 +513,8 @@ function renderLatestRoundPanel() {
 function renderNoticePanel() {
   const topParticipants = getTopParticipants(4);
   elements.noticePanel.innerHTML = `
-    <p class="panel-label">OPS NOTE</p>
-    <h3>이번 분기 운영 메모와 대화 주제를 같이 정리했습니다.</h3>
+    <p class="panel-label">운영 메모</p>
+    <h3>다음 모임 전에 참고할 메모입니다.</h3>
     <div class="note-list">
       ${clubData.nextRound.notes
         .map(
@@ -524,7 +527,7 @@ function renderNoticePanel() {
         )
         .join("")}
     </div>
-    <p class="topic-header">Round Talk</p>
+    <p class="topic-header">같이 이야기할 주제</p>
     <div class="topic-chips">
       ${clubData.nextRound.talkTopics.map((topic) => `<span class="chip">${escapeHtml(topic)}</span>`).join("")}
     </div>
@@ -569,7 +572,7 @@ function renderRecordSummary(events) {
   const stats = getArchiveStats(events);
   const summaryItems = [
     { label: "표시된 라운드", value: `${stats.eventCount}회` },
-    { label: "표시된 참석 로그", value: `${stats.totalAttendance}건` },
+    { label: "표시된 참석", value: `${stats.totalAttendance}건` },
     { label: "표시된 사진", value: `${stats.totalPhotos}장` },
     { label: "가장 최근 기록", value: stats.latestDate }
   ];
@@ -744,7 +747,7 @@ function renderMemberSummary(members) {
 }
 
 function renderMemberResultMeta(members) {
-  elements.memberResultMeta.textContent = `현재 ${members.length}명의 닉네임이 표시됩니다. 검색은 닉네임, 역할, 플레이 스타일 기준으로 동작합니다.`;
+  elements.memberResultMeta.textContent = `현재 ${members.length}명의 회원이 표시됩니다. 닉네임이나 플레이 스타일로 빠르게 찾을 수 있습니다.`;
 }
 
 function renderMembers(members) {
@@ -938,6 +941,7 @@ function renderDetailDialog(eventId) {
 function openDialog(dialog) {
   if (!dialog) return;
   if (dialog.open) return;
+  setMobileMenu(false);
   state.lastFocusedByDialog.set(dialog.id, document.activeElement instanceof HTMLElement ? document.activeElement : null);
   document.body.classList.add("dialog-open");
   if (typeof dialog.showModal === "function") dialog.showModal();
@@ -995,6 +999,16 @@ function renderLightbox(title, photoIndex) {
       `
     )
     .join("");
+}
+
+function setMobileMenu(open) {
+  const shouldOpen = Boolean(open);
+  document.body.classList.toggle("menu-open", shouldOpen);
+  elements.navToggle?.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
+  elements.navToggle?.setAttribute("aria-label", shouldOpen ? "메인 메뉴 닫기" : "메인 메뉴 열기");
+  if (elements.mainNav) {
+    elements.mainNav.setAttribute("aria-hidden", window.innerWidth <= 900 && !shouldOpen ? "true" : "false");
+  }
 }
 
 function refreshRevealTargets(scope = document) {
@@ -1069,9 +1083,23 @@ function setupScrollSpy() {
 }
 
 function bindEvents() {
+  elements.navToggle?.addEventListener("click", (event) => {
+    event.preventDefault();
+    setMobileMenu(!document.body.classList.contains("menu-open"));
+  });
+
   document.addEventListener("click", (event) => {
     const target = event.target;
     if (!(target instanceof Element)) return;
+
+    if (document.body.classList.contains("menu-open") && elements.headerShell && !target.closest(".header-shell")) {
+      setMobileMenu(false);
+    }
+
+    const navLink = target.closest(".main-nav a");
+    if (navLink) {
+      setMobileMenu(false);
+    }
 
     const openTrigger = target.closest("[data-open-dialog]");
     if (openTrigger) {
@@ -1140,7 +1168,8 @@ function bindEvents() {
 
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
-      if (elements.lightboxDialog.open) closeDialog(elements.lightboxDialog);
+      if (document.body.classList.contains("menu-open")) setMobileMenu(false);
+      else if (elements.lightboxDialog.open) closeDialog(elements.lightboxDialog);
       else if (elements.detailDialog.open) closeDialog(elements.detailDialog);
       else if (elements.noticeDialog.open) closeDialog(elements.noticeDialog);
       return;
@@ -1181,7 +1210,10 @@ function bindEvents() {
   });
 
   window.addEventListener("scroll", updateScrollProgress, { passive: true });
-  window.addEventListener("resize", updateScrollProgress);
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 900) setMobileMenu(false);
+    updateScrollProgress();
+  });
 }
 
 function renderFooter() {
@@ -1204,6 +1236,7 @@ function init() {
   setupRevealObserver();
   setupScrollSpy();
   bindEvents();
+  setMobileMenu(false);
   updateScrollProgress();
 }
 

@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="코오롱 스크린 골프 동호회의 공지, 소개, 기록 관리를 한 흐름으로 정리한 사내 동호회 운영 보드" />
+  <meta name="description" content="코오롱 스크린 골프 동호회의 정기 라운드 공지, 회원 소개, 지난 모임 기록을 모아둔 사내 동호회 홈페이지" />
   <meta name="theme-color" content="#13201d" />
-  <title>코오롱 스크린 골프 동호회 | Club OS</title>
+  <title>코오롱 스크린 골프 동호회</title>
   <link rel="stylesheet" href="./style.css?v=20260313-2" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -25,40 +25,50 @@
         <span class="brand-mark" aria-hidden="true">K</span>
         <span class="brand-copy">
           <strong>코오롱 스크린 골프 동호회</strong>
-          <small>KOLON SCREEN GOLF CLUB OS</small>
+          <small>KOLON SCREEN GOLF CLUB</small>
         </span>
       </a>
 
-      <nav class="main-nav" aria-label="메인 메뉴">
-        <a href="#notice">공지 보드</a>
-        <a href="#archive">기록 센터</a>
+      <nav class="main-nav" id="mainNav" aria-label="메인 메뉴">
+        <a href="#notice">공지</a>
+        <a href="#archive">기록</a>
         <a href="#members">회원</a>
-        <a href="#club">클럽 안내</a>
+        <a href="#club">소개</a>
       </nav>
 
-      <div class="header-badge" id="seasonBadge">2026 CLUB OS</div>
+      <div class="header-actions">
+        <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="mainNav" aria-label="메인 메뉴 열기">
+          <span class="nav-toggle-label">메뉴</span>
+          <span class="nav-toggle-icon" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
+        <div class="header-badge" id="seasonBadge">2026 시즌</div>
+      </div>
     </div>
   </header>
 
   <main id="top">
     <section class="hero shell">
       <div class="hero-copy" data-reveal>
-        <p class="eyebrow">KOLON SCREEN GOLF CLUB OS</p>
-        <h1>공지, 소개, 기록이 한 흐름으로 이어지는 사내 골프 동호회 보드</h1>
+        <p class="eyebrow">사내 동호회</p>
+        <h1>다음 라운드 공지와 지난 기록을 한곳에 모았습니다.</h1>
         <p class="hero-lead">
-          메인 상단은 다음 라운드 공지, 중단은 운영 흐름, 하단은 기록 센터로 재편했습니다.
-          이번 개편의 기준은 "멋진 첫 화면"이 아니라 "바로 쓰이는 동호회 홈페이지"입니다.
+          다음 모임 일정, 참여 안내, 지난 라운드 사진과 참석 기록을 모바일에서 빠르게 확인할 수 있습니다.
+          공지 확인부터 지난 기록 탐색까지 한 흐름으로 이어지는 사내 동호회 홈페이지입니다.
         </p>
         <div class="hero-actions">
-          <a class="btn primary" href="#notice">공지 보드 보기</a>
-          <a class="btn secondary" href="#archive">기록 센터 가기</a>
+          <a class="btn primary" href="#notice">다음 일정 보기</a>
+          <a class="btn secondary" href="#archive">기록 둘러보기</a>
         </div>
         <dl class="headline-metrics" id="headlineMetrics" aria-label="클럽 핵심 지표"></dl>
       </div>
 
       <aside class="hero-board" data-reveal>
         <div class="hero-board-head">
-          <p class="panel-label">NEXT TEE BOARD</p>
+          <p class="panel-label">다음 라운드</p>
           <div class="hero-board-badges">
             <span class="status-pill" id="nextRoundStatus"></span>
             <span class="status-pill secondary" id="nextRoundDday"></span>
@@ -80,12 +90,12 @@
     <section class="ops shell" id="notice">
       <div class="section-head" data-reveal>
         <div>
-          <p class="eyebrow">NOTICE BOARD</p>
-          <h2>다음 라운드를 준비하는 데 필요한 정보만 먼저 보이게 정리했습니다.</h2>
+          <p class="eyebrow">공지</p>
+          <h2>다음 모임 준비에 필요한 내용부터 확인할 수 있습니다.</h2>
         </div>
         <p class="section-copy">
-          일정 준비 상태, 참여 루틴, 최근 결과, 운영 메모를 한 섹션에 묶었습니다.
-          누구든 상단에서 바로 "이번엔 어떻게 움직이면 되는지" 이해할 수 있게 구성했습니다.
+          장소 후보, 일정 조율 상태, 참여 안내, 최근 모임 메모를 한곳에 모았습니다.
+          다음 공지가 올라오기 전에도 필요한 내용을 바로 확인할 수 있습니다.
         </p>
       </div>
 
@@ -102,8 +112,8 @@
     <section class="record-center shell" id="archive">
       <div class="section-head" data-reveal>
         <div>
-          <p class="eyebrow">RECORD CENTER</p>
-          <h2>지난 라운드를 사진 갤러리가 아니라 기록 자산으로 탐색할 수 있게 바꿨습니다.</h2>
+          <p class="eyebrow">기록</p>
+          <h2>지난 라운드 사진과 참석 기록을 날짜별로 모아봤습니다.</h2>
         </div>
         <div class="section-tools">
           <label class="sr-only" for="archiveSearch">아카이브 검색</label>
@@ -130,8 +140,8 @@
     <section class="members shell" id="members">
       <div class="section-head" data-reveal>
         <div>
-          <p class="eyebrow">MEMBER ROSTER</p>
-          <h2>실명 대신 닉네임 중심으로 재편하고, 실제 활동 이력을 같이 보여주도록 바꿨습니다.</h2>
+          <p class="eyebrow">회원</p>
+          <h2>닉네임과 최근 활동으로 회원을 확인할 수 있습니다.</h2>
         </div>
         <div class="section-tools">
           <label class="sr-only" for="memberSearch">회원 검색</label>
@@ -147,11 +157,11 @@
     <section class="club-guide shell" id="club">
       <div class="section-head" data-reveal>
         <div>
-          <p class="eyebrow">CLUB GUIDE</p>
-          <h2>소개 섹션은 감성 문구 대신 운영 원칙과 동호회 분위기를 설명하는 쪽으로 정리했습니다.</h2>
+          <p class="eyebrow">소개</p>
+          <h2>정기 라운드와 친목 모임으로 꾸준히 이어가는 사내 동호회입니다.</h2>
         </div>
         <p class="section-copy">
-          사내 동호회 홈페이지의 역할이 분명해지도록, 소개 문구도 실제 운영과 기록 흐름에 맞춰 다시 배치했습니다.
+          분기별 정기전, 친선 라운드, 사진과 후기 공유를 통해 다음 만남까지 자연스럽게 이어집니다.
         </p>
       </div>
 
@@ -161,11 +171,11 @@
     <section class="contact shell" id="contact">
       <div class="contact-shell" data-reveal>
         <div class="contact-copy">
-          <p class="eyebrow">CONTACT</p>
-          <h2>가입 문의와 기록 전달 동선도 같은 톤으로 정리했습니다.</h2>
+          <p class="eyebrow">연락처</p>
+          <h2>가입 문의와 운영 메일</h2>
           <p>
-            운영 문의, 가입 문의, 사진/기록 전달 경로를 따로 흩어놓지 않고 한 섹션에서 끝낼 수 있게 정리했습니다.
-            이후 폼이나 사내 게시판 연동이 필요해도 이 구조에서 바로 확장 가능합니다.
+            가입 문의, 장소 제안, 사진 전달은 아래 운영 메일로 안내합니다.
+            라운드 공지와 기록 업데이트는 운영진이 순차적으로 반영합니다.
           </p>
         </div>
         <div class="contact-grid" id="contactGrid"></div>
@@ -174,7 +184,7 @@
   </main>
 
   <footer class="site-footer shell">
-    <p>코오롱 스크린 골프 동호회 운영 보드</p>
+    <p>코오롱 스크린 골프 동호회</p>
     <p id="footerMeta"></p>
   </footer>
 
@@ -182,7 +192,7 @@
     <div class="dialog-card">
       <div class="dialog-head">
         <div>
-          <p class="eyebrow">OPERATING MEMO</p>
+          <p class="eyebrow">운영 메모</p>
           <h3 id="noticeDialogTitle">다음 라운드 운영 메모</h3>
         </div>
         <button class="btn ghost small" type="button" data-close-dialog="noticeDialog">닫기</button>
@@ -195,7 +205,7 @@
     <div class="dialog-card detail-dialog-card">
       <div class="dialog-head">
         <div>
-          <p class="eyebrow">ARCHIVE DETAIL</p>
+          <p class="eyebrow">라운드 기록</p>
           <h3 id="detailDialogTitle">라운드 상세</h3>
         </div>
         <button class="btn ghost small" type="button" data-close-dialog="detailDialog">닫기</button>
@@ -208,7 +218,7 @@
     <div class="dialog-card lightbox-card">
       <div class="dialog-head">
         <div>
-          <p class="eyebrow">PHOTO VIEWER</p>
+          <p class="eyebrow">사진 보기</p>
           <h3 id="lightboxTitle">행사 사진</h3>
           <p class="lightbox-caption" id="lightboxCaption">사진 설명</p>
         </div>
