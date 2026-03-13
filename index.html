@@ -3,566 +3,226 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>코오롱 스크린 골프 동호회</title>
-  <link rel="stylesheet" href="./style.css?v=20260307-1" />
+  <meta name="description" content="코오롱 스크린 골프 동호회의 공지, 소개, 기록 관리를 한 흐름으로 정리한 사내 동호회 운영 보드" />
+  <meta name="theme-color" content="#13201d" />
+  <title>코오롱 스크린 골프 동호회 | Club OS</title>
+  <link rel="stylesheet" href="./style.css?v=20260313-2" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Montserrat:wght@500;700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
 </head>
 <body>
+  <div class="backdrop-layer" aria-hidden="true">
+    <div class="backdrop-orb orb-one"></div>
+    <div class="backdrop-orb orb-two"></div>
+    <div class="backdrop-grid"></div>
+  </div>
   <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
-  <div class="page-noise" aria-hidden="true"></div>
 
   <header class="site-header">
-    <a class="brand" href="#top">
-      <span class="brand-mark" aria-hidden="true">K</span>
-      <span class="brand-text">
-        <strong>코오롱 스크린 골프 동호회</strong>
-        <small>KOLON SCREEN GOLF SOCIETY</small>
-      </span>
-    </a>
+    <div class="header-shell">
+      <a class="brand" href="#top">
+        <span class="brand-mark" aria-hidden="true">K</span>
+        <span class="brand-copy">
+          <strong>코오롱 스크린 골프 동호회</strong>
+          <small>KOLON SCREEN GOLF CLUB OS</small>
+        </span>
+      </a>
 
-    <nav class="main-nav" aria-label="메인 메뉴">
-      <a href="#features">클럽 소개</a>
-      <a href="#schedule">일정</a>
-      <a href="#members">회원</a>
-      <a href="#archive">아카이브</a>
-    </nav>
+      <nav class="main-nav" aria-label="메인 메뉴">
+        <a href="#notice">공지 보드</a>
+        <a href="#archive">기록 센터</a>
+        <a href="#members">회원</a>
+        <a href="#club">클럽 안내</a>
+      </nav>
+
+      <div class="header-badge" id="seasonBadge">2026 CLUB OS</div>
+    </div>
   </header>
 
   <main id="top">
-    <section class="hero section-shell">
-      <div class="hero-backdrop" aria-hidden="true">
-        <div class="hero-orb orb-a" data-parallax="0.55"></div>
-        <div class="hero-orb orb-b" data-parallax="-0.35"></div>
-        <div class="hero-grid-glow" data-parallax="0.18"></div>
-        <div class="waacky waacky-main" data-parallax="0.26">
-          <img src="images/waacky.png" alt="" />
-        </div>
-        <div class="waacky waacky-trail" data-parallax="-0.18">
-          <img src="images/waacky.png" alt="" />
-        </div>
-        <div class="waacky waacky-mini" data-parallax="0.12">
-          <img src="images/waacky.png" alt="" />
-        </div>
-      </div>
-
-      <div class="hero-copy">
-        <p class="eyebrow">KOLON SCREEN GOLF</p>
-        <p class="hero-kicker">SCREEN ROUNDING, MEMORY MAKING</p>
-        <h1 class="hero-title">
-          <span>스크린에서 시작하고</span>
-          <span>필드에서는 더 짜릿하게.</span>
-        </h1>
-        <div class="hero-message" data-reveal>
-          <p class="hero-lead">
-            우리는 스크린에서 만나 기억을 남긴다. 코오롱 스크린 골프 동호회는 일정 공유, 회원 네트워크,
-            라운드 기록 아카이브를 한 곳에 모아 매번의 만남을 더 깊고 오래 즐기는 커뮤니티입니다.
-          </p>
-          <div class="hero-badge-row" aria-label="클럽 핵심 키워드">
-            <span class="chip">정기 라운드 운영</span>
-            <span class="chip">회원 네트워크</span>
-            <span class="chip">사진 · 기록 아카이브</span>
-          </div>
-        </div>
-        <article class="hero-highlight" data-reveal>
-          <p class="hero-highlight-label">LATEST ROUND</p>
-          <div class="hero-highlight-content">
-            <div class="hero-highlight-head">
-              <strong>2026년 3월 정기 스크린 라운드</strong>
-              <span>2026.03.04 · 울산골프존 · 10명 참석</span>
-            </div>
-            <p>
-              2026년 3월 정기 라운드는 울산골프존에서 10명이 함께했고,
-              대표 사진 4장과 참가 기록을 남기며 즐거운 시간을 함께했습니다.
-            </p>
-          </div>
-        </article>
+    <section class="hero shell">
+      <div class="hero-copy" data-reveal>
+        <p class="eyebrow">KOLON SCREEN GOLF CLUB OS</p>
+        <h1>공지, 소개, 기록이 한 흐름으로 이어지는 사내 골프 동호회 보드</h1>
+        <p class="hero-lead">
+          메인 상단은 다음 라운드 공지, 중단은 운영 흐름, 하단은 기록 센터로 재편했습니다.
+          이번 개편의 기준은 "멋진 첫 화면"이 아니라 "바로 쓰이는 동호회 홈페이지"입니다.
+        </p>
         <div class="hero-actions">
-          <a class="btn primary" href="#features">클럽 스토리 보기</a>
-          <a class="btn secondary" href="#archive">3월 라운드 보기</a>
+          <a class="btn primary" href="#notice">공지 보드 보기</a>
+          <a class="btn secondary" href="#archive">기록 센터 가기</a>
         </div>
-        <dl class="hero-stats">
-          <div>
-            <dt>활동 멤버</dt>
-            <dd>18명</dd>
-          </div>
-          <div>
-            <dt>최근 라운드</dt>
-            <dd>2026.03.04 · 10명</dd>
-          </div>
-          <div>
-            <dt>누적 아카이브</dt>
-            <dd>2025~2026 총 5회</dd>
-          </div>
-        </dl>
+        <dl class="headline-metrics" id="headlineMetrics" aria-label="클럽 핵심 지표"></dl>
       </div>
 
-      <aside class="hero-panel" data-reveal>
-        <p class="panel-title">CLUB SIGNAL</p>
-        <div class="panel-stack">
-          <article class="signal-card signal-card-strong">
-            <p class="signal-label">LAST ROUND</p>
-            <h2>3월 라운드, 기록까지 깔끔하게 완료</h2>
-            <p class="panel-meta">2026년 3월 4일 (수) 17:00 · 울산골프존</p>
-            <div class="panel-chip-row">
-              <span class="chip">참가 10명</span>
-              <span class="chip">대표 사진 4장</span>
-              <span class="chip">아카이브 업데이트</span>
-            </div>
-          </article>
-          <article class="signal-card">
-            <p class="signal-label">NEXT NOTICE</p>
-            <h3>2026년 2분기 정기 라운드 공지 준비 중</h3>
-            <p>
-              장소 후보와 시간대 의견을 정리한 뒤 참석 신청을 오픈합니다.
-              일정만 던지는 대신, 다음 모임을 같이 만드는 흐름으로 가져갑니다.
-            </p>
-          </article>
+      <aside class="hero-board" data-reveal>
+        <div class="hero-board-head">
+          <p class="panel-label">NEXT TEE BOARD</p>
+          <div class="hero-board-badges">
+            <span class="status-pill" id="nextRoundStatus"></span>
+            <span class="status-pill secondary" id="nextRoundDday"></span>
+          </div>
         </div>
-        <p class="panel-note">정기 라운드 소식부터 지난 기록과 멤버 분위기까지 한눈에 볼 수 있습니다.</p>
-        <div class="panel-actions">
-          <button class="btn ghost small" type="button" data-open-modal="locationModal">운영 메모 보기</button>
-          <button class="btn primary small" type="button" data-open-modal="rsvpModal">알림 신청</button>
+        <h2 id="nextRoundTitle"></h2>
+        <p class="hero-board-lead" id="nextRoundLead"></p>
+        <dl class="fact-grid" id="nextRoundFacts"></dl>
+        <div class="step-list" id="nextRoundSteps"></div>
+        <p class="hero-board-note" id="nextRoundNote"></p>
+        <div class="hero-actions board-actions">
+          <button class="btn primary" type="button" data-open-dialog="noticeDialog">운영 메모 보기</button>
+          <a class="btn secondary" href="#contact">가입/문의 보기</a>
         </div>
+        <img class="club-sticker" src="images/waacky.png" alt="" />
       </aside>
-
     </section>
 
-    <div class="ticker" aria-label="클럽 하이라이트">
-      <div class="ticker-track">
-        <span>2026.03.04 정기 스크린 라운드 완료</span>
-        <span>울산골프존 · 10명 참석</span>
-        <span>대표 사진 4장 업로드</span>
-        <span>회원 네트워크 · 일정 공유 · 기록 아카이브</span>
-        <span>2026년 2분기 정기 라운드 공지 준비 중</span>
-        <span>2026.03.04 정기 스크린 라운드 완료</span>
-        <span>울산골프존 · 10명 참석</span>
-        <span>대표 사진 4장 업로드</span>
-        <span>회원 네트워크 · 일정 공유 · 기록 아카이브</span>
-        <span>2026년 2분기 정기 라운드 공지 준비 중</span>
-      </div>
-    </div>
-
-    <section class="features section-shell" id="features">
-      <div class="section-head intro-head" data-reveal>
+    <section class="ops shell" id="notice">
+      <div class="section-head" data-reveal>
         <div>
-          <p class="eyebrow">CLUB DNA</p>
-          <h2>좋은 샷을 남기고, 좋은 사람을 더 자주 만나는 방식</h2>
+          <p class="eyebrow">NOTICE BOARD</p>
+          <h2>다음 라운드를 준비하는 데 필요한 정보만 먼저 보이게 정리했습니다.</h2>
         </div>
         <p class="section-copy">
-          정기 라운드, 기록 공유, 자연스러운 교류가 이어지는 동호회의 흐름을 담았습니다.
+          일정 준비 상태, 참여 루틴, 최근 결과, 운영 메모를 한 섹션에 묶었습니다.
+          누구든 상단에서 바로 "이번엔 어떻게 움직이면 되는지" 이해할 수 있게 구성했습니다.
         </p>
       </div>
 
-      <div class="feature-grid">
-        <article class="feature-card feature-card-lead" data-reveal>
-          <div class="feature-float" data-parallax="0.11">
-            <p class="feature-kicker">OUR MANIFESTO</p>
-            <h3>스크린에서 만나, 기록으로 더 가까워집니다.</h3>
-            <p>
-              정기 라운드 공지부터 사진, 스코어, 참가 멤버 기록까지 한 흐름으로 연결해
-              "한 번 모이고 끝"이 아니라 "다음 모임이 더 기다려지는 클럽"을 만듭니다.
-            </p>
-            <div class="feature-chip-row">
-              <span class="chip">정기전 중심 운영</span>
-              <span class="chip">라운드 후 기록 공유</span>
-              <span class="chip">초보부터 숙련자까지 환영</span>
-            </div>
-          </div>
-        </article>
-        <article class="feature-card" data-reveal>
-          <div class="feature-float" data-parallax="-0.09">
-            <p class="feature-kicker">OPERATING STYLE</p>
-            <h3>운영은 단순하고 참여는 가볍게</h3>
-            <p>
-              일정이 확정되면 빠르게 공유하고, 참석 의사와 현장 흐름을 명확하게 맞춥니다.
-              시작 10분 전 도착과 라운드 후 기록 공유가 기본 리듬입니다.
-            </p>
-          </div>
-        </article>
-        <article class="feature-card feature-card-accent" data-reveal>
-          <div class="feature-float" data-parallax="0.13">
-            <p class="feature-kicker">MARCH 2026</p>
-            <h3>2026년 3월 라운드, 함께 남긴 좋은 기록</h3>
-            <p>
-              3월 4일 울산골프존에서 10명이 함께했고, 대표 사진 4장과 참가 기록을 남겼습니다.
-              즐거웠던 분위기와 현장 기록은 아카이브에서 계속 확인할 수 있습니다.
-            </p>
-            <a class="feature-link" href="#archive">아카이브에서 사진 보기</a>
-          </div>
-        </article>
-        <article class="feature-card feature-card-wide" data-reveal>
-          <div class="feature-float" data-parallax="0.07">
-            <p class="feature-kicker">CLUB MOOD</p>
-            <h3>좋은 샷엔 한마디, 아쉬운 샷엔 다음 약속</h3>
-            <p>
-              좋은 샷엔 아낌없이 박수를 보내고, 아쉬운 샷엔 다음 라운드를 기약합니다.
-              장소 추천과 일정 의견도 자연스럽게 오가는 것이 우리 동호회의 분위기입니다.
-            </p>
-          </div>
-        </article>
+      <div class="ops-layout">
+        <article class="panel board-panel" id="boardPanel" data-reveal></article>
+
+        <div class="side-stack">
+          <article class="panel recap-panel" id="latestRoundPanel" data-reveal></article>
+          <article class="panel note-panel" id="noticePanel" data-reveal></article>
+        </div>
       </div>
     </section>
 
-    <section class="schedule section-shell" id="schedule">
-      <div class="section-head board-head" data-reveal>
+    <section class="record-center shell" id="archive">
+      <div class="section-head" data-reveal>
         <div>
-          <p class="eyebrow">CLUB BOARD</p>
-          <h2>일정을 나열하는 대신, 다음 라운드를 함께 만드는 보드</h2>
+          <p class="eyebrow">RECORD CENTER</p>
+          <h2>지난 라운드를 사진 갤러리가 아니라 기록 자산으로 탐색할 수 있게 바꿨습니다.</h2>
+        </div>
+        <div class="section-tools">
+          <label class="sr-only" for="archiveSearch">아카이브 검색</label>
+          <input class="search-input" id="archiveSearch" type="search" placeholder="닉네임, 장소, 태그 검색" />
+        </div>
+      </div>
+
+      <div class="filter-bar" data-reveal>
+        <div class="filter-group">
+          <span class="filter-label">연도</span>
+          <div class="filter-list" id="yearFilters"></div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">유형</span>
+          <div class="filter-list" id="typeFilters"></div>
+        </div>
+      </div>
+
+      <div class="summary-strip" id="recordSummary" data-reveal></div>
+      <p class="result-meta" id="archiveResultMeta" aria-live="polite"></p>
+      <div class="archive-grid" id="archiveGrid"></div>
+    </section>
+
+    <section class="members shell" id="members">
+      <div class="section-head" data-reveal>
+        <div>
+          <p class="eyebrow">MEMBER ROSTER</p>
+          <h2>실명 대신 닉네임 중심으로 재편하고, 실제 활동 이력을 같이 보여주도록 바꿨습니다.</h2>
+        </div>
+        <div class="section-tools">
+          <label class="sr-only" for="memberSearch">회원 검색</label>
+          <input class="search-input" id="memberSearch" type="search" placeholder="닉네임, 역할, 플레이 스타일 검색" />
+        </div>
+      </div>
+
+      <div class="summary-strip member-summary" id="memberSummary" data-reveal></div>
+      <p class="result-meta" id="memberResultMeta" aria-live="polite"></p>
+      <div class="member-grid" id="memberGrid"></div>
+    </section>
+
+    <section class="club-guide shell" id="club">
+      <div class="section-head" data-reveal>
+        <div>
+          <p class="eyebrow">CLUB GUIDE</p>
+          <h2>소개 섹션은 감성 문구 대신 운영 원칙과 동호회 분위기를 설명하는 쪽으로 정리했습니다.</h2>
         </div>
         <p class="section-copy">
-          다음 라운드 준비 상황과 참여 흐름, 멤버들이 나눌 이야기를 한눈에 볼 수 있습니다.
+          사내 동호회 홈페이지의 역할이 분명해지도록, 소개 문구도 실제 운영과 기록 흐름에 맞춰 다시 배치했습니다.
         </p>
       </div>
 
-      <div class="schedule-layout">
-        <article class="schedule-card spotlight schedule-card-tall" data-reveal>
-          <p class="schedule-tag">NOW PREPARING</p>
-          <h3>2026년 2분기 정기 라운드 준비 흐름</h3>
-          <p class="schedule-meta">장소 후보 정리 -> 일정 확정 -> 참석 신청 -> 라운드 후 기록 업로드</p>
-          <div class="board-steps">
-            <div class="board-step">
-              <span>01</span>
-              <div>
-                <strong>장소 후보 정리</strong>
-                <p>접근성과 타석 환경을 기준으로 후보를 좁히는 단계입니다.</p>
-              </div>
-            </div>
-            <div class="board-step">
-              <span>02</span>
-              <div>
-                <strong>일정 확정 후 모집 오픈</strong>
-                <p>운영진 공지와 함께 참석 신청을 받고 조 편성을 진행합니다.</p>
-              </div>
-            </div>
-            <div class="board-step">
-              <span>03</span>
-              <div>
-                <strong>라운드 후 사진과 기록 공유</strong>
-                <p>스코어, 대표 사진, 참가 멤버를 바로 아카이브에 남깁니다.</p>
-              </div>
-            </div>
-          </div>
-          <div class="schedule-actions">
-            <button class="btn secondary small" type="button" data-open-modal="locationModal">운영 메모 보기</button>
-            <button class="btn ghost small" type="button" data-open-modal="rsvpModal">알림 신청</button>
-          </div>
-        </article>
-
-        <div class="schedule-side">
-          <article class="schedule-card mini" data-reveal>
-            <p class="schedule-tag">CHECK-IN</p>
-            <h3>참여 루틴</h3>
-            <ul class="board-list">
-              <li>일정 공지 확인 후 참석 의사 공유</li>
-              <li>시작 10분 전 도착으로 경기 흐름 맞추기</li>
-              <li>라운드 후 사진과 한 줄 후기를 남기기</li>
-            </ul>
-          </article>
-          <article class="schedule-card mini schedule-card-talk" data-reveal>
-            <p class="schedule-tag">ROUND TALK</p>
-            <h3>라운드 후 함께 나누는 이야기</h3>
-            <div class="talk-stack">
-              <div class="talk-item">
-                <strong>이번 라운드 베스트샷</strong>
-                <p>가장 기억에 남는 한 장면이나 한 홀을 서로 이야기해보는 주제</p>
-              </div>
-              <div class="talk-item">
-                <strong>다음 선호 시간</strong>
-                <p>퇴근 후 또는 주말 오전 등 선호 시간대를 미리 모으기</p>
-              </div>
-              <div class="talk-item">
-                <strong>가고 싶은 스크린장</strong>
-                <p>다음 공지를 더 빠르게 만들 장소 추천 포인트</p>
-              </div>
-            </div>
-          </article>
-        </div>
-      </div>
+      <div class="guide-grid" id="guideGrid"></div>
     </section>
 
-    <section class="pulse section-shell" data-reveal>
-      <div class="pulse-shell">
-        <div class="pulse-copy">
-          <p class="eyebrow">CLUB PULSE</p>
-          <h2>좋은 라운드는 끝난 뒤에도 이야기가 남습니다.</h2>
+    <section class="contact shell" id="contact">
+      <div class="contact-shell" data-reveal>
+        <div class="contact-copy">
+          <p class="eyebrow">CONTACT</p>
+          <h2>가입 문의와 기록 전달 동선도 같은 톤으로 정리했습니다.</h2>
           <p>
-            함께한 샷, 사진, 다음 일정 이야기가 자연스럽게 이어질 때
-            동호회의 분위기와 연결감도 더 깊어집니다.
+            운영 문의, 가입 문의, 사진/기록 전달 경로를 따로 흩어놓지 않고 한 섹션에서 끝낼 수 있게 정리했습니다.
+            이후 폼이나 사내 게시판 연동이 필요해도 이 구조에서 바로 확장 가능합니다.
           </p>
         </div>
-        <div class="pulse-grid">
-          <article class="pulse-card">
-            <p class="pulse-label">SHOT TALK</p>
-            <h3>이번 라운드 베스트샷</h3>
-            <p>가장 기억에 남는 한 장면이나 한 홀을 서로 짧게 나눠보는 이야기</p>
-          </article>
-          <article class="pulse-card">
-            <p class="pulse-label">PHOTO TALK</p>
-            <h3>사진으로 남기는 분위기</h3>
-            <p>대표 사진은 물론 현장 분위기와 웃음이 담긴 순간까지 함께 남기는 기록</p>
-          </article>
-          <article class="pulse-card">
-            <p class="pulse-label">NEXT VOTE</p>
-            <h3>다음 장소와 시간 의견 모으기</h3>
-            <p>다음 일정과 장소에 대한 선호를 편하게 나누는 대화 주제</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="waacky-drive section-shell" data-waacky-drive aria-label="와키 스크롤 연출">
-      <div class="waacky-drive-sticky">
-        <div class="waacky-drive-lines" aria-hidden="true"></div>
-        <div class="waacky-drive-step main" data-waacky-drive-step="main" aria-hidden="true"></div>
-        <div class="waacky-drive-step ghost" data-waacky-drive-step="ghost-a" aria-hidden="true"></div>
-        <div class="waacky-drive-step ghost" data-waacky-drive-step="ghost-b" aria-hidden="true"></div>
-        <div class="waacky-drive-char main" data-waacky-drive-char="main">
-          <img src="images/waacky.png" alt="" />
-        </div>
-        <div class="waacky-drive-char ghost ghost-a" data-waacky-drive-char="ghost-a">
-          <img src="images/waacky.png" alt="" />
-        </div>
-        <div class="waacky-drive-char ghost ghost-b" data-waacky-drive-char="ghost-b">
-          <img src="images/waacky.png" alt="" />
-        </div>
-      </div>
-    </section>
-
-    <section class="members section-shell" id="members">
-      <div class="section-head" data-reveal>
-        <div>
-          <p class="eyebrow">MEMBERS</p>
-          <h2>회원명부</h2>
-        </div>
-        <div class="search-wrap">
-          <input id="memberSearch" type="text" placeholder="이름 또는 역할 검색" />
-          <button class="btn secondary small" id="memberReset" type="button">초기화</button>
-        </div>
-      </div>
-
-      <div class="member-grid" id="memberGrid">
-        <article class="member-card" data-reveal><h3>덕충안길 (권순노)</h3><p>정회원 · 페이드 장인</p></article>
-        <article class="member-card" data-reveal><h3>살려줘제바알 (김경수)</h3><p>정회원 · 벙커 탈출 1위</p></article>
-        <article class="member-card" data-reveal><h3>오!건2 (김무건)</h3><p>회장 · 경기 운영</p></article>
-        <article class="member-card" data-reveal><h3>인생무생 (김무생)</h3><p>정회원 · 후반 집중력</p></article>
-        <article class="member-card" data-reveal><h3>울산땡주 (김영주)</h3><p>정회원 · 파3 스페셜</p></article>
-        <article class="member-card" data-reveal><h3>원조가가멜 (김정훈)</h3><p>정회원 · 백스핀 컨트롤</p></article>
-        <article class="member-card" data-reveal><h3>백돌이깬다 (김태연)</h3><p>정회원 · 정확한 어프로치</p></article>
-        <article class="member-card" data-reveal><h3>준빵 (김효준)</h3><p>정회원 · 스윙 템포</p></article>
-        <article class="member-card" data-reveal><h3>빽스윙쫌만더 (서무환)</h3><p>정회원 · 장타 본능</p></article>
-        <article class="member-card" data-reveal><h3>날아라호 (심재호)</h3><p>정회원 · 탄도 조절</p></article>
-        <article class="member-card" data-reveal><h3>오상택</h3><p>정회원 · 코스 매니지먼트</p></article>
-        <article class="member-card" data-reveal><h3>필드난폭자 (윤석현)</h3><p>정회원 · 공격적 플레이</p></article>
-        <article class="member-card" data-reveal><h3>타키온 (이동수)</h3><p>정회원 · 퍼팅 스트로크</p></article>
-        <article class="member-card" data-reveal><h3>무근정 (정무근)</h3><p>총무 · 운영 관리</p></article>
-        <article class="member-card" data-reveal><h3>울산정쁘로 (정성원)</h3><p>정회원 · 아이언 정밀도</p></article>
-        <article class="member-card" data-reveal><h3>원펀쓰리강냉 (천기준)</h3><p>정회원 · 파워 스윙</p></article>
-        <article class="member-card" data-reveal><h3>무적부대 (추정술)</h3><p>정회원 · 위기 탈출</p></article>
-        <article class="member-card" data-reveal><h3>장금이에이스 (하선재)</h3><p>정회원 · 정교한 퍼터</p></article>
-      </div>
-    </section>
-
-    <section class="archive section-shell" id="archive">
-      <div class="section-head" data-reveal>
-        <p class="eyebrow">ARCHIVE</p>
-        <h2>지난 라운드 기록</h2>
-      </div>
-
-      <div class="archive-grid">
-        <article class="archive-card" data-reveal>
-          <div class="archive-head">
-            <p class="archive-date">2026.03.04</p>
-            <h3>2026년 3월 행사 (정기 스크린 라운드)</h3>
-          </div>
-          <p>일시: 2026년 3월 4일 (수) 17:00</p>
-          <p>장소: 울산골프존 (울산 남구 화합로 108)</p>
-          <p>참가자(총 10명): 무근정, 덕충안길, 살려줘제바알, 오!건2, 원조가가멜, 준빵, 날아라호, 타키온, 원펀쓰리강냉, 장금이에이스</p>
-          <p>기록: 2026년 3월 4일 일정 완료</p>
-          <button class="archive-shot archive-shot-main" type="button" data-lightbox-src="images/archive-2026-03-1.webp" data-lightbox-title="2026년 3월 행사" data-lightbox-caption="2026.03 정기 스크린 라운드 · 대표사진 1/4" style="background-image:url('images/archive-2026-03-1.jpeg');">
-            <span class="archive-zoom">대표 사진</span>
-          </button>
-          <div class="archive-shot-strip" aria-label="2026년 3월 사진 스와이프">
-            <button class="archive-shot archive-shot-thumb primary-slide" type="button" data-lightbox-src="images/archive-2026-03-1.webp" data-lightbox-title="2026년 3월 행사" data-lightbox-caption="2026.03 정기 스크린 라운드 · 대표사진 1/4" style="background-image:url('images/archive-2026-03-1.jpeg');">
-              <span class="archive-zoom">1 / 4</span>
-            </button>
-            <button class="archive-shot archive-shot-thumb" type="button" data-lightbox-src="images/archive-2026-03-2.webp" data-lightbox-title="2026년 3월 행사" data-lightbox-caption="2026.03 정기 스크린 라운드 · 2/4" style="background-image:url('images/archive-2026-03-2.jpeg');">
-              <span class="archive-zoom">2 / 4</span>
-            </button>
-            <button class="archive-shot archive-shot-thumb" type="button" data-lightbox-src="images/archive-2026-03-3.webp" data-lightbox-title="2026년 3월 행사" data-lightbox-caption="2026.03 정기 스크린 라운드 · 3/4" style="background-image:url('images/archive-2026-03-3.jpeg');">
-              <span class="archive-zoom">3 / 4</span>
-            </button>
-            <button class="archive-shot archive-shot-thumb" type="button" data-lightbox-src="images/archive-2026-03-4.webp" data-lightbox-title="2026년 3월 행사" data-lightbox-caption="2026.03 정기 스크린 라운드 · 4/4" style="background-image:url('images/archive-2026-03-4.jpeg');">
-              <span class="archive-zoom">4 / 4</span>
-            </button>
-          </div>
-          <button class="btn secondary small" type="button" data-open-modal="attendanceModal">참가 멤버 보기</button>
-        </article>
-
-        <article class="archive-card" data-reveal>
-          <div class="archive-head">
-            <p class="archive-date">2025.12.09</p>
-            <h3>2025년 12월 행사 (송년회)</h3>
-          </div>
-          <p>일시: 2025년 12월 9일 (화) 16:30</p>
-          <p>장소: 삼산동 울산골프존 (울산 남구 화합로 108)</p>
-          <p>참석자(총 9명): 살려줘제바알, 준빵, 무근정, 허니완, 박재만(OB), 빽스윙쫌만더, 오!건2, 무적부대, 장금이에이스</p>
-          <button class="archive-shot" type="button" data-lightbox-src="images/archive-2025-12.webp" data-lightbox-title="2025년 12월 행사" data-lightbox-caption="2025.12 송년회 · 삼산동 울산골프존" style="background-image:url('images/archive-2025-12.webp');">
-            <span class="archive-zoom">VIEW PHOTO</span>
-          </button>
-        </article>
-
-        <article class="archive-card" data-reveal>
-          <div class="archive-head">
-            <p class="archive-date">2025.09.30</p>
-            <h3>2025년 9월 행사 (3분기 정기전)</h3>
-          </div>
-          <p>일시: 2025년 9월 30일 (화) 17:00</p>
-          <p>장소: 골프존파크 선암 솔밭스크린 (울산 남구 두왕로92번길 11-5)</p>
-          <p>참가자(총 9명): 원조가가멜, 타키온, 빽스윙쫌만더, 오!건2, 준빵, 날아라호, 무적부대, 장금이에이스, 무근정</p>
-          <button class="archive-shot" type="button" data-lightbox-src="images/archive-2025-09.webp" data-lightbox-title="2025년 9월 행사" data-lightbox-caption="2025.09 3분기 정기전 · 선암 솔밭스크린" style="background-image:url('images/archive-2025-09.webp');">
-            <span class="archive-zoom">VIEW PHOTO</span>
-          </button>
-        </article>
-
-        <article class="archive-card" data-reveal>
-          <div class="archive-head">
-            <p class="archive-date">2025.05.01</p>
-            <h3>2025년 5월 행사 (상반기 필드 라운딩)</h3>
-          </div>
-          <p>일시: 2025년 5월 1일 (목)</p>
-          <p>장소: 힐스카이CC (구, 루나엑스)</p>
-          <p>참가자(총 8명): 오!건2, 인생무생, 무근정, 원펀쓰리강냉, 원조가가멜, 준빵, 필드난폭자, 타키온</p>
-          <button class="archive-shot" type="button" data-lightbox-src="images/archive-2025-05.JPG" data-lightbox-title="2025년 5월 행사" data-lightbox-caption="2025.05 상반기 필드 라운딩 · 힐스카이CC" style="background-image:url('images/archive-2025-05.JPG');">
-            <span class="archive-zoom">VIEW PHOTO</span>
-          </button>
-        </article>
-
-        <article class="archive-card" data-reveal>
-          <div class="archive-head">
-            <p class="archive-date">2025.02.25</p>
-            <h3>2025년 2월 행사 (1분기 정기 모임)</h3>
-          </div>
-          <p>일시: 2025년 2월 25일 (화) 16:30</p>
-          <p>장소: 골프존파크 두왕테크노골프점 (울산 남구 테크노산업로 78-11, 2층)</p>
-          <p>참가자(총 13명): 준빵, 날아라호, 타키온, 장금이에이스, 살려줘제바알, 울산땡주, 무근정, 오!건2, 인생무생, 허니완, 원조가가멜, 빽스윙쫌만더, 원영민, 필드난폭자</p>
-          <button class="archive-shot" type="button" data-lightbox-src="images/archive-2025-02.webp" data-lightbox-title="2025년 2월 행사" data-lightbox-caption="2025.02 1분기 정기 모임 · 두왕테크노골프점" style="background-image:url('images/archive-2025-02.webp');">
-            <span class="archive-zoom">VIEW PHOTO</span>
-          </button>
-        </article>
-      </div>
-    </section>
-
-    <section class="join-banner section-shell" data-reveal>
-      <p class="eyebrow">JOIN US</p>
-      <h2>함께 스윙하고, 기록하고, 더 자주 이야기합니다.</h2>
-      <p>정기전 중심으로 운영하며 사진과 후기, 다음 일정 이야기가 자연스럽게 이어지는 동호회입니다.</p>
-      <div class="join-actions">
-        <button class="btn primary" type="button" data-open-modal="joinModal">가입 문의하기</button>
-        <a class="btn secondary" href="#top">맨 위로</a>
+        <div class="contact-grid" id="contactGrid"></div>
       </div>
     </section>
   </main>
 
-  <div class="modal" id="rsvpModal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="rsvpTitle">
-      <div class="modal-head">
-        <div>
-          <p class="eyebrow">NEXT TEE TIME</p>
-          <h3 id="rsvpTitle">참석 신청 안내</h3>
-        </div>
-        <button class="btn ghost small" type="button" data-close-modal>닫기</button>
-      </div>
-      <div class="modal-body">
-        <p>운영 상태: 2026년 2분기 정기 라운드 준비 중</p>
-        <p>장소: 후보 정리 후 공지</p>
-        <p>일정 확정 시 회장/총무 공지와 함께 참석 신청을 오픈합니다.</p>
-        <p>선호 시간대나 장소 의견은 운영진에게 전달하면 공지 정리에 반영할 수 있습니다.</p>
-      </div>
-    </div>
-  </div>
+  <footer class="site-footer shell">
+    <p>코오롱 스크린 골프 동호회 운영 보드</p>
+    <p id="footerMeta"></p>
+  </footer>
 
-  <div class="modal" id="joinModal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="joinTitle">
-      <div class="modal-head">
+  <dialog class="dialog" id="noticeDialog" aria-labelledby="noticeDialogTitle">
+    <div class="dialog-card">
+      <div class="dialog-head">
         <div>
-          <p class="eyebrow">JOIN</p>
-          <h3 id="joinTitle">가입 문의</h3>
+          <p class="eyebrow">OPERATING MEMO</p>
+          <h3 id="noticeDialogTitle">다음 라운드 운영 메모</h3>
         </div>
-        <button class="btn ghost small" type="button" data-close-modal>닫기</button>
+        <button class="btn ghost small" type="button" data-close-dialog="noticeDialog">닫기</button>
       </div>
-      <div class="modal-body">
-        <p>정기 라운드, 기록 공유, 친선 매치를 함께합니다.</p>
-        <p>회장: 김무건 · gun77@kolon.com</p>
-        <p>총무: 정무근 · moogunjeong@kolon.com</p>
-      </div>
+      <div class="dialog-body" id="noticeDialogBody"></div>
     </div>
-  </div>
+  </dialog>
 
-  <div class="modal" id="locationModal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="locationTitle">
-      <div class="modal-head">
+  <dialog class="dialog" id="detailDialog" aria-labelledby="detailDialogTitle">
+    <div class="dialog-card detail-dialog-card">
+      <div class="dialog-head">
         <div>
-          <p class="eyebrow">CLUB BOARD NOTE</p>
-          <h3 id="locationTitle">운영 메모</h3>
+          <p class="eyebrow">ARCHIVE DETAIL</p>
+          <h3 id="detailDialogTitle">라운드 상세</h3>
         </div>
-        <button class="btn ghost small" type="button" data-close-modal>닫기</button>
+        <button class="btn ghost small" type="button" data-close-dialog="detailDialog">닫기</button>
       </div>
-      <div class="modal-body">
-        <p>현재 상태: 2026년 2분기 정기 라운드 준비 중</p>
-        <p>장소 후보: 접근성과 타석 환경 기준으로 검토 중</p>
-        <p>참석 신청: 일정 확정 후 공지와 함께 오픈</p>
-        <p>의견 수집: 선호 시간대, 가고 싶은 스크린장</p>
-      </div>
+      <div class="dialog-body" id="detailDialogBody"></div>
     </div>
-  </div>
+  </dialog>
 
-  <div class="modal" id="attendanceModal" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="attendanceTitle">
-      <div class="modal-head">
+  <dialog class="dialog lightbox-dialog" id="lightboxDialog" aria-labelledby="lightboxTitle">
+    <div class="dialog-card lightbox-card">
+      <div class="dialog-head">
         <div>
-          <p class="eyebrow">ARCHIVE PLAYERS</p>
-          <h3 id="attendanceTitle">2026.03.04 참가 멤버 10명</h3>
-        </div>
-        <button class="btn ghost small" type="button" data-close-modal>닫기</button>
-      </div>
-      <div class="modal-body">
-        <ul class="attendee-list">
-          <li>무근정 (정무근)</li>
-          <li>덕충안길 (권순노)</li>
-          <li>살려줘제바알 (김경수)</li>
-          <li>오!건2 (김무건)</li>
-          <li>원조가가멜 (김정훈)</li>
-          <li>준빵 (김효준)</li>
-          <li>날아라호 (심재호)</li>
-          <li>타키온 (이동수)</li>
-          <li>원펀쓰리강냉 (천기준)</li>
-          <li>장금이에이스 (하선재)</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal lightbox" id="photoLightbox" aria-hidden="true">
-    <div class="modal-card lightbox-card" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
-      <div class="modal-head">
-        <div>
-          <p class="eyebrow">ARCHIVE PHOTO</p>
+          <p class="eyebrow">PHOTO VIEWER</p>
           <h3 id="lightboxTitle">행사 사진</h3>
-          <p id="lightboxCaption">기록 이미지</p>
+          <p class="lightbox-caption" id="lightboxCaption">사진 설명</p>
         </div>
-        <button class="btn ghost small" type="button" data-close-modal>닫기</button>
+        <button class="btn ghost small" type="button" data-close-dialog="lightboxDialog">닫기</button>
       </div>
       <div class="lightbox-stage">
         <button class="lightbox-nav" id="lightboxPrev" type="button" aria-label="이전 사진">‹</button>
-        <img id="lightboxImage" src="" alt="동호회 아카이브 사진" />
+        <img id="lightboxImage" src="" alt="" />
         <button class="lightbox-nav" id="lightboxNext" type="button" aria-label="다음 사진">›</button>
       </div>
-      <div class="lightbox-thumbs" id="lightboxThumbs" aria-label="썸네일 목록"></div>
+      <div class="lightbox-strip" id="lightboxStrip" aria-label="사진 썸네일"></div>
     </div>
-  </div>
+  </dialog>
 
-  <script defer src="./main.js?v=20260301-5"></script>
+  <script defer src="./main.js?v=20260313-2"></script>
 </body>
 </html>
