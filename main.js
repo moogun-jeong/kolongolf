@@ -21,6 +21,24 @@ const members = [
 
 const archives = [
   {
+    date: "2026.04.10",
+    label: "필드 행사",
+    title: "2026년 4월 베이스타즈CC 필드 행사",
+    location: "베이스타즈CC",
+    people: "12명 참가",
+    summary: "조별 티오프 후 라운딩을 진행하고 명촌 중식 장소에 모여 마무리한 4월 필드 행사 기록입니다.",
+    details: [
+      "티오프: 07:20 BAY, 07:55 BAY, 08:09 STARS",
+      "운영: 그린피·캐디피 개인 부담, 카트비 동호회 지원",
+      "시상: 니어리스트(STARS 5H), 다버디상, 각 조 1위"
+    ],
+    images: [
+      "images/archive-2026-04-2.png",
+      "images/archive-2026-04-3.png",
+      "images/archive-2026-04-1.png"
+    ]
+  },
+  {
     date: "2026.03.04",
     label: "정기 스크린 라운드",
     title: "2026년 3월 정기전",
@@ -74,14 +92,19 @@ const archives = [
 
 const heroSlides = [
   {
+    image: "images/archive-2026-04-2.png",
+    date: "2026.04.10",
+    caption: "4월 베이스타즈CC 필드 행사"
+  },
+  {
+    image: "images/archive-2026-04-3.png",
+    date: "2026.04.10",
+    caption: "필드 라운드 코스 기록"
+  },
+  {
     image: "images/archive-2026-03-1.jpeg",
     date: "2026.03.04",
     caption: "3월 정기 스크린 라운드"
-  },
-  {
-    image: "images/archive-2025-12.webp",
-    date: "2025.12.09",
-    caption: "송년 라운드와 시상"
   },
   {
     image: "images/archive-2025-05.webp",
@@ -89,6 +112,13 @@ const heroSlides = [
     caption: "상반기 필드 라운딩"
   }
 ];
+
+const nextNotice = {
+  eyebrow: "Next Notice",
+  title: "2분기 말 스크린 행사 준비 중",
+  meta: "일시·장소·참가 방식은 추후 공지",
+  body: "세부 일정이 확정되면 회장/총무 공지와 함께 홈페이지 일정도 업데이트합니다."
+};
 
 const defineElement = (name, elementClass) => {
   if (!customElements.get(name)) customElements.define(name, elementClass);
@@ -152,11 +182,17 @@ class KolonHero extends HTMLElement {
             <h1 id="heroTitle">함께 치고,<br />함께 기록하는<br />스크린 골프 모임</h1>
             <p>
               코오롱 스크린 골프 동호회는 정기 라운드 일정, 멤버 네트워크,
-              지난 모임의 사진과 기록을 한 곳에 모아 공유합니다.
+              4월 필드 행사까지 이어진 사진과 기록을 한 곳에 모아 공유합니다.
             </p>
+            <div class="hero-meta-strip" aria-label="동호회 주요 정보">
+              <span><strong>Next</strong>2분기 말</span>
+              <span><strong>Latest</strong>4월 필드</span>
+              <span><strong>Members</strong>18명</span>
+            </div>
             <a class="text-button" href="#features">About us</a>
           </div>
           <figure class="hero-media" data-reveal>
+            <span class="hero-photo-tag" aria-hidden="true">FIELD 04</span>
             <img id="heroImage" src="${heroSlides[0].image}" alt="코오롱 스크린 골프 동호회 대표 사진" fetchpriority="high" />
             <figcaption>
               <span id="heroDate">${heroSlides[0].date}</span>
@@ -226,10 +262,10 @@ class KolonImageStatement extends HTMLElement {
     this.dataset.ready = "true";
     this.innerHTML = `
       <section class="image-statement" aria-label="동호회 활동 사진">
-        <img src="images/archive-2025-12.webp" alt="코오롱 스크린 골프 동호회 송년 라운드 단체 사진" loading="lazy" />
+        <img src="images/archive-2026-04-1.png" alt="코오롱 스크린 골프 동호회 4월 필드 행사 중식 모임 사진" loading="lazy" />
         <div class="statement-copy" data-reveal>
           <p class="section-kicker">Round Memory</p>
-          <h2>모임마다 남긴 사진이 다음 라운드의 이야기가 됩니다.</h2>
+          <h2>필드에서 시작한 라운드는 함께 모인 자리까지 기록으로 남습니다.</h2>
         </div>
       </section>
     `;
@@ -245,17 +281,24 @@ class KolonSchedule extends HTMLElement {
         <div class="section-heading centered" data-reveal>
           <p class="section-kicker">Schedule</p>
           <h2 id="scheduleTitle">다가오는 모임</h2>
-          <p>확정 전 정보는 준비 상태로 표시하고, 운영진 공지 후 세부 내용을 업데이트합니다.</p>
+          <p>4월 필드 행사는 기록으로 보관했고, 다음 모임은 2분기 말 스크린 행사로 준비합니다.</p>
         </div>
 
         <div class="schedule-grid">
           <article class="next-event" data-reveal>
-            <p class="event-state">정기 라운드 준비 중</p>
-            <h3>2026년 2분기 정기 라운드</h3>
+            <div class="event-topline">
+              <p class="event-state">상세 추후 공지</p>
+              <span>Q2 Screen</span>
+            </div>
+            <h3>2026년 2분기 말 스크린 행사</h3>
+            <div class="event-date-lockup" aria-hidden="true">
+              <span>Q2</span>
+              <strong>Late</strong>
+            </div>
             <dl>
               <div>
                 <dt>일시</dt>
-                <dd>2026년 2분기 예정</dd>
+                <dd>2026년 2분기 말 예정</dd>
               </div>
               <div>
                 <dt>장소</dt>
@@ -263,30 +306,34 @@ class KolonSchedule extends HTMLElement {
               </div>
               <div>
                 <dt>방식</dt>
-                <dd>스트로크 플레이 예정</dd>
+                <dd>스크린 라운드 예정</dd>
+              </div>
+              <div>
+                <dt>안내</dt>
+                <dd>자세한 내용은 추후 공지</dd>
               </div>
             </dl>
             <div class="button-row">
-              <button class="solid-button" type="button" data-open-modal="rsvpModal">알림 신청</button>
-              <button class="line-button" type="button" data-open-modal="locationModal">장소 확인</button>
+              <button class="solid-button" type="button" data-open-modal="rsvpModal">공지 확인</button>
+              <a class="line-button" href="#archive">4월 기록 보기</a>
             </div>
           </article>
 
           <div class="schedule-notes">
             <article data-reveal>
               <span>01</span>
-              <h3>운영진 공지</h3>
-              <p>장소와 시간 확정 후 참석 신청을 오픈합니다.</p>
+              <h3>4월 필드 행사 기록 완료</h3>
+              <p>베이스타즈CC 라운딩과 중식 모임 사진을 아카이브에 반영했습니다.</p>
             </article>
             <article data-reveal>
               <span>02</span>
-              <h3>참석자 정리</h3>
-              <p>참석 인원과 조 편성은 모집 마감 후 공유합니다.</p>
+              <h3>2분기 말 스크린 행사 준비</h3>
+              <p>다음 일정은 스크린 라운드로 진행할 예정이며 세부 정보는 준비 중입니다.</p>
             </article>
             <article data-reveal>
               <span>03</span>
-              <h3>기록 보관</h3>
-              <p>모임 종료 후 사진과 주요 기록을 아카이브에 반영합니다.</p>
+              <h3>상세 공지 대기</h3>
+              <p>일시, 장소, 참가 방식이 확정되면 운영진 공지 후 홈페이지에 업데이트합니다.</p>
             </article>
           </div>
         </div>
@@ -339,8 +386,16 @@ class KolonArchive extends HTMLElement {
     if (this.dataset.ready) return;
     this.dataset.ready = "true";
     const archiveItems = archives
-      .map(
-        (archive, index) => `
+      .map((archive, index) => {
+        const details = archive.details?.length
+          ? `
+              <ul class="archive-details" aria-label="${archive.title} 상세 기록">
+                ${archive.details.map((detail) => `<li>${detail}</li>`).join("")}
+              </ul>
+            `
+          : "";
+
+        return `
           <article class="archive-card" data-reveal>
             <button class="archive-photo" type="button" data-archive-index="${index}" aria-label="${archive.title} 사진 보기">
               <img src="${archive.images[0]}" alt="${archive.title} 대표 사진" loading="lazy" />
@@ -349,14 +404,15 @@ class KolonArchive extends HTMLElement {
               <p class="archive-meta">${archive.date} · ${archive.label}</p>
               <h3>${archive.title}</h3>
               <p>${archive.summary}</p>
+              ${details}
               <div class="archive-foot">
                 <span>${archive.location}</span>
                 <span>${archive.people}</span>
               </div>
             </div>
           </article>
-        `
-      )
+        `;
+      })
       .join("");
 
     this.innerHTML = `
@@ -403,15 +459,16 @@ class KolonModalStack extends HTMLElement {
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="rsvpTitle">
           <div class="modal-head">
             <div>
-              <p class="section-kicker">Next Tee Time</p>
-              <h3 id="rsvpTitle">참석 신청 안내</h3>
+              <p class="section-kicker">Next Screen Event</p>
+              <h3 id="rsvpTitle">2분기 말 스크린 행사 안내</h3>
             </div>
             <button class="line-button small" type="button" data-close-modal>닫기</button>
           </div>
           <div class="modal-body">
-            <p>일시: 2026년 2분기 예정</p>
+            <p>일시: 2026년 2분기 말 예정</p>
             <p>장소: 추후 공지</p>
-            <p>일정 확정 시 회장/총무 공지로 참석 신청을 안내합니다.</p>
+            <p>방식: 스크린 라운드 예정</p>
+            <p>자세한 일정과 참가 방식은 운영진 공지 후 업데이트합니다.</p>
           </div>
         </div>
       </div>
@@ -438,14 +495,14 @@ class KolonModalStack extends HTMLElement {
           <div class="modal-head">
             <div>
               <p class="section-kicker">Location</p>
-              <h3 id="locationTitle">정기 라운드 장소 안내</h3>
+              <h3 id="locationTitle">다음 일정 장소 안내</h3>
             </div>
             <button class="line-button small" type="button" data-close-modal>닫기</button>
           </div>
           <div class="modal-body">
             <p>장소: 추후 공지</p>
             <p>주소: 장소 확정 후 업데이트</p>
-            <p>일시: 2026년 2분기 예정</p>
+            <p>일시: 2026년 2분기 말 예정</p>
           </div>
         </div>
       </div>
@@ -468,6 +525,32 @@ class KolonModalStack extends HTMLElement {
           <div class="lightbox-thumbs" id="lightboxThumbs" aria-label="썸네일 목록"></div>
         </div>
       </div>
+    `;
+  }
+}
+
+class KolonBottomNotice extends HTMLElement {
+  connectedCallback() {
+    if (this.dataset.ready) return;
+    this.dataset.ready = "true";
+    this.innerHTML = `
+      <section class="bottom-notice" data-bottom-notice role="region" aria-labelledby="bottomNoticeTitle" aria-live="polite">
+        <span class="notice-mark" aria-hidden="true"></span>
+        <div class="notice-copy">
+          <p>${nextNotice.eyebrow}</p>
+          <h2 id="bottomNoticeTitle">${nextNotice.title}</h2>
+          <span>${nextNotice.meta}</span>
+          <small>${nextNotice.body}</small>
+        </div>
+        <div class="notice-actions">
+          <label class="notice-check">
+            <input type="checkbox" data-notice-snooze />
+            <span>일주일간 열지 않기</span>
+          </label>
+          <button class="line-button small" type="button" data-open-modal="rsvpModal">상세 보기</button>
+          <button class="notice-close" type="button" data-close-bottom-notice aria-label="하단 일정 공지 닫기"></button>
+        </div>
+      </section>
     `;
   }
 }
@@ -506,6 +589,7 @@ defineElement("kolon-members", KolonMembers);
 defineElement("kolon-archive", KolonArchive);
 defineElement("kolon-join", KolonJoin);
 defineElement("kolon-modal-stack", KolonModalStack);
+defineElement("kolon-bottom-notice", KolonBottomNotice);
 defineElement("kolon-footer", KolonFooter);
 
 document.body.append(document.createElement("kolon-footer"));
@@ -769,6 +853,49 @@ const initLightbox = () => {
   });
 };
 
+const initBottomNotice = () => {
+  const notice = document.querySelector("[data-bottom-notice]");
+  if (!notice) return;
+
+  const storageKey = "kolongolf:bottom-notice:hidden-until";
+  const week = 7 * 24 * 60 * 60 * 1000;
+  const checkbox = notice.querySelector("[data-notice-snooze]");
+  const close = notice.querySelector("[data-close-bottom-notice]");
+
+  const getHiddenUntil = () => {
+    try {
+      return Number(window.localStorage.getItem(storageKey)) || 0;
+    } catch {
+      return 0;
+    }
+  };
+
+  const setHiddenUntil = () => {
+    try {
+      window.localStorage.setItem(storageKey, String(Date.now() + week));
+    } catch {
+      // Storage can be unavailable in private browsing or embedded previews.
+    }
+  };
+
+  if (getHiddenUntil() > Date.now()) {
+    notice.hidden = true;
+    return;
+  }
+
+  window.requestAnimationFrame(() => {
+    notice.classList.add("is-visible");
+  });
+
+  close?.addEventListener("click", () => {
+    if (checkbox instanceof HTMLInputElement && checkbox.checked) setHiddenUntil();
+    notice.classList.remove("is-visible");
+    window.setTimeout(() => {
+      notice.hidden = true;
+    }, 220);
+  });
+};
+
 const initPage = () => {
   initHeader();
   initSmoothScroll();
@@ -778,6 +905,7 @@ const initPage = () => {
   initHeroSlider();
   initModals();
   initLightbox();
+  initBottomNotice();
 };
 
 initPage();
