@@ -181,18 +181,18 @@ class KolonHero extends HTMLElement {
             <p class="section-kicker">Kolon Screen Golf</p>
             <h1 id="heroTitle">함께 치고,<br />함께 기록하는<br />스크린 골프 모임</h1>
             <p>
-              코오롱 스크린 골프 동호회는 정기 라운드 일정, 멤버 네트워크,
-              4월 필드 행사까지 이어진 사진과 기록을 한 곳에 모아 공유합니다.
+              코오롱 스크린 골프 동호회는 함께 라운드하고 기록을 나누는 사내 골프 모임입니다.
+              정기 일정, 멤버 소식, 지난 모임의 사진과 이야기를 한 곳에 모아 공유합니다.
             </p>
             <div class="hero-meta-strip" aria-label="동호회 주요 정보">
               <span><strong>Next</strong>2분기 말</span>
-              <span><strong>Latest</strong>4월 필드</span>
+              <span><strong>Archive</strong>라운드 기록</span>
               <span><strong>Members</strong>18명</span>
             </div>
             <a class="text-button" href="#features">About us</a>
           </div>
           <figure class="hero-media" data-reveal>
-            <span class="hero-photo-tag" aria-hidden="true">FIELD 04</span>
+            <span class="hero-photo-tag" aria-hidden="true">CLUB PHOTO</span>
             <img id="heroImage" src="${heroSlides[0].image}" alt="코오롱 스크린 골프 동호회 대표 사진" fetchpriority="high" />
             <figcaption>
               <span id="heroDate">${heroSlides[0].date}</span>
