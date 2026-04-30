@@ -21,7 +21,7 @@
 *   `git diff --check` 통과.
 *   로컬 서버에서 `index.html`, `main.js?v=20260430-1`, `style.css?v=20260430-1` `200` 응답 확인.
 *   Chromium `--dump-dom`으로 회원 SVG 18개, 스프라이트 심볼 18개, `currentColor` stroke 속성 렌더링 확인.
-*   GitHub 기기 인증 코드가 승인되지 않아 원격 푸시와 GitHub Pages 배포 확인은 대기 상태.
+*   GitHub `main` 브랜치 푸시 및 GitHub Pages 배포 반영 확인 완료.
 
 #### **기술적 결정 이유**
 *   **토큰/파일 크기 절감**: 카드마다 전체 SVG를 반복하지 않고 스프라이트와 `<use>`를 사용해 DOM 반복을 줄임.
