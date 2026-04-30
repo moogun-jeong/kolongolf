@@ -7,7 +7,7 @@
 *   [x] 4월 베이스타즈CC 아카이브 상세 기록에 홀인원/수상 정보 추가
 *   [x] 캐시 버전 갱신 및 렌더링 검증
 *   [x] `PROJECT_LOG.md`에 변경 사항 기록
-*   [ ] 변경 사항 커밋, GitHub 푸시, GitHub Pages 배포 확인
+*   [x] 변경 사항 커밋, GitHub 푸시, GitHub Pages 배포 확인
 
 ## **2. 완료된 작업 (Completed Tasks)**
 *   [x] **2026년 4월 베이스타즈CC 수상 기록 추가**
