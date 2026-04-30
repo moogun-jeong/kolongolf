@@ -83,11 +83,13 @@ const archives = [
     title: "2026년 4월 베이스타즈CC 필드 행사",
     location: "베이스타즈CC",
     people: "12명 참가",
-    summary: "조별 티오프 후 라운딩을 진행하고 명촌 중식 장소에 모여 마무리한 4월 필드 행사 기록입니다.",
+    summary: "조별 티오프 후 라운딩을 진행하고 명촌 중식 장소에 모여 마무리한 4월 필드 행사 기록입니다. 홀인원과 공동 1위 기록까지 함께 남겼습니다.",
     details: [
       "티오프: 07:20 BAY, 07:55 BAY, 08:09 STARS",
       "운영: 그린피·캐디피 개인 부담, 카트비 동호회 지원",
-      "시상: 니어리스트(STARS 5H), 다버디상, 각 조 1위"
+      "홀인원: 이동수 팀장(STARS 8번 홀)",
+      "필드 전체 1위: 권순노 팀장, 서무환 팀장 공동 1위",
+      "시상: 니어리스트 이동수, 다버디 심재호"
     ],
     images: [
       "images/archive-2026-04-2.png",
@@ -380,7 +382,7 @@ class KolonSchedule extends HTMLElement {
             <article data-reveal>
               <span>01</span>
               <h3>4월 필드 행사 기록 완료</h3>
-              <p>베이스타즈CC 라운딩과 중식 모임 사진을 아카이브에 반영했습니다.</p>
+              <p>베이스타즈CC 라운딩, 홀인원, 수상 기록과 중식 모임 사진을 아카이브에 반영했습니다.</p>
             </article>
             <article data-reveal>
               <span>02</span>
