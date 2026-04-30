@@ -19,6 +19,63 @@ const members = [
   { handle: "장금이에이스", name: "하선재", role: "정회원", note: "정교한 퍼터" }
 ];
 
+const memberAnimals = [
+  ["hawk", "매"],
+  ["fox", "여우"],
+  ["bear", "곰"],
+  ["wolf", "늑대"],
+  ["deer", "사슴"],
+  ["turtle", "거북"],
+  ["rabbit", "토끼"],
+  ["penguin", "펭귄"],
+  ["horse", "말"],
+  ["dolphin", "돌고래"],
+  ["owl", "부엉이"],
+  ["tiger", "호랑이"],
+  ["seal", "물범"],
+  ["panda", "판다"],
+  ["crane", "두루미"],
+  ["shark", "상어"],
+  ["lion", "사자"],
+  ["whale", "고래"]
+];
+
+const memberAnimalSprite = `
+  <svg class="member-animal-sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="animal-hawk" viewBox="0 0 32 32"><path d="M3 18l9-7 4 5 4-5 9 7-9 6h-8z"/><path d="M13 18h6"/></symbol>
+      <symbol id="animal-fox" viewBox="0 0 32 32"><path d="M5 9l7 4 4-5 4 5 7-4-4 16H9z"/><path d="M12 20h8"/></symbol>
+      <symbol id="animal-bear" viewBox="0 0 32 32"><circle cx="10" cy="10" r="4"/><circle cx="22" cy="10" r="4"/><path d="M8 15c1-5 15-5 16 0v5c0 5-16 5-16 0z"/></symbol>
+      <symbol id="animal-wolf" viewBox="0 0 32 32"><path d="M6 7l7 5 3-6 3 6 7-5-4 18H10z"/><path d="M12 17l4 4 4-4"/></symbol>
+      <symbol id="animal-deer" viewBox="0 0 32 32"><path d="M12 11L8 6M20 11l4-5M10 8H6m16 0h4M10 14c0-6 12-6 12 0v5c0 6-12 6-12 0z"/></symbol>
+      <symbol id="animal-turtle" viewBox="0 0 32 32"><path d="M6 20c0-8 20-8 20 0 0 6-20 6-20 0z"/><path d="M26 19h4M2 19h4m4-5v12m12-12v12"/></symbol>
+      <symbol id="animal-rabbit" viewBox="0 0 32 32"><path d="M12 15C5 5 9 2 15 12M20 15c7-10 3-13-3-3"/><path d="M9 17c0-6 14-6 14 0v5c0 5-14 5-14 0z"/></symbol>
+      <symbol id="animal-penguin" viewBox="0 0 32 32"><path d="M10 16c0-10 12-10 12 0v6c0 7-12 7-12 0z"/><path d="M10 20l-5 4m17-4l5 4M14 25h4"/></symbol>
+      <symbol id="animal-horse" viewBox="0 0 32 32"><path d="M9 25V9l7-4 7 7-3 13"/><path d="M11 13h10m-6 12v-7"/></symbol>
+      <symbol id="animal-dolphin" viewBox="0 0 32 32"><path d="M4 21c8-10 17-11 24-4l-5 1 3 5c-8-4-15 1-22-2z"/><path d="M15 13l-2-5"/></symbol>
+      <symbol id="animal-owl" viewBox="0 0 32 32"><path d="M8 11l4-5 4 5 4-5 4 5v9c0 7-16 7-16 0z"/><circle cx="13" cy="16" r="2"/><circle cx="19" cy="16" r="2"/></symbol>
+      <symbol id="animal-tiger" viewBox="0 0 32 32"><path d="M6 8l6 4 4-4 4 4 6-4-3 17H9z"/><path d="M12 13l-2 4m10-4l2 4m-6-3v5"/></symbol>
+      <symbol id="animal-seal" viewBox="0 0 32 32"><path d="M5 21c3-9 19-9 22 0-6 6-16 6-22 0z"/><path d="M10 23l-5 4m17-4l5 4"/></symbol>
+      <symbol id="animal-panda" viewBox="0 0 32 32"><circle cx="10" cy="10" r="4"/><circle cx="22" cy="10" r="4"/><path d="M8 15c0-7 16-7 16 0v5c0 6-16 6-16 0z"/><path d="M13 18h6"/></symbol>
+      <symbol id="animal-crane" viewBox="0 0 32 32"><path d="M8 24c4-13 11-13 16-3"/><path d="M16 21V7l7 5M16 7l-5 4m5 10l-3 6m3-6l4 6"/></symbol>
+      <symbol id="animal-shark" viewBox="0 0 32 32"><path d="M3 18c8-7 18-7 26 0-8 5-18 5-26 0z"/><path d="M16 13l-3-6m11 11l5-4M10 21l-4 5"/></symbol>
+      <symbol id="animal-lion" viewBox="0 0 32 32"><path d="M16 5l4 4 6 1-1 6 3 5-6 2-3 5-3-4-3 4-3-5-6-2 3-5-1-6 6-1z"/><circle cx="16" cy="17" r="5"/></symbol>
+      <symbol id="animal-whale" viewBox="0 0 32 32"><path d="M4 19c4-7 17-9 24-1l-4 6H10z"/><path d="M25 16l3-6m0 0l2 5m-18 9l-3 4h9l-3-4"/></symbol>
+    </defs>
+  </svg>
+`;
+
+const getMemberAnimal = (index) => {
+  const [id, label] = memberAnimals[index % memberAnimals.length];
+  return { id, label };
+};
+
+const renderMemberAnimal = (animal) => `
+  <svg class="member-animal" viewBox="0 0 32 32" role="img" aria-label="${animal.label} 아이콘" focusable="false">
+    <use href="#animal-${animal.id}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></use>
+  </svg>
+`;
+
 const archives = [
   {
     date: "2026.04.10",
@@ -348,13 +405,19 @@ class KolonMembers extends HTMLElement {
     this.dataset.ready = "true";
     const memberItems = members
       .map(
-        (member) => `
+        (member, index) => {
+          const animal = getMemberAnimal(index);
+          return `
           <article class="member-card" data-member-card data-reveal>
-            <span>${member.role}</span>
+            <div class="member-card-top">
+              <span>${member.role}</span>
+              ${renderMemberAnimal(animal)}
+            </div>
             <h3>${member.handle}</h3>
-            <p>${member.name} · ${member.note}</p>
+            <p><strong>${member.name}</strong> · ${member.note}</p>
           </article>
-        `
+        `;
+        }
       )
       .join("");
 
@@ -373,6 +436,7 @@ class KolonMembers extends HTMLElement {
             <button class="line-button small" id="memberReset" type="button">초기화</button>
           </div>
         </div>
+        ${memberAnimalSprite}
         <div class="member-grid" id="memberGrid">
           ${memberItems}
         </div>
