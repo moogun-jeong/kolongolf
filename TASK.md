@@ -8,7 +8,7 @@
 *   [x] 내부 작업 내역처럼 보이는 표현을 방문자용 소개 문장으로 수정
 *   [x] 캐시 버전 갱신 및 렌더링 검증
 *   [x] `PROJECT_LOG.md`에 변경 사항 기록
-*   [ ] 변경 사항 커밋, GitHub 푸시, GitHub Pages 배포 확인
+*   [x] 변경 사항 커밋, GitHub 푸시, GitHub Pages 배포 확인
 
 ## **2. 완료된 작업 (Completed Tasks)**
 *   [x] **방문자용 행사 소개 문구 전반 개선**
