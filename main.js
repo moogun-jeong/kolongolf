@@ -19,60 +19,36 @@ const members = [
   { handle: "장금이에이스", name: "하선재", role: "정회원", note: "정교한 퍼터" }
 ];
 
-const memberAnimals = [
-  ["hawk", "매"],
-  ["fox", "여우"],
-  ["bear", "곰"],
-  ["wolf", "늑대"],
-  ["deer", "사슴"],
-  ["turtle", "거북"],
-  ["rabbit", "토끼"],
-  ["penguin", "펭귄"],
-  ["horse", "말"],
-  ["dolphin", "돌고래"],
-  ["owl", "부엉이"],
-  ["tiger", "호랑이"],
-  ["seal", "물범"],
-  ["panda", "판다"],
-  ["crane", "두루미"],
-  ["shark", "상어"],
-  ["lion", "사자"],
-  ["whale", "고래"]
+const memberMarks = [
+  ["flag", "플래그"],
+  ["score", "스코어카드"],
+  ["tee", "티"],
+  ["cup", "홀컵"],
+  ["green", "그린"],
+  ["ball", "골프공"]
 ];
 
-const memberAnimalSprite = `
-  <svg class="member-animal-sprite" aria-hidden="true" focusable="false">
+const memberMarkSprite = `
+  <svg class="member-mark-sprite" aria-hidden="true" focusable="false">
     <defs>
-      <symbol id="animal-hawk" viewBox="0 0 32 32"><path d="M3 18l9-7 4 5 4-5 9 7-9 6h-8z"/><path d="M13 18h6"/></symbol>
-      <symbol id="animal-fox" viewBox="0 0 32 32"><path d="M5 9l7 4 4-5 4 5 7-4-4 16H9z"/><path d="M12 20h8"/></symbol>
-      <symbol id="animal-bear" viewBox="0 0 32 32"><circle cx="10" cy="10" r="4"/><circle cx="22" cy="10" r="4"/><path d="M8 15c1-5 15-5 16 0v5c0 5-16 5-16 0z"/></symbol>
-      <symbol id="animal-wolf" viewBox="0 0 32 32"><path d="M6 7l7 5 3-6 3 6 7-5-4 18H10z"/><path d="M12 17l4 4 4-4"/></symbol>
-      <symbol id="animal-deer" viewBox="0 0 32 32"><path d="M12 11L8 6M20 11l4-5M10 8H6m16 0h4M10 14c0-6 12-6 12 0v5c0 6-12 6-12 0z"/></symbol>
-      <symbol id="animal-turtle" viewBox="0 0 32 32"><path d="M6 20c0-8 20-8 20 0 0 6-20 6-20 0z"/><path d="M26 19h4M2 19h4m4-5v12m12-12v12"/></symbol>
-      <symbol id="animal-rabbit" viewBox="0 0 32 32"><path d="M12 15C5 5 9 2 15 12M20 15c7-10 3-13-3-3"/><path d="M9 17c0-6 14-6 14 0v5c0 5-14 5-14 0z"/></symbol>
-      <symbol id="animal-penguin" viewBox="0 0 32 32"><path d="M10 16c0-10 12-10 12 0v6c0 7-12 7-12 0z"/><path d="M10 20l-5 4m17-4l5 4M14 25h4"/></symbol>
-      <symbol id="animal-horse" viewBox="0 0 32 32"><path d="M9 25V9l7-4 7 7-3 13"/><path d="M11 13h10m-6 12v-7"/></symbol>
-      <symbol id="animal-dolphin" viewBox="0 0 32 32"><path d="M4 21c8-10 17-11 24-4l-5 1 3 5c-8-4-15 1-22-2z"/><path d="M15 13l-2-5"/></symbol>
-      <symbol id="animal-owl" viewBox="0 0 32 32"><path d="M8 11l4-5 4 5 4-5 4 5v9c0 7-16 7-16 0z"/><circle cx="13" cy="16" r="2"/><circle cx="19" cy="16" r="2"/></symbol>
-      <symbol id="animal-tiger" viewBox="0 0 32 32"><path d="M6 8l6 4 4-4 4 4 6-4-3 17H9z"/><path d="M12 13l-2 4m10-4l2 4m-6-3v5"/></symbol>
-      <symbol id="animal-seal" viewBox="0 0 32 32"><path d="M5 21c3-9 19-9 22 0-6 6-16 6-22 0z"/><path d="M10 23l-5 4m17-4l5 4"/></symbol>
-      <symbol id="animal-panda" viewBox="0 0 32 32"><circle cx="10" cy="10" r="4"/><circle cx="22" cy="10" r="4"/><path d="M8 15c0-7 16-7 16 0v5c0 6-16 6-16 0z"/><path d="M13 18h6"/></symbol>
-      <symbol id="animal-crane" viewBox="0 0 32 32"><path d="M8 24c4-13 11-13 16-3"/><path d="M16 21V7l7 5M16 7l-5 4m5 10l-3 6m3-6l4 6"/></symbol>
-      <symbol id="animal-shark" viewBox="0 0 32 32"><path d="M3 18c8-7 18-7 26 0-8 5-18 5-26 0z"/><path d="M16 13l-3-6m11 11l5-4M10 21l-4 5"/></symbol>
-      <symbol id="animal-lion" viewBox="0 0 32 32"><path d="M16 5l4 4 6 1-1 6 3 5-6 2-3 5-3-4-3 4-3-5-6-2 3-5-1-6 6-1z"/><circle cx="16" cy="17" r="5"/></symbol>
-      <symbol id="animal-whale" viewBox="0 0 32 32"><path d="M4 19c4-7 17-9 24-1l-4 6H10z"/><path d="M25 16l3-6m0 0l2 5m-18 9l-3 4h9l-3-4"/></symbol>
+      <symbol id="mark-flag" viewBox="0 0 32 32"><path d="M10 27V5"/><path d="M10 6h14l-3 5 3 5H10"/><path d="M6 27h10"/></symbol>
+      <symbol id="mark-score" viewBox="0 0 32 32"><path d="M9 5h14v22H9z"/><path d="M13 11h6M13 16h6M13 21h4"/></symbol>
+      <symbol id="mark-tee" viewBox="0 0 32 32"><path d="M11 10h10"/><path d="M16 10v16"/><path d="M10 26h12"/></symbol>
+      <symbol id="mark-cup" viewBox="0 0 32 32"><path d="M8 12c0 8 16 8 16 0"/><path d="M8 12h16M16 17v9M11 26h10"/></symbol>
+      <symbol id="mark-green" viewBox="0 0 32 32"><path d="M5 22c6-7 16-7 22 0"/><path d="M16 22V7"/><path d="M16 7h8l-2 4 2 4h-8"/></symbol>
+      <symbol id="mark-ball" viewBox="0 0 32 32"><circle cx="16" cy="16" r="9"/><path d="M12 12h.01M16 11h.01M20 13h.01M13 17h.01M18 18h.01M15 22h.01"/></symbol>
     </defs>
   </svg>
 `;
 
-const getMemberAnimal = (index) => {
-  const [id, label] = memberAnimals[index % memberAnimals.length];
+const getMemberMark = (index) => {
+  const [id, label] = memberMarks[index % memberMarks.length];
   return { id, label };
 };
 
-const renderMemberAnimal = (animal) => `
-  <svg class="member-animal" viewBox="0 0 32 32" role="img" aria-label="${animal.label} 아이콘" focusable="false">
-    <use href="#animal-${animal.id}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></use>
+const renderMemberMark = (mark) => `
+  <svg class="member-mark" viewBox="0 0 32 32" role="img" aria-label="${mark.label} 아이콘" focusable="false">
+    <use href="#mark-${mark.id}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></use>
   </svg>
 `;
 
@@ -84,6 +60,7 @@ const archives = [
     location: "베이스타즈CC",
     people: "12명 참가",
     summary: "조별 티오프 후 라운딩을 진행하고 명촌 중식 장소에 모여 필드 행사를 함께했습니다. 이동수 팀장님의 홀인원과 전체 1위 시상까지 함께한 자리였습니다.",
+    highlights: ["Hole-in-one", "공동 1위", "12명 참가"],
     details: [
       "티오프: 07:20 BAY, 07:55 BAY, 08:09 STARS",
       "운영: 그린피·캐디피 개인 부담, 카트비 동호회 지원",
@@ -173,9 +150,9 @@ const heroSlides = [
 ];
 
 const nextNotice = {
-  eyebrow: "Next Notice",
+  eyebrow: "Next Round",
   title: "2분기 말 스크린 행사 예정",
-  meta: "일시·장소·참가 방식은 추후 공지",
+  meta: "확정 대기 · 운영진 공지 예정",
   body: "세부 일정이 확정되면 회장/총무 안내와 함께 홈페이지 일정에서도 알려드리겠습니다."
 };
 
@@ -193,20 +170,24 @@ class KolonSiteHeader extends HTMLElement {
           <button class="icon-button menu-toggle" type="button" aria-controls="mobileNav" aria-expanded="false" aria-label="메뉴 열기">
             <span></span>
           </button>
-          <a class="brand compact" href="#top" aria-label="홈으로 이동">kolongolf</a>
+          <a class="brand compact" href="#top" aria-label="홈으로 이동">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <strong>Kolon Golf</strong>
+          </a>
           <a class="icon-button search-link" href="#members" aria-label="회원 검색"></a>
         </div>
 
         <div class="desktop-bar">
           <a class="brand" href="#top" aria-label="홈으로 이동">
-            <strong>kolongolf</strong>
-            <span>screen golf society</span>
+            <span class="brand-mark" aria-hidden="true"></span>
+            <strong>Kolon Golf Society</strong>
+            <span>premium screen golf club</span>
           </a>
           <nav class="main-nav" aria-label="메인 메뉴">
-            <a href="#features">About</a>
+            <a href="#features">Club</a>
             <a href="#schedule">Schedule</a>
             <a href="#members">Members</a>
-            <a href="#archive">Archive</a>
+            <a href="#archive">Rounds</a>
           </nav>
           <div class="account-links">
             <button type="button" data-open-modal="rsvpModal">Notice</button>
@@ -215,10 +196,10 @@ class KolonSiteHeader extends HTMLElement {
         </div>
 
         <nav class="mobile-panel" id="mobileNav" aria-label="모바일 메뉴">
-          <a href="#features">About</a>
+          <a href="#features">Club</a>
           <a href="#schedule">Schedule</a>
           <a href="#members">Members</a>
-          <a href="#archive">Archive</a>
+          <a href="#archive">Rounds</a>
           <button type="button" data-open-modal="joinModal">Join</button>
         </nav>
       </header>
@@ -237,26 +218,34 @@ class KolonHero extends HTMLElement {
         </button>
         <div class="hero-inner">
           <div class="hero-copy" data-reveal>
-            <p class="section-kicker">Kolon Screen Golf</p>
-            <h1 id="heroTitle">함께 치고,<br />함께 기록하는<br />스크린 골프 모임</h1>
+            <p class="section-kicker">Kolon Golf Society</p>
+            <h1 id="heroTitle">함께 걷는 페어웨이,<br />함께 만드는<br />라운딩의 품격</h1>
             <p>
-              코오롱 스크린 골프 동호회는 함께 라운드하고 기록을 나누는 사내 골프 모임입니다.
-              정기 일정, 멤버 소식, 지난 모임의 사진과 이야기를 한 곳에 모아 공유합니다.
+              매월 정기 라운딩과 스크린 모임을 함께하는 코오롱 골프 동호회입니다.
+              일정, 회원, 지난 라운드의 사진과 기록을 한 곳에서 확인합니다.
             </p>
             <div class="hero-meta-strip" aria-label="동호회 주요 정보">
-              <span><strong>Next</strong>2분기 말</span>
-              <span><strong>Archive</strong>라운드 기록</span>
+              <span><strong>Next Round</strong>2분기 말 예정</span>
+              <span><strong>Latest Record</strong>베이스타즈CC</span>
               <span><strong>Members</strong>18명</span>
             </div>
-            <a class="text-button" href="#features">About us</a>
+            <div class="button-row">
+              <a class="solid-button" href="#schedule">월례회 일정 보기</a>
+              <a class="line-button" href="#archive">지난 라운드 보기</a>
+            </div>
           </div>
           <figure class="hero-media" data-reveal>
-            <span class="hero-photo-tag" aria-hidden="true">CLUB PHOTO</span>
-            <img id="heroImage" src="${heroSlides[0].image}" alt="코오롱 스크린 골프 동호회 대표 사진" fetchpriority="high" />
+            <span class="hero-photo-tag" aria-hidden="true">Club Round</span>
+            <img id="heroImage" src="${heroSlides[0].image}" alt="코오롱 골프 동호회 대표 라운딩 사진" fetchpriority="high" />
             <figcaption>
               <span id="heroDate">${heroSlides[0].date}</span>
               <strong id="heroCaption">${heroSlides[0].caption}</strong>
             </figcaption>
+            <div class="hero-course-card" aria-label="최근 주요 기록">
+              <span>Featured</span>
+              <strong>Hole-in-one</strong>
+              <small>STARS 8번 홀 · 이동수 팀장</small>
+            </div>
           </figure>
         </div>
         <button class="hero-arrow hero-arrow-next" type="button" data-hero-slide="next" aria-label="다음 대표 사진">
@@ -274,13 +263,13 @@ class KolonIntro extends HTMLElement {
     this.innerHTML = `
       <section class="intro-section site-section" aria-labelledby="introTitle">
         <div class="intro-title" data-reveal>
-          <p class="section-kicker">Club Note</p>
-          <h2 id="introTitle">좋은 샷보다 오래 남는 것은 같이 친 시간입니다.</h2>
+          <p class="section-kicker">Club Philosophy</p>
+          <h2 id="introTitle">좋은 샷보다 오래 남는 것은 함께한 라운드의 온도입니다.</h2>
         </div>
         <div class="intro-copy" data-reveal>
           <p>
-            정기전은 분기 단위로 운영하고, 장소와 경기 방식은 확정 즉시 공유합니다.
-            스크린 라운드는 부담 없이 참여하고, 함께한 순간은 다음 모임을 떠올릴 수 있게 정리합니다.
+            코오롱 골프 동호회는 정기 일정, 친선 경기, 필드 라운딩 기록을 차분하게 공유합니다.
+            누구나 부담 없이 합류하고, 함께한 순간은 사진과 기록으로 오래 남깁니다.
           </p>
           <a class="text-button" href="#schedule">다가오는 일정 보기</a>
         </div>
@@ -296,19 +285,22 @@ class KolonPrinciples extends HTMLElement {
     this.innerHTML = `
       <section class="principles-section site-section" aria-label="동호회 핵심 운영 방식">
         <article class="principle-item" data-reveal>
+          <span class="principle-index">01</span>
           <span class="principle-icon icon-calendar" aria-hidden="true"></span>
-          <h3>일정은 명확하게</h3>
-          <p>장소, 시간, 모집 상태를 한 화면에서 확인할 수 있도록 정리합니다.</p>
+          <h3>정기적으로 만나는 라운드</h3>
+          <p>다음 모임의 상태와 운영 안내를 한눈에 확인할 수 있게 정리합니다.</p>
         </article>
         <article class="principle-item" data-reveal>
+          <span class="principle-index">02</span>
           <span class="principle-icon icon-members" aria-hidden="true"></span>
-          <h3>멤버는 가볍게 찾기</h3>
-          <p>닉네임과 역할을 기준으로 빠르게 검색하고 모임 구성을 확인합니다.</p>
+          <h3>부담 없이 합류하는 경기</h3>
+          <p>회원명부와 운영진 정보를 간결하게 보여주어 모임 흐름을 쉽게 파악합니다.</p>
         </article>
         <article class="principle-item" data-reveal>
+          <span class="principle-index">03</span>
           <span class="principle-icon icon-heart" aria-hidden="true"></span>
-          <h3>추억은 오래 남기기</h3>
-          <p>라운드 사진, 참가자, 장소를 모임별 카드로 한눈에 볼 수 있게 정리합니다.</p>
+          <h3>사진과 기록으로 남는 모임</h3>
+          <p>라운딩 사진, 장소, 수상 기록을 모임별 이야기로 보관합니다.</p>
         </article>
       </section>
     `;
@@ -324,7 +316,12 @@ class KolonImageStatement extends HTMLElement {
         <img src="images/archive-2026-04-1.png" alt="코오롱 스크린 골프 동호회 4월 필드 행사 중식 모임 사진" loading="lazy" />
         <div class="statement-copy" data-reveal>
           <p class="section-kicker">Round Memory</p>
-          <h2>필드에서 시작한 라운드는 함께 모인 자리까지 이어집니다.</h2>
+          <h2>필드에서 시작한 라운드는 함께 모인 자리까지 오래 이어집니다.</h2>
+          <div class="statement-badges" aria-label="4월 필드 행사 주요 기록">
+            <span>2026.04.10</span>
+            <span>Baystars CC</span>
+            <span>Hole-in-one</span>
+          </div>
         </div>
       </section>
     `;
@@ -337,23 +334,32 @@ class KolonSchedule extends HTMLElement {
     this.dataset.ready = "true";
     this.innerHTML = `
       <section class="schedule-section site-section" aria-labelledby="scheduleTitle">
-        <div class="section-heading centered" data-reveal>
-          <p class="section-kicker">Schedule</p>
-          <h2 id="scheduleTitle">다가오는 모임</h2>
-          <p>4월에는 베이스타즈CC에서 필드 행사를 함께했고, 다음 모임은 2분기 말 스크린 행사로 준비합니다.</p>
+        <div class="section-heading split" data-reveal>
+          <div>
+            <p class="section-kicker">Schedule</p>
+            <h2 id="scheduleTitle">Next Round Board</h2>
+          </div>
+          <p>다가오는 스크린 행사와 지난 필드 기록을 한 화면에서 확인합니다.</p>
         </div>
 
-        <div class="schedule-grid">
-          <article class="next-event" data-reveal>
-            <div class="event-topline">
-              <p class="event-state">상세 추후 공지</p>
-              <span>Q2 Screen</span>
-            </div>
-            <h3>2026년 2분기 말 스크린 행사</h3>
+        <div class="schedule-board" data-reveal>
+          <article class="next-event">
             <div class="event-date-lockup" aria-hidden="true">
               <span>Q2</span>
               <strong>Late</strong>
+              <small>2026</small>
             </div>
+            <div class="event-content">
+              <div class="event-topline">
+                <p class="event-state">확정 대기</p>
+                <span>Screen Round</span>
+              </div>
+              <h3>2026년 2분기 말 스크린 행사</h3>
+              <p>세부 일정과 장소가 확정되면 회장/총무 안내와 함께 홈페이지 일정에서도 바로 확인할 수 있습니다.</p>
+            </div>
+          </article>
+
+          <div class="event-detail-panel" aria-label="다음 일정 상세 정보">
             <dl>
               <div>
                 <dt>일시</dt>
@@ -361,40 +367,45 @@ class KolonSchedule extends HTMLElement {
               </div>
               <div>
                 <dt>장소</dt>
-                <dd>추후 공지</dd>
+                <dd>운영진 공지 예정</dd>
               </div>
               <div>
                 <dt>방식</dt>
-                <dd>스크린 라운드 예정</dd>
+                <dd>스크린 라운드</dd>
               </div>
               <div>
-                <dt>안내</dt>
-                <dd>자세한 내용은 추후 공지</dd>
+                <dt>상태</dt>
+                <dd>참가 방식 확정 대기</dd>
               </div>
             </dl>
             <div class="button-row">
               <button class="solid-button" type="button" data-open-modal="rsvpModal">공지 확인</button>
               <a class="line-button" href="#archive">4월 행사 보기</a>
             </div>
-          </article>
-
-          <div class="schedule-notes">
-            <article data-reveal>
-              <span>01</span>
-              <h3>4월 베이스타즈CC 필드 행사</h3>
-              <p>라운딩부터 이동수 팀장님의 홀인원, 전체 1위 시상, 중식 모임까지 함께한 자리였습니다.</p>
-            </article>
-            <article data-reveal>
-              <span>02</span>
-              <h3>2분기 말 스크린 행사 예정</h3>
-              <p>다음 일정은 스크린 라운드로 진행할 예정이며 세부 정보는 준비 중입니다.</p>
-            </article>
-            <article data-reveal>
-              <span>03</span>
-              <h3>상세 안내 예정</h3>
-              <p>일시, 장소, 참가 방식이 확정되면 운영진 안내와 함께 홈페이지에서도 알려드립니다.</p>
-            </article>
           </div>
+        </div>
+
+        <div class="section-heading compact" data-reveal>
+          <p class="section-kicker">Schedule</p>
+          <h3>최근 운영 흐름</h3>
+        </div>
+
+        <div class="schedule-notes">
+          <article data-reveal>
+            <span>01</span>
+            <h3>4월 베이스타즈CC 필드 행사</h3>
+            <p>라운딩부터 이동수 팀장님의 홀인원, 공동 1위 시상, 중식 모임까지 함께한 자리였습니다.</p>
+          </article>
+          <article data-reveal>
+            <span>02</span>
+            <h3>2분기 말 스크린 행사 예정</h3>
+            <p>다음 일정은 스크린 라운드로 진행할 예정이며 세부 정보는 준비 중입니다.</p>
+          </article>
+          <article data-reveal>
+            <span>03</span>
+            <h3>운영진 상세 안내 예정</h3>
+            <p>일시, 장소, 참가 방식이 확정되면 운영진 안내와 홈페이지 일정에 함께 공지합니다.</p>
+          </article>
         </div>
       </section>
     `;
@@ -405,20 +416,31 @@ class KolonMembers extends HTMLElement {
   connectedCallback() {
     if (this.dataset.ready) return;
     this.dataset.ready = "true";
-    const memberItems = members
+    const renderMemberCard = (member, index, variant = "") => {
+      const mark = getMemberMark(index);
+      return `
+        <article class="member-card ${variant}" data-member-card data-reveal>
+          <div class="member-card-top">
+            <span>${member.role}</span>
+            ${renderMemberMark(mark)}
+          </div>
+          <h3>${member.handle}</h3>
+          <p><strong>${member.name}</strong> · ${member.note}</p>
+        </article>
+      `;
+    };
+
+    const staffMembers = members.filter((member) => member.role !== "정회원");
+    const regularMembers = members.filter((member) => member.role === "정회원");
+
+    const staffItems = staffMembers
+      .map((member, index) => renderMemberCard(member, index, "staff-card"))
+      .join("");
+
+    const memberItems = regularMembers
       .map(
         (member, index) => {
-          const animal = getMemberAnimal(index);
-          return `
-          <article class="member-card" data-member-card data-reveal>
-            <div class="member-card-top">
-              <span>${member.role}</span>
-              ${renderMemberAnimal(animal)}
-            </div>
-            <h3>${member.handle}</h3>
-            <p><strong>${member.name}</strong> · ${member.note}</p>
-          </article>
-        `;
+          return renderMemberCard(member, index + staffMembers.length);
         }
       )
       .join("");
@@ -428,7 +450,7 @@ class KolonMembers extends HTMLElement {
         <div class="section-heading split" data-reveal>
           <div>
             <p class="section-kicker">Members</p>
-            <h2 id="membersTitle">회원명부</h2>
+            <h2 id="membersTitle">Club Members</h2>
           </div>
           <div class="member-tools">
             <label class="search-field">
@@ -438,8 +460,11 @@ class KolonMembers extends HTMLElement {
             <button class="line-button small" id="memberReset" type="button">초기화</button>
           </div>
         </div>
-        ${memberAnimalSprite}
-        <div class="member-grid" id="memberGrid">
+        ${memberMarkSprite}
+        <div class="staff-grid" aria-label="운영진">
+          ${staffItems}
+        </div>
+        <div class="member-grid" id="memberGrid" aria-label="정회원">
           ${memberItems}
         </div>
       </section>
@@ -451,26 +476,35 @@ class KolonArchive extends HTMLElement {
   connectedCallback() {
     if (this.dataset.ready) return;
     this.dataset.ready = "true";
-    const archiveItems = archives
-      .map((archive, index) => {
-        const details = archive.details?.length
-          ? `
-              <ul class="archive-details" aria-label="${archive.title} 상세 기록">
-                ${archive.details.map((detail) => `<li>${detail}</li>`).join("")}
-              </ul>
-            `
-          : "";
+    const renderDetails = (archive) =>
+      archive.details?.length
+        ? `
+            <ul class="archive-details" aria-label="${archive.title} 상세 기록">
+              ${archive.details.map((detail) => `<li>${detail}</li>`).join("")}
+            </ul>
+          `
+        : "";
 
+    const featured = archives[0];
+    const featuredBadges = featured.highlights?.length
+      ? featured.highlights.map((item) => `<span>${item}</span>`).join("")
+      : "";
+
+    const archiveItems = archives
+      .slice(1)
+      .map((archive, index) => {
+        const archiveIndex = index + 1;
         return `
           <article class="archive-card" data-reveal>
-            <button class="archive-photo" type="button" data-archive-index="${index}" aria-label="${archive.title} 사진 보기">
+            <button class="archive-photo" type="button" data-archive-index="${archiveIndex}" aria-label="${archive.title} 사진 보기">
               <img src="${archive.images[0]}" alt="${archive.title} 대표 사진" loading="lazy" />
+              <span>View photos</span>
             </button>
             <div class="archive-body">
               <p class="archive-meta">${archive.date} · ${archive.label}</p>
               <h3>${archive.title}</h3>
               <p>${archive.summary}</p>
-              ${details}
+              ${renderDetails(archive)}
               <div class="archive-foot">
                 <span>${archive.location}</span>
                 <span>${archive.people}</span>
@@ -487,8 +521,27 @@ class KolonArchive extends HTMLElement {
           <div class="section-heading centered" data-reveal>
             <p class="section-kicker">Archive</p>
             <h2 id="archiveTitle">지난 라운드 이야기</h2>
-            <p>사진을 선택하면 해당 모임의 순간을 크게 볼 수 있습니다.</p>
+            <p>주요 라운드 기록은 크게, 나머지 모임은 카드형 아카이브로 이어집니다.</p>
           </div>
+          <article class="featured-round" data-reveal>
+            <button class="featured-photo" type="button" data-archive-index="0" aria-label="${featured.title} 사진 보기">
+              <img src="${featured.images[0]}" alt="${featured.title} 대표 사진" loading="lazy" />
+              <span>View featured round</span>
+            </button>
+            <div class="featured-body">
+              <p class="archive-meta">${featured.date} · ${featured.label}</p>
+              <h3>${featured.title}</h3>
+              <p>${featured.summary}</p>
+              <div class="featured-badges" aria-label="${featured.title} 주요 기록">
+                ${featuredBadges}
+              </div>
+              ${renderDetails(featured)}
+              <div class="archive-foot">
+                <span>${featured.location}</span>
+                <span>${featured.people}</span>
+              </div>
+            </div>
+          </article>
           <div class="archive-grid">
             ${archiveItems}
           </div>
@@ -505,8 +558,8 @@ class KolonJoin extends HTMLElement {
     this.innerHTML = `
       <section class="join-section site-section" aria-labelledby="joinTitle" data-reveal>
         <p class="section-kicker">Join Us</p>
-        <h2 id="joinTitle">함께 스윙하고, 기록하고, 다음 모임을 기다립니다.</h2>
-        <p>정기 라운드와 친선 매치를 함께할 동호회 멤버를 기다립니다.</p>
+        <h2 id="joinTitle">함께 스윙하고, 기록하고, 다음 라운드를 기다립니다.</h2>
+        <p>정기 라운드와 친선 매치를 함께할 코오롱 골프 동호회 멤버를 기다립니다.</p>
         <div class="button-row center">
           <button class="solid-button" type="button" data-open-modal="joinModal">가입 문의</button>
           <a class="line-button" href="#top">맨 위로</a>
@@ -532,8 +585,8 @@ class KolonModalStack extends HTMLElement {
           </div>
           <div class="modal-body">
             <p>일시: 2026년 2분기 말 예정</p>
-            <p>장소: 추후 공지</p>
-            <p>방식: 스크린 라운드 예정</p>
+            <p>장소: 운영진 공지 예정</p>
+            <p>방식: 스크린 라운드</p>
             <p>자세한 일정과 참가 방식은 운영진 안내와 함께 홈페이지에서도 알려드리겠습니다.</p>
           </div>
         </div>
@@ -549,7 +602,7 @@ class KolonModalStack extends HTMLElement {
             <button class="line-button small" type="button" data-close-modal>닫기</button>
           </div>
           <div class="modal-body">
-            <p>정기 라운드, 기록 공유, 친선 매치를 함께합니다.</p>
+            <p>정기 라운드, 기록 공유, 친선 매치를 함께하는 코오롱 골프 동호회입니다.</p>
             <p>회장: 김무건 · gun77@kolon.com</p>
             <p>총무: 정무근 · moogunjeong@kolon.com</p>
           </div>
@@ -566,7 +619,7 @@ class KolonModalStack extends HTMLElement {
             <button class="line-button small" type="button" data-close-modal>닫기</button>
           </div>
           <div class="modal-body">
-            <p>장소: 추후 공지</p>
+            <p>장소: 운영진 공지 예정</p>
             <p>주소: 장소 확정 후 안내</p>
             <p>일시: 2026년 2분기 말 예정</p>
           </div>
@@ -628,12 +681,16 @@ class KolonFooter extends HTMLElement {
     this.innerHTML = `
       <footer class="site-footer">
         <div class="footer-inner">
-          <a class="brand footer-brand" href="#top">kolongolf</a>
+          <a class="brand footer-brand" href="#top">
+            <span class="brand-mark" aria-hidden="true"></span>
+            <strong>Kolon Golf Society</strong>
+          </a>
           <nav aria-label="푸터 메뉴">
-            <a href="#features">About</a>
+            <a href="#features">Club</a>
             <a href="#schedule">Schedule</a>
             <a href="#members">Members</a>
-            <a href="#archive">Archive</a>
+            <a href="#archive">Rounds</a>
+            <button type="button" data-open-modal="joinModal">Join</button>
           </nav>
           <address>
             회장 김무건 · gun77@kolon.com<br />
@@ -665,10 +722,29 @@ const initHeader = () => {
   const header = document.querySelector("[data-site-header]");
   const menuToggle = document.querySelector(".menu-toggle");
   const mobilePanel = document.getElementById("mobileNav");
+  const navLinks = Array.from(document.querySelectorAll(".main-nav a, .mobile-panel a"));
+  const sections = ["features", "schedule", "members", "archive"]
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
 
   const closeMenu = () => {
     header?.classList.remove("menu-open");
     menuToggle?.setAttribute("aria-expanded", "false");
+  };
+
+  const syncHeaderState = () => {
+    header?.classList.toggle("is-scrolled", window.scrollY > 12);
+  };
+
+  const syncActiveLink = (id) => {
+    navLinks.forEach((link) => {
+      const isActive = link.getAttribute("href") === `#${id}`;
+      if (isActive) {
+        link.setAttribute("aria-current", "page");
+      } else {
+        link.removeAttribute("aria-current");
+      }
+    });
   };
 
   menuToggle?.addEventListener("click", () => {
@@ -685,6 +761,23 @@ const initHeader = () => {
   window.addEventListener("resize", () => {
     if (window.innerWidth > 760) closeMenu();
   });
+
+  syncHeaderState();
+  window.addEventListener("scroll", syncHeaderState, { passive: true });
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible?.target.id) syncActiveLink(visible.target.id);
+      },
+      { threshold: [0.18, 0.34], rootMargin: "-18% 0px -62% 0px" }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+  }
 };
 
 const initSmoothScroll = () => {
@@ -775,7 +868,17 @@ const initHeroSlider = () => {
   const render = (nextIndex) => {
     index = (nextIndex + heroSlides.length) % heroSlides.length;
     const slide = heroSlides[index];
-    if (image) image.src = slide.image;
+    if (image) {
+      if (prefersReducedMotion) {
+        image.src = slide.image;
+      } else {
+        image.classList.add("is-switching");
+        window.setTimeout(() => {
+          image.src = slide.image;
+          window.requestAnimationFrame(() => image.classList.remove("is-switching"));
+        }, 120);
+      }
+    }
     if (date) date.textContent = slide.date;
     if (caption) caption.textContent = slide.caption;
   };
