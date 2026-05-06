@@ -30,7 +30,9 @@
 *   로컬 서버(`python3 -m http.server 4173`)에서 `index.html`, `style.css?v=20260506-1`, `main.js?v=20260506-1` 모두 `200` 응답 확인.
 *   Chromium `--dump-dom`으로 `Kolon Golf Society`, 새 히어로 문구, `Next Round Board`, `Club Members`, `featured-round`, `bottom-notice`, `20260506-1` 렌더링 확인.
 *   데스크톱 스크린샷 `/tmp/kolongolf-premium-desktop.png` 생성. 현재 headless Chromium 환경의 한글 폰트 렌더링 오류로 모바일 스크린샷은 완료하지 못해 DOM 확인과 반응형 CSS 점검으로 보완.
-*   로컬 커밋 `4ce8708` 생성. `git push origin main`은 현재 셸에 GitHub HTTPS 자격 증명이 없어 `could not read Username for 'https://github.com'` 오류로 차단됨.
+*   커밋 `bf97ef4`를 GitHub `main` 브랜치에 SSH로 푸시 완료.
+*   Cloudflare Pages 체크 `Cloudflare Pages` 성공 및 preview URL `https://1df18509.kolongolf.pages.dev/` 배포 확인.
+*   `https://kolongolf.pages.dev/`, `https://moogun-jeong.github.io/kolongolf/`에서 `20260506-1` 캐시 버전과 새 `main.js`/`style.css` 렌더링 확인.
 
 #### **기술적 결정 이유**
 *   **구조 유지형 전면 개선**: Web Components 기반 구조는 안정적이므로 섹션 계약은 유지하고 데이터, 마크업 위계, 스타일 시스템을 크게 개선하는 방식이 배포 위험이 낮음.
