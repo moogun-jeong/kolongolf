@@ -19,38 +19,229 @@ const members = [
   { handle: "장금이에이스", name: "하선재", role: "정회원", note: "정교한 퍼터" }
 ];
 
-const memberMarks = [
-  ["flag", "플래그"],
-  ["score", "스코어카드"],
-  ["tee", "티"],
-  ["cup", "홀컵"],
-  ["green", "그린"],
-  ["ball", "골프공"]
+const memberAnimals = [
+  ["stag", "사슴", 82],
+  ["fox", "여우", 42],
+  ["bear", "곰", 72],
+  ["otter", "수달", 180],
+  ["owl", "부엉이", 108],
+  ["tiger", "호랑이", 58],
+  ["horse", "말", 96],
+  ["hawk", "매", 34],
+  ["dolphin", "돌고래", 214],
+  ["lynx", "스라소니", 318],
+  ["crane", "두루미", 24],
+  ["panther", "표범", 150],
+  ["cheetah", "치타", 88],
+  ["eagle", "독수리", 64],
+  ["heron", "왜가리", 196],
+  ["bison", "들소", 46],
+  ["seal", "물개", 226],
+  ["swan", "백조", 126]
 ];
 
-const memberMarkSprite = `
-  <svg class="member-mark-sprite" aria-hidden="true" focusable="false">
+const memberAnimalSprite = `
+  <svg class="member-animal-sprite" aria-hidden="true" focusable="false">
     <defs>
-      <symbol id="mark-flag" viewBox="0 0 32 32"><path d="M10 27V5"/><path d="M10 6h14l-3 5 3 5H10"/><path d="M6 27h10"/></symbol>
-      <symbol id="mark-score" viewBox="0 0 32 32"><path d="M9 5h14v22H9z"/><path d="M13 11h6M13 16h6M13 21h4"/></symbol>
-      <symbol id="mark-tee" viewBox="0 0 32 32"><path d="M11 10h10"/><path d="M16 10v16"/><path d="M10 26h12"/></symbol>
-      <symbol id="mark-cup" viewBox="0 0 32 32"><path d="M8 12c0 8 16 8 16 0"/><path d="M8 12h16M16 17v9M11 26h10"/></symbol>
-      <symbol id="mark-green" viewBox="0 0 32 32"><path d="M5 22c6-7 16-7 22 0"/><path d="M16 22V7"/><path d="M16 7h8l-2 4 2 4h-8"/></symbol>
-      <symbol id="mark-ball" viewBox="0 0 32 32"><circle cx="16" cy="16" r="9"/><path d="M12 12h.01M16 11h.01M20 13h.01M13 17h.01M18 18h.01M15 22h.01"/></symbol>
+      <symbol id="animal-stag" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M18 16c-4-6-3-10 1-12M20 16c-9-1-10-8-8-12M46 16c4-6 3-10-1-12M44 16c9-1 10-8 8-12" fill="none" stroke="var(--animal-line)" stroke-width="2.4" stroke-linecap="round" />
+        <path d="M19 22l-7-6 2 12M45 22l7-6-2 12" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2" stroke-linejoin="round" />
+        <path d="M20 30c0-10 24-10 24 0v8c0 8-5 14-12 14S20 46 20 38z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" />
+        <path d="M28 34h.01M36 34h.01" stroke="var(--animal-line)" stroke-width="3.2" stroke-linecap="round" />
+        <path d="M29 42c2 2 4 2 6 0" fill="none" stroke="var(--animal-line)" stroke-width="2" stroke-linecap="round" />
+      </symbol>
+      <symbol id="animal-fox" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M16 15l12 9h8l12-9-4 24c-1 8-6 13-12 13s-11-5-12-13z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
+        <path d="M24 33l8 17 8-17" fill="var(--animal-soft)" stroke="var(--animal-line)" stroke-width="2" stroke-linejoin="round" />
+        <path d="M26 31h.01M38 31h.01" stroke="var(--animal-line)" stroke-width="3.2" stroke-linecap="round" />
+        <path d="M31 40h2" stroke="var(--animal-line)" stroke-width="2.4" stroke-linecap="round" />
+      </symbol>
+      <symbol id="animal-bear" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <circle cx="20" cy="21" r="8" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.2" />
+        <circle cx="44" cy="21" r="8" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.2" />
+        <circle cx="32" cy="35" r="18" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" />
+        <ellipse cx="32" cy="42" rx="9" ry="7" fill="var(--animal-soft)" stroke="var(--animal-line)" stroke-width="2" />
+        <path d="M26 33h.01M38 33h.01M30 41h4M28 46c3 2 5 2 8 0" stroke="var(--animal-line)" stroke-width="2.6" stroke-linecap="round" />
+      </symbol>
+      <symbol id="animal-otter" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M19 32c0-10 6-17 13-17s13 7 13 17v7c0 8-6 14-13 14s-13-6-13-14z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" />
+        <ellipse cx="32" cy="40" rx="10" ry="8" fill="var(--animal-soft)" stroke="var(--animal-line)" stroke-width="2" />
+        <path d="M25 33h.01M39 33h.01M31 39h2M18 39l8 2M18 45l8-1M46 39l-8 2M46 45l-8-1" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
+      </symbol>
+      <symbol id="animal-owl" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M17 19l8 3 7-7 7 7 8-3v17c0 10-6 17-15 17s-15-7-15-17z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
+        <circle cx="26" cy="34" r="7" fill="var(--animal-soft)" stroke="var(--animal-line)" stroke-width="2" />
+        <circle cx="38" cy="34" r="7" fill="var(--animal-soft)" stroke="var(--animal-line)" stroke-width="2" />
+        <path d="M26 34h.01M38 34h.01M30 42l2 3 2-3" stroke="var(--animal-line)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+      </symbol>
+      <symbol id="animal-tiger" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M20 23l-5-6 1 12M44 23l5-6-1 12" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2" stroke-linejoin="round" />
+        <path d="M18 34c0-12 8-19 14-19s14 7 14 19c0 11-6 18-14 18s-14-7-14-18z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" />
+        <path d="M32 18v9M24 24l5 4M40 24l-5 4M21 33l7 1M43 33l-7 1" fill="none" stroke="var(--animal-line)" stroke-width="2" stroke-linecap="round" />
+        <path d="M26 36h.01M38 36h.01M30 44c2 2 4 2 6 0" stroke="var(--animal-line)" stroke-width="2.6" stroke-linecap="round" />
+      </symbol>
+      <symbol id="animal-horse" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M40 13c-10 1-18 7-19 17l-2 17h19c7 0 11-5 11-12V22c0-6-3-9-9-9z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
+        <path d="M31 17c-4 5-5 11-5 22M43 23h.01M31 38c5 2 8 1 11-1" fill="none" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
+        <path d="M20 30c6-7 13-9 20-10" fill="none" stroke="var(--animal-soft)" stroke-width="5" stroke-linecap="round" />
+      </symbol>
+      <symbol id="animal-hawk" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M17 31c8-13 22-15 33-8-3 1-6 4-7 8 5 0 8 3 10 6-10 2-18 0-23-5-3 7-8 12-15 15 2-6 2-11 2-16z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
+        <path d="M39 25l10 2-7 4M34 28h.01M22 38c6-1 12-4 17-9" fill="none" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
+      </symbol>
+      <symbol id="animal-dolphin" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M14 37c9-15 25-22 39-13-5 0-8 2-10 6 5 1 8 4 10 8-13 5-25 2-33-5l-8 8z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
+        <path d="M28 28l-3-9 10 7M41 31h.01" stroke="var(--animal-line)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      </symbol>
+      <symbol id="animal-lynx" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M20 22l-4-10 9 8M44 22l4-10-9 8" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2" stroke-linejoin="round" />
+        <path d="M18 34c0-11 7-18 14-18s14 7 14 18c0 10-6 17-14 17s-14-7-14-17z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" />
+        <path d="M24 36h.01M40 36h.01M31 43h2M17 19l-4-5M47 19l4-5M24 46c5 3 11 3 16 0" stroke="var(--animal-line)" stroke-width="2.4" stroke-linecap="round" />
+      </symbol>
+      <symbol id="animal-crane" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M37 15c-7 4-10 12-9 23 1 8-3 12-9 13h24c-5-3-7-8-6-16 1-6 5-8 12-9l-10-4z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
+        <path d="M41 21l13 2-12 4M36 23h.01M27 51v6M37 51v6" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
+      </symbol>
+      <symbol id="animal-panther" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M18 22l8-7 3 8h6l3-8 8 7-2 17c-1 8-6 13-12 13s-11-5-12-13z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
+        <path d="M25 34l4 1M39 34l-4 1M30 43c2 2 4 2 6 0M22 39l7 1M42 40l7-1" fill="none" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
+      </symbol>
+      <symbol id="animal-cheetah" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M19 31c0-10 6-17 13-17s13 7 13 17v6c0 9-6 15-13 15s-13-6-13-15z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" />
+        <path d="M23 23l-4-6M41 23l4-6M27 32h.01M37 32h.01M27 24h.01M38 24h.01M24 40h.01M40 40h.01M31 43c2 2 4 2 6 0" stroke="var(--animal-line)" stroke-width="2.4" stroke-linecap="round" />
+      </symbol>
+      <symbol id="animal-eagle" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M17 34c8-13 18-19 31-14-5 2-8 6-9 11 5 1 8 3 11 7-10 4-19 2-26-4-1 5-4 9-8 12 0-4 0-8 1-12z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
+        <path d="M37 25l15 2-12 6M33 29h.01M25 35c4-1 8-3 11-7" fill="none" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
+      </symbol>
+      <symbol id="animal-heron" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M41 16c-9 2-13 9-11 20 1 7-4 12-12 15h24c-4-3-6-8-4-15 2-6 7-8 14-10l-10-4z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
+        <path d="M45 22l11 3-12 3M38 23h.01M25 51v6M35 51v6" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
+      </symbol>
+      <symbol id="animal-bison" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M18 29c-5-7-3-13 4-15M46 29c5-7 3-13-4-15" fill="none" stroke="var(--animal-line)" stroke-width="2.8" stroke-linecap="round" />
+        <path d="M18 34c0-10 7-17 14-17s14 7 14 17c0 10-6 17-14 17s-14-7-14-17z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" />
+        <path d="M20 25c5-5 19-6 24 0" fill="none" stroke="var(--animal-soft)" stroke-width="6" stroke-linecap="round" />
+        <path d="M26 36h.01M38 36h.01M29 44c2 2 4 2 6 0" stroke="var(--animal-line)" stroke-width="2.5" stroke-linecap="round" />
+      </symbol>
+      <symbol id="animal-seal" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M18 37c0-11 7-18 15-18 9 0 16 8 15 19-1 8-7 14-15 14S18 46 18 37z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" />
+        <path d="M27 35h.01M39 35h.01M32 39h.01M18 43l10-2M18 48l10-3M46 41l10 2M46 45l10 3" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
+        <path d="M28 45c3 2 5 2 8 0" fill="none" stroke="var(--animal-line)" stroke-width="2" stroke-linecap="round" />
+      </symbol>
+      <symbol id="animal-swan" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
+        <path d="M38 14c-9 2-13 9-10 18 2 5 0 9-7 13 9 5 22 5 30-3-7 1-12-1-14-6-2-4 1-8 8-10z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
+        <path d="M41 21l12 3-11 4M38 22h.01M22 45c8 3 18 2 28-3" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
+      </symbol>
     </defs>
   </svg>
 `;
 
-const getMemberMark = (index) => {
-  const [id, label] = memberMarks[index % memberMarks.length];
-  return { id, label };
+const getMemberAnimal = (index) => {
+  const [id, label, hue] = memberAnimals[index % memberAnimals.length];
+  return { id, label, hue };
 };
 
-const renderMemberMark = (mark) => `
-  <svg class="member-mark" viewBox="0 0 32 32" role="img" aria-label="${mark.label} 아이콘" focusable="false">
-    <use href="#mark-${mark.id}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></use>
+const renderMemberAnimal = (animal, name) => `
+  <svg class="member-animal" viewBox="0 0 64 64" role="img" aria-label="${name} 회원 ${animal.label} 캐릭터" focusable="false" style="--animal-hue: ${animal.hue};">
+    <use href="#animal-${animal.id}"></use>
   </svg>
 `;
+
+const svgOrnaments = {
+  heroCourse: `
+    <svg class="hero-course-svg" viewBox="0 0 560 420" aria-hidden="true" focusable="false">
+      <path class="svg-fairway" d="M63 346C102 212 197 130 318 114c74-10 133-39 177-88" />
+      <path class="svg-fairway soft" d="M42 278c88-12 154-52 198-121 44-69 107-104 188-108" />
+      <path class="svg-fairway soft" d="M126 394c45-85 111-132 198-142 73-8 127-40 164-97" />
+      <circle cx="418" cy="102" r="38" class="svg-green" />
+      <circle cx="418" cy="102" r="7" class="svg-cup" />
+      <path class="svg-flagpole" d="M418 101V44" />
+      <path class="svg-flag" d="M421 45h47l-13 15 13 15h-47z" />
+      <path class="svg-ball-trail" d="M94 324c62-48 127-74 195-79" />
+      <circle cx="94" cy="324" r="6" class="svg-ball" />
+    </svg>
+  `,
+  introMap: `
+    <svg class="intro-course-svg" viewBox="0 0 360 210" aria-hidden="true" focusable="false">
+      <path d="M28 162c42-70 92-103 151-98 57 5 95-13 123-56" />
+      <path d="M56 190c36-42 76-62 121-59 64 5 107-21 131-76" />
+      <circle cx="287" cy="54" r="26" />
+      <path d="M287 54V18M287 18h34l-9 11 9 11h-34" />
+    </svg>
+  `,
+  scheduleMap: `
+    <svg class="schedule-course-svg" viewBox="0 0 320 240" aria-hidden="true" focusable="false">
+      <path d="M36 184c46-82 102-124 170-126 34-1 59-13 77-36" />
+      <path d="M72 216c22-32 51-53 87-62 47-12 83-40 107-84" />
+      <circle cx="238" cy="55" r="30" />
+      <path d="M238 55V21M238 21h31l-8 10 8 10h-31" />
+      <circle cx="76" cy="190" r="5" />
+    </svg>
+  `,
+  archiveMap: `
+    <svg class="archive-course-svg" viewBox="0 0 720 260" aria-hidden="true" focusable="false">
+      <path d="M34 204c92-110 191-161 297-153 108 8 199-11 273-57" />
+      <path d="M124 246c85-64 170-93 254-86 90 8 167-20 230-84" />
+      <circle cx="595" cy="64" r="38" />
+      <path d="M595 64V18M595 18h48l-13 15 13 15h-48" />
+    </svg>
+  `,
+  joinFlag: `
+    <svg class="join-flag-svg" viewBox="0 0 520 260" aria-hidden="true" focusable="false">
+      <path d="M52 219c63-91 144-134 244-129 82 4 139-20 172-73" />
+      <path d="M90 244c79-49 152-68 219-57 73 12 132-5 177-52" />
+      <circle cx="398" cy="82" r="34" />
+      <path d="M398 82V29M398 29h58l-16 18 16 18h-58" />
+      <circle cx="124" cy="211" r="7" />
+    </svg>
+  `
+};
+
+const principleIcons = {
+  round: `
+    <svg class="principle-svg-icon" viewBox="0 0 56 56" aria-hidden="true" focusable="false">
+      <path d="M11 42c10-17 23-25 38-22" />
+      <circle cx="39" cy="22" r="8" />
+      <path d="M39 22V8M39 8h11l-3 5 3 5H39" />
+      <path d="M12 43h32" />
+    </svg>
+  `,
+  score: `
+    <svg class="principle-svg-icon" viewBox="0 0 56 56" aria-hidden="true" focusable="false">
+      <path d="M16 9h24v38H16z" />
+      <path d="M22 19h12M22 27h12M22 35h8" />
+      <circle cx="39" cy="19" r="3" />
+      <circle cx="39" cy="27" r="3" />
+    </svg>
+  `,
+  memory: `
+    <svg class="principle-svg-icon" viewBox="0 0 56 56" aria-hidden="true" focusable="false">
+      <path d="M12 18h32v24H12z" />
+      <path d="M19 18l4-6h10l4 6" />
+      <circle cx="28" cy="30" r="8" />
+      <path d="M42 14h5v8" />
+    </svg>
+  `
+};
 
 const archives = [
   {
@@ -213,6 +404,7 @@ class KolonHero extends HTMLElement {
     this.dataset.ready = "true";
     this.innerHTML = `
       <section class="hero-band" aria-labelledby="heroTitle">
+        ${svgOrnaments.heroCourse}
         <button class="hero-arrow hero-arrow-prev" type="button" data-hero-slide="prev" aria-label="이전 대표 사진">
           <span aria-hidden="true">‹</span>
         </button>
@@ -262,6 +454,7 @@ class KolonIntro extends HTMLElement {
     this.dataset.ready = "true";
     this.innerHTML = `
       <section class="intro-section site-section" aria-labelledby="introTitle">
+        ${svgOrnaments.introMap}
         <div class="intro-title" data-reveal>
           <p class="section-kicker">Club Philosophy</p>
           <h2 id="introTitle">좋은 샷보다 오래 남는 것은 함께한 라운드의 온도입니다.</h2>
@@ -286,19 +479,19 @@ class KolonPrinciples extends HTMLElement {
       <section class="principles-section site-section" aria-label="동호회 핵심 운영 방식">
         <article class="principle-item" data-reveal>
           <span class="principle-index">01</span>
-          <span class="principle-icon icon-calendar" aria-hidden="true"></span>
+          <span class="principle-icon" aria-hidden="true">${principleIcons.round}</span>
           <h3>정기적으로 만나는 라운드</h3>
           <p>다음 모임의 상태와 운영 안내를 한눈에 확인할 수 있게 정리합니다.</p>
         </article>
         <article class="principle-item" data-reveal>
           <span class="principle-index">02</span>
-          <span class="principle-icon icon-members" aria-hidden="true"></span>
+          <span class="principle-icon" aria-hidden="true">${principleIcons.score}</span>
           <h3>부담 없이 합류하는 경기</h3>
           <p>회원명부와 운영진 정보를 간결하게 보여주어 모임 흐름을 쉽게 파악합니다.</p>
         </article>
         <article class="principle-item" data-reveal>
           <span class="principle-index">03</span>
-          <span class="principle-icon icon-heart" aria-hidden="true"></span>
+          <span class="principle-icon" aria-hidden="true">${principleIcons.memory}</span>
           <h3>사진과 기록으로 남는 모임</h3>
           <p>라운딩 사진, 장소, 수상 기록을 모임별 이야기로 보관합니다.</p>
         </article>
@@ -344,6 +537,7 @@ class KolonSchedule extends HTMLElement {
 
         <div class="schedule-board" data-reveal>
           <article class="next-event">
+            ${svgOrnaments.scheduleMap}
             <div class="event-date-lockup" aria-hidden="true">
               <span>Q2</span>
               <strong>Late</strong>
@@ -417,32 +611,33 @@ class KolonMembers extends HTMLElement {
     if (this.dataset.ready) return;
     this.dataset.ready = "true";
     const renderMemberCard = (member, index, variant = "") => {
-      const mark = getMemberMark(index);
+      const animal = getMemberAnimal(index);
       return `
         <article class="member-card ${variant}" data-member-card data-reveal>
           <div class="member-card-top">
             <span>${member.role}</span>
-            ${renderMemberMark(mark)}
           </div>
-          <h3>${member.handle}</h3>
-          <p><strong>${member.name}</strong> · ${member.note}</p>
+          <div class="member-identity">
+            ${renderMemberAnimal(animal, member.name)}
+            <div>
+              <h3>${member.handle}</h3>
+              <p><strong>${member.name}</strong> · ${member.note}</p>
+            </div>
+          </div>
         </article>
       `;
     };
 
-    const staffMembers = members.filter((member) => member.role !== "정회원");
-    const regularMembers = members.filter((member) => member.role === "정회원");
+    const indexedMembers = members.map((member, index) => ({ ...member, index }));
+    const staffMembers = indexedMembers.filter((member) => member.role !== "정회원");
+    const regularMembers = indexedMembers.filter((member) => member.role === "정회원");
 
     const staffItems = staffMembers
-      .map((member, index) => renderMemberCard(member, index, "staff-card"))
+      .map((member) => renderMemberCard(member, member.index, "staff-card"))
       .join("");
 
     const memberItems = regularMembers
-      .map(
-        (member, index) => {
-          return renderMemberCard(member, index + staffMembers.length);
-        }
-      )
+      .map((member) => renderMemberCard(member, member.index))
       .join("");
 
     this.innerHTML = `
@@ -460,7 +655,7 @@ class KolonMembers extends HTMLElement {
             <button class="line-button small" id="memberReset" type="button">초기화</button>
           </div>
         </div>
-        ${memberMarkSprite}
+        ${memberAnimalSprite}
         <div class="staff-grid" aria-label="운영진">
           ${staffItems}
         </div>
@@ -517,6 +712,7 @@ class KolonArchive extends HTMLElement {
 
     this.innerHTML = `
       <section class="archive-section" aria-labelledby="archiveTitle">
+        ${svgOrnaments.archiveMap}
         <div class="site-section">
           <div class="section-heading centered" data-reveal>
             <p class="section-kicker">Archive</p>
@@ -557,6 +753,7 @@ class KolonJoin extends HTMLElement {
     this.dataset.ready = "true";
     this.innerHTML = `
       <section class="join-section site-section" aria-labelledby="joinTitle" data-reveal>
+        ${svgOrnaments.joinFlag}
         <p class="section-kicker">Join Us</p>
         <h2 id="joinTitle">함께 스윙하고, 기록하고, 다음 라운드를 기다립니다.</h2>
         <p>정기 라운드와 친선 매치를 함께할 코오롱 골프 동호회 멤버를 기다립니다.</p>

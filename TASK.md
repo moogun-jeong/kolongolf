@@ -3,13 +3,13 @@
 `home_redisign.md`의 설계에 맞춰 현재 홈페이지를 딥그린·아이보리·골드 기반의 프리미엄 골프 동호회형 디자인으로 개선하고, 검증 후 커밋·푸시·배포까지 완료합니다.
 
 ## **1. 현재 진행 중인 작업 (Current Active Task)**
-*   [x] 작업 맥락 학습: `AGENTS.md`, `TASK.md`, `PROJECT_LOG.md` 확인
-*   [x] `home_redisign.md` 개선 설계와 현재 구현 구조 확인
-*   [x] 히어로·헤더·색상 토큰을 프리미엄 골프 클럽 톤으로 개선
-*   [x] 일정·회원명부·아카이브·CTA 구간의 시각 위계 개선
-*   [x] 로컬 렌더링, 문법, 반응형 검증
-*   [x] `PROJECT_LOG.md` 기록 및 로컬 커밋 완료
-*   [x] GitHub SSH 푸시 및 Cloudflare Pages/GitHub Pages 배포 확인
+*   [x] 작업 맥락 학습: `AGENTS.md`, `TASK.md`, `PROJECT_LOG.md`, `home_redisign.md` 확인
+*   [x] 현재 Web Components 기반 홈 구조와 회원명부 SVG 구조 확인
+*   [x] 히어로·소개·일정·아카이브·CTA 구간에 inline SVG 장식 보강
+*   [x] 회원명부 카드의 골프 소품 마크를 개별 동물 캐릭터 SVG로 교체
+*   [x] CSS 반응형, 접근성, 캐시 버전 정리
+*   [x] `PROJECT_LOG.md`/`blueprint.md` 기록 및 로컬 검증
+*   [x] 선별 커밋 후 `git@github.com:moogun-jeong/kolongolf.git` SSH 푸시
 
 ## **2. 완료된 작업 (Completed Tasks)**
 *   [x] **프리미엄 골프 클럽형 홈페이지 전면 개선**
