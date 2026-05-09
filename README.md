@@ -16,3 +16,4 @@
 3. 스팸 방지를 강화하려면 환경 변수 `TURNSTILE_SECRET_KEY`와 `MESSAGE_SALT`를 추가합니다.
 4. Turnstile을 화면에 표시하려면 `index.html`의 `cf-turnstile-sitekey` 메타 값을 sitekey로 채웁니다.
 5. `_routes.json`은 `/api/*` 요청만 Functions로 보내도록 제한합니다.
+6. GitHub Pages 화면에서도 Cloudflare API를 쓰도록 `index.html`의 `message-api-base`는 `https://kolongolf.pages.dev/api`를 가리킵니다.

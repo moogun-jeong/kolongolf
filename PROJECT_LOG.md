@@ -17,6 +17,7 @@
 *   **배포 설정 보강**:
     *   `_routes.json`으로 `/api/*`만 Functions가 처리하도록 제한.
     *   `wrangler.toml`과 README의 Cloudflare 설정 안내를 추가.
+    *   GitHub Pages 화면에서도 Cloudflare Functions API를 호출할 수 있도록 `message-api-base`를 `https://kolongolf.pages.dev/api`로 지정.
     *   캐시 버전을 `20260510-3`으로 갱신.
 
 #### **검증**
