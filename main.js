@@ -245,6 +245,7 @@ const principleIcons = {
 
 const archives = [
   {
+    id: "2026-04-baystars",
     date: "2026.04.10",
     label: "필드 행사",
     title: "2026년 4월 베이스타즈CC 필드 행사",
@@ -266,6 +267,7 @@ const archives = [
     ]
   },
   {
+    id: "2026-03-regular",
     date: "2026.03.04",
     label: "정기 스크린 라운드",
     title: "2026년 3월 정기전",
@@ -280,6 +282,7 @@ const archives = [
     ]
   },
   {
+    id: "2025-12-year-end",
     date: "2025.12.09",
     label: "송년회",
     title: "2025년 12월 송년 라운드",
@@ -289,6 +292,7 @@ const archives = [
     images: ["images/archive-2025-12-display.jpg"]
   },
   {
+    id: "2025-09-regular",
     date: "2025.09.30",
     label: "3분기 정기전",
     title: "2025년 9월 정기전",
@@ -298,6 +302,7 @@ const archives = [
     images: ["images/archive-2025-09-display.jpg"]
   },
   {
+    id: "2025-05-field",
     date: "2025.05.01",
     label: "상반기 필드 라운딩",
     title: "2025년 5월 필드 라운딩",
@@ -307,6 +312,7 @@ const archives = [
     images: ["images/archive-2025-05-display.jpg"]
   },
   {
+    id: "2025-02-regular",
     date: "2025.02.25",
     label: "1분기 정기 모임",
     title: "2025년 2월 정기전",
@@ -347,6 +353,43 @@ const nextNotice = {
   body: "일정이 잡히는 대로 회장/총무 안내를 통해 함께 나눌 예정입니다."
 };
 
+const messageCopy = {
+  unavailable: "방명록 저장소를 연결하는 중입니다. Cloudflare Pages 배포에서 곧 글을 남길 수 있습니다.",
+  emptyGuestbook: "아직 남겨진 글이 없습니다. 첫 인사를 남겨주세요.",
+  emptyArchive: "이 라운드에는 아직 댓글이 없습니다.",
+  loading: "글을 불러오는 중입니다.",
+  saved: "글을 남겼습니다.",
+  saving: "등록 중입니다."
+};
+
+const getTurnstileSiteKey = () =>
+  document.querySelector('meta[name="cf-turnstile-sitekey"]')?.getAttribute("content")?.trim() || "";
+
+const getMessageApiBase = () =>
+  document.querySelector('meta[name="message-api-base"]')?.getAttribute("content")?.trim() || "/api";
+
+const messageFormTemplate = (type, placeholder, buttonText) => `
+  <form class="message-form" data-message-form data-message-type="${type}">
+    <label>
+      <span>이름 또는 닉네임</span>
+      <input name="authorName" type="text" maxlength="20" autocomplete="name" required />
+    </label>
+    <label>
+      <span>남기고 싶은 말</span>
+      <textarea name="body" maxlength="500" rows="4" placeholder="${placeholder}" required></textarea>
+    </label>
+    <label class="message-honeypot" aria-hidden="true">
+      <span>Website</span>
+      <input name="website" type="text" tabindex="-1" autocomplete="off" />
+    </label>
+    <div class="turnstile-slot" data-turnstile-slot></div>
+    <div class="message-form-actions">
+      <button class="solid-button" type="submit">${buttonText}</button>
+      <p class="message-status" data-message-status role="status"></p>
+    </div>
+  </form>
+`;
+
 const defineElement = (name, elementClass) => {
   if (!customElements.get(name)) customElements.define(name, elementClass);
 };
@@ -379,6 +422,7 @@ class KolonSiteHeader extends HTMLElement {
             <a href="#schedule">일정</a>
             <a href="#members">회원</a>
             <a href="#archive">기록</a>
+            <a href="#guestbook">방명록</a>
           </nav>
           <div class="account-links">
             <button type="button" data-open-modal="rsvpModal">공지</button>
@@ -391,6 +435,7 @@ class KolonSiteHeader extends HTMLElement {
           <a href="#schedule">일정</a>
           <a href="#members">회원</a>
           <a href="#archive">기록</a>
+          <a href="#guestbook">방명록</a>
           <button type="button" data-open-modal="joinModal">가입 문의</button>
         </nav>
       </header>
@@ -747,6 +792,36 @@ class KolonArchive extends HTMLElement {
   }
 }
 
+class KolonGuestbook extends HTMLElement {
+  connectedCallback() {
+    if (this.dataset.ready) return;
+    this.dataset.ready = "true";
+    this.innerHTML = `
+      <section class="guestbook-section site-section" aria-labelledby="guestbookTitle">
+        <div class="section-heading split" data-reveal>
+          <div>
+            <p class="section-kicker">Guestbook</p>
+            <h2 id="guestbookTitle">방명록</h2>
+          </div>
+          <p>함께한 라운드의 한마디, 다음 모임을 기다리는 마음을 편하게 남겨주세요.</p>
+        </div>
+        <div class="guestbook-board" data-reveal>
+          <div class="guestbook-form-card">
+            ${messageFormTemplate("guestbook", "오늘의 한마디를 남겨주세요.", "글 남기기")}
+          </div>
+          <div class="guestbook-list-card">
+            <div class="message-list-head">
+              <h3>최근 방명록</h3>
+              <button class="line-button small" type="button" data-message-refresh data-message-type="guestbook">새로고침</button>
+            </div>
+            <div class="message-list" data-message-list data-message-type="guestbook" data-empty="${messageCopy.emptyGuestbook}"></div>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+}
+
 class KolonJoin extends HTMLElement {
   connectedCallback() {
     if (this.dataset.ready) return;
@@ -839,6 +914,17 @@ class KolonModalStack extends HTMLElement {
             <button class="lightbox-nav" id="lightboxNext" type="button" aria-label="다음 사진">›</button>
           </div>
           <div class="lightbox-thumbs" id="lightboxThumbs" aria-label="썸네일 목록"></div>
+          <div class="archive-comment-panel" data-archive-comments>
+            <div class="message-list-head">
+              <div>
+                <p class="section-kicker">Round Comments</p>
+                <h4 id="archiveCommentTitle">라운드 댓글</h4>
+              </div>
+              <button class="line-button small" type="button" data-message-refresh data-message-type="archive_comment">새로고침</button>
+            </div>
+            <div class="message-list compact" data-message-list data-message-type="archive_comment" data-empty="${messageCopy.emptyArchive}"></div>
+            ${messageFormTemplate("archive_comment", "이 라운드의 기억을 남겨주세요.", "댓글 남기기")}
+          </div>
         </div>
       </div>
     `;
@@ -887,6 +973,7 @@ class KolonFooter extends HTMLElement {
             <a href="#schedule">일정</a>
             <a href="#members">회원</a>
             <a href="#archive">기록</a>
+            <a href="#guestbook">방명록</a>
             <button type="button" data-open-modal="joinModal">가입 문의</button>
           </nav>
           <address>
@@ -907,6 +994,7 @@ defineElement("kolon-image-statement", KolonImageStatement);
 defineElement("kolon-schedule", KolonSchedule);
 defineElement("kolon-members", KolonMembers);
 defineElement("kolon-archive", KolonArchive);
+defineElement("kolon-guestbook", KolonGuestbook);
 defineElement("kolon-join", KolonJoin);
 defineElement("kolon-modal-stack", KolonModalStack);
 defineElement("kolon-bottom-notice", KolonBottomNotice);
@@ -920,7 +1008,7 @@ const initHeader = () => {
   const menuToggle = document.querySelector(".menu-toggle");
   const mobilePanel = document.getElementById("mobileNav");
   const navLinks = Array.from(document.querySelectorAll(".main-nav a, .mobile-panel a"));
-  const sections = ["features", "schedule", "members", "archive"]
+  const sections = ["features", "schedule", "members", "archive", "guestbook"]
     .map((id) => document.getElementById(id))
     .filter(Boolean);
 
@@ -1194,6 +1282,7 @@ const initLightbox = () => {
     });
 
     render(0);
+    document.dispatchEvent(new CustomEvent("archive-comment-scope", { detail: { archive: currentArchive } }));
     lightbox.classList.add("open");
     lightbox.setAttribute("aria-hidden", "false");
     document.body.classList.add("modal-open");
@@ -1217,6 +1306,229 @@ const initLightbox = () => {
     if (event.key === "ArrowLeft") render(index - 1);
     if (event.key === "ArrowRight") render(index + 1);
   });
+};
+
+const initMessages = () => {
+  const siteKey = getTurnstileSiteKey();
+  let turnstileReady = null;
+
+  const formatDate = (value) => {
+    if (!value) return "";
+    try {
+      return new Intl.DateTimeFormat("ko-KR", {
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(new Date(value));
+    } catch {
+      return "";
+    }
+  };
+
+  const setStatus = (form, message, isError = false) => {
+    const status = form?.querySelector("[data-message-status]");
+    if (!status) return;
+    status.textContent = message;
+    status.classList.toggle("is-error", isError);
+  };
+
+  const showListMessage = (list, message, isError = false) => {
+    if (!list) return;
+    list.innerHTML = "";
+    const empty = document.createElement("p");
+    empty.className = "message-empty";
+    empty.classList.toggle("is-error", isError);
+    empty.textContent = message;
+    list.append(empty);
+  };
+
+  const renderList = (list, items) => {
+    if (!list) return;
+    list.innerHTML = "";
+    if (!items.length) {
+      showListMessage(list, list.dataset.empty || messageCopy.emptyGuestbook);
+      return;
+    }
+
+    items.forEach((item) => {
+      const article = document.createElement("article");
+      article.className = "message-item";
+
+      const meta = document.createElement("div");
+      meta.className = "message-meta";
+
+      const author = document.createElement("strong");
+      author.textContent = item.authorName || "익명";
+
+      const time = document.createElement("time");
+      time.dateTime = item.createdAt ? new Date(item.createdAt).toISOString() : "";
+      time.textContent = formatDate(item.createdAt);
+
+      const body = document.createElement("p");
+      body.textContent = item.body || "";
+
+      meta.append(author, time);
+      article.append(meta, body);
+      list.append(article);
+    });
+  };
+
+  const requestJson = async (url, options = {}) => {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        "Accept": "application/json",
+        ...(options.body ? { "Content-Type": "application/json" } : {}),
+        ...options.headers
+      }
+    });
+    const contentType = response.headers.get("content-type") || "";
+    if (!contentType.includes("application/json")) throw new Error(messageCopy.unavailable);
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || messageCopy.unavailable);
+    return data;
+  };
+
+  const messageUrl = (type, archiveId = "") => {
+    const params = new URLSearchParams({ type });
+    if (archiveId) params.set("archiveId", archiveId);
+    return `${getMessageApiBase().replace(/\/$/, "")}/messages?${params.toString()}`;
+  };
+
+  const loadList = async (list, type, archiveId = "") => {
+    if (!list) return;
+    showListMessage(list, messageCopy.loading);
+    try {
+      const data = await requestJson(messageUrl(type, archiveId));
+      renderList(list, data.items || []);
+    } catch (error) {
+      showListMessage(list, error.message || messageCopy.unavailable, true);
+    }
+  };
+
+  const loadTurnstile = () => {
+    if (!siteKey) return Promise.resolve();
+    if (window.turnstile) return Promise.resolve();
+    if (turnstileReady) return turnstileReady;
+    turnstileReady = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.async = true;
+      script.defer = true;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.append(script);
+    });
+    return turnstileReady;
+  };
+
+  const setupTurnstile = async () => {
+    if (!siteKey) return;
+    try {
+      await loadTurnstile();
+      document.querySelectorAll("[data-turnstile-slot]").forEach((slot) => {
+        if (slot.dataset.widgetId || !window.turnstile) return;
+        slot.dataset.widgetId = window.turnstile.render(slot, {
+          sitekey: siteKey,
+          theme: "light"
+        });
+      });
+    } catch {
+      document.querySelectorAll("[data-message-form]").forEach((form) => {
+        setStatus(form, "보안 확인을 불러오지 못했습니다.", true);
+      });
+    }
+  };
+
+  const getTurnstileToken = (form) => {
+    if (!siteKey || !window.turnstile) return "";
+    const slot = form.querySelector("[data-turnstile-slot]");
+    return slot?.dataset.widgetId ? window.turnstile.getResponse(slot.dataset.widgetId) : "";
+  };
+
+  const resetTurnstile = (form) => {
+    if (!siteKey || !window.turnstile) return;
+    const slot = form.querySelector("[data-turnstile-slot]");
+    if (slot?.dataset.widgetId) window.turnstile.reset(slot.dataset.widgetId);
+  };
+
+  const getListFor = (type) =>
+    document.querySelector(`.message-list[data-message-type="${type}"]`);
+
+  document.querySelectorAll("[data-message-form]").forEach((form) => {
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      if (formData.get("website")) {
+        form.reset();
+        setStatus(form, messageCopy.saved);
+        return;
+      }
+
+      const type = form.dataset.messageType || "guestbook";
+      const archiveId = form.dataset.archiveId || "";
+      const authorName = String(formData.get("authorName") || "").trim();
+      const body = String(formData.get("body") || "").trim();
+      const turnstileToken = getTurnstileToken(form);
+
+      if (!authorName || !body) {
+        setStatus(form, "이름과 내용을 모두 입력해주세요.", true);
+        return;
+      }
+      if (type === "archive_comment" && !archiveId) {
+        setStatus(form, "댓글을 남길 라운드를 먼저 열어주세요.", true);
+        return;
+      }
+
+      const submitButton = form.querySelector("button[type='submit']");
+      submitButton?.setAttribute("disabled", "true");
+      setStatus(form, messageCopy.saving);
+
+      try {
+        await requestJson(`${getMessageApiBase().replace(/\/$/, "")}/messages`, {
+          method: "POST",
+          body: JSON.stringify({ type, archiveId, authorName, body, turnstileToken })
+        });
+        form.reset();
+        resetTurnstile(form);
+        setStatus(form, messageCopy.saved);
+        const list = getListFor(type);
+        await loadList(list, type, archiveId);
+      } catch (error) {
+        setStatus(form, error.message || messageCopy.unavailable, true);
+        resetTurnstile(form);
+      } finally {
+        submitButton?.removeAttribute("disabled");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-message-refresh]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const type = button.dataset.messageType || "guestbook";
+      const list = getListFor(type);
+      loadList(list, type, button.dataset.archiveId || "");
+    });
+  });
+
+  document.addEventListener("archive-comment-scope", (event) => {
+    const archive = event.detail?.archive;
+    if (!archive?.id) return;
+    const panel = document.querySelector("[data-archive-comments]");
+    const title = document.getElementById("archiveCommentTitle");
+    const form = panel?.querySelector('[data-message-form][data-message-type="archive_comment"]');
+    const list = panel?.querySelector('[data-message-list][data-message-type="archive_comment"]');
+    const refresh = panel?.querySelector('[data-message-refresh][data-message-type="archive_comment"]');
+    if (title) title.textContent = `${archive.title} 댓글`;
+    if (form) form.dataset.archiveId = archive.id;
+    if (list) list.dataset.archiveId = archive.id;
+    if (refresh) refresh.dataset.archiveId = archive.id;
+    loadList(list, "archive_comment", archive.id);
+  });
+
+  setupTurnstile();
+  loadList(getListFor("guestbook"), "guestbook");
 };
 
 const initBottomNotice = () => {
@@ -1271,6 +1583,7 @@ const initPage = () => {
   initHeroSlider();
   initModals();
   initLightbox();
+  initMessages();
   initBottomNotice();
 };
 

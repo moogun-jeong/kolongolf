@@ -14,7 +14,8 @@
   }
 
   button,
-  input {
+  input,
+  textarea {
     font: inherit;
   }
 
@@ -95,7 +96,8 @@
     background: transparent;
   }
 
-  input {
+  input,
+  textarea {
     color: inherit;
   }
 
@@ -107,6 +109,7 @@
   kolon-schedule,
   kolon-members,
   kolon-archive,
+  kolon-guestbook,
   kolon-join,
   kolon-modal-stack,
   kolon-bottom-notice,
@@ -117,7 +120,8 @@
   kolon-intro[id],
   kolon-schedule[id],
   kolon-members[id],
-  kolon-archive[id] {
+  kolon-archive[id],
+  kolon-guestbook[id] {
     scroll-margin-top: 92px;
   }
 
@@ -1660,6 +1664,193 @@
     min-height: 68px;
   }
 
+  .guestbook-section {
+    position: relative;
+  }
+
+  .guestbook-board {
+    display: grid;
+    grid-template-columns: minmax(320px, 0.86fr) minmax(0, 1.14fr);
+    gap: 22px;
+    align-items: start;
+  }
+
+  .guestbook-form-card,
+  .guestbook-list-card,
+  .archive-comment-panel {
+    border: 1px solid var(--line);
+    background:
+      linear-gradient(145deg, var(--paper), oklch(95% 0.022 98)),
+      var(--paper);
+    box-shadow: 0 16px 36px oklch(18% 0.04 155 / 0.08);
+  }
+
+  .guestbook-form-card,
+  .guestbook-list-card {
+    padding: 24px;
+  }
+
+  .message-form {
+    display: grid;
+    gap: 14px;
+  }
+
+  .message-form label {
+    display: grid;
+    gap: 7px;
+  }
+
+  .message-form label > span {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 900;
+  }
+
+  .message-form input,
+  .message-form textarea {
+    width: 100%;
+    border: 1px solid var(--line-strong);
+    border-radius: 2px;
+    background: var(--paper);
+  }
+
+  .message-form input {
+    min-height: 42px;
+    padding: 0 12px;
+  }
+
+  .message-form textarea {
+    min-height: 118px;
+    padding: 12px;
+    resize: vertical;
+  }
+
+  .message-form input:focus,
+  .message-form textarea:focus {
+    border-color: var(--club-green);
+    outline: 3px solid oklch(45% 0.105 150 / 0.16);
+  }
+
+  .message-form input::placeholder,
+  .message-form textarea::placeholder {
+    color: var(--faint);
+  }
+
+  .message-honeypot {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .turnstile-slot:empty {
+    display: none;
+  }
+
+  .message-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    align-items: center;
+  }
+
+  .message-form button[disabled] {
+    opacity: 0.58;
+    cursor: progress;
+  }
+
+  .message-status {
+    margin-bottom: 0;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .message-status.is-error {
+    color: oklch(42% 0.14 28);
+  }
+
+  .message-list-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .message-list-head h3,
+  .message-list-head h4 {
+    margin: 0;
+    color: var(--club-green);
+    font-size: 18px;
+  }
+
+  .message-list-head .section-kicker {
+    margin-bottom: 6px;
+  }
+
+  .message-list {
+    display: grid;
+    gap: 10px;
+    max-height: 430px;
+    overflow: auto;
+    padding-right: 4px;
+  }
+
+  .message-list.compact {
+    max-height: 240px;
+    margin-bottom: 18px;
+  }
+
+  .message-item {
+    padding: 14px;
+    border: 1px solid var(--line);
+    background: oklch(99% 0.008 94 / 0.74);
+  }
+
+  .message-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 7px;
+  }
+
+  .message-meta strong {
+    color: var(--club-green);
+    font-size: 14px;
+  }
+
+  .message-meta time {
+    color: var(--faint);
+    font-size: 11px;
+    font-weight: 900;
+  }
+
+  .message-item p,
+  .message-empty {
+    margin-bottom: 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.58;
+  }
+
+  .message-empty {
+    padding: 18px;
+    border: 1px dashed var(--line-strong);
+    background: oklch(99% 0.008 94 / 0.54);
+  }
+
+  .message-empty.is-error {
+    color: oklch(42% 0.14 28);
+  }
+
+  .archive-comment-panel {
+    margin-top: 20px;
+    padding: 20px;
+  }
+
   .join-section {
     width: 100%;
     max-width: none;
@@ -2116,7 +2307,8 @@
     .hero-inner,
     .intro-section,
     .schedule-board,
-    .featured-round {
+    .featured-round,
+    .guestbook-board {
       grid-template-columns: 1fr;
     }
 
@@ -2419,6 +2611,30 @@
 
     .archive-body > p:not(.archive-meta) {
       min-height: 0;
+    }
+
+    .guestbook-form-card,
+    .guestbook-list-card,
+    .archive-comment-panel {
+      padding: 18px;
+    }
+
+    .message-list-head {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .message-list {
+      max-height: none;
+    }
+
+    .message-form-actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .message-form-actions .solid-button {
+      width: 100%;
     }
 
     .join-section {
