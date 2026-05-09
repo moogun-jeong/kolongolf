@@ -41,8 +41,8 @@
     --gold-soft: oklch(88% 0.056 84);
     --sky: oklch(59% 0.12 214);
     --ink: oklch(18% 0.035 155);
-    --muted: oklch(45% 0.026 150);
-    --faint: oklch(64% 0.025 120);
+    --muted: oklch(38% 0.028 150);
+    --faint: oklch(54% 0.026 120);
     --line: oklch(84% 0.025 92);
     --line-strong: oklch(73% 0.036 88);
     --dark: oklch(18% 0.037 155);
@@ -252,7 +252,7 @@
 
   .brand span:not(.brand-mark) {
     grid-column: 2;
-    color: var(--muted);
+    color: var(--ink);
     font-size: 11px;
     font-weight: 700;
     text-transform: lowercase;
@@ -264,7 +264,7 @@
     justify-content: center;
     gap: 34px;
     color: var(--muted);
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 800;
   }
 
@@ -321,7 +321,7 @@
   }
 
   .account-links button:first-child {
-    color: var(--muted);
+    color: var(--ink);
   }
 
   .account-links button + button {
@@ -501,16 +501,16 @@
   .hero-copy h1 {
     margin-bottom: 28px;
     color: var(--ivory);
-    font-size: 52px;
-    line-height: 1.13;
+    font-size: 56px;
+    line-height: 1.08;
     font-weight: 800;
   }
 
   .hero-copy p:not(.section-kicker) {
     max-width: 540px;
     margin-bottom: 28px;
-    color: oklch(90% 0.02 100);
-    font-size: 17px;
+    color: oklch(93% 0.018 100);
+    font-size: 18px;
   }
 
   .hero-meta-strip {
@@ -529,7 +529,7 @@
     align-content: center;
     gap: 3px;
     padding: 13px 15px;
-    color: oklch(86% 0.025 100);
+    color: oklch(94% 0.018 100);
     font-size: 13px;
     border-right: 1px solid oklch(88% 0.056 84 / 0.28);
   }
@@ -1269,6 +1269,10 @@
     background: var(--paper);
   }
 
+  .search-field input::placeholder {
+    color: var(--faint);
+  }
+
   .search-field input:focus {
     border-color: var(--club-green);
     outline: 3px solid oklch(45% 0.105 150 / 0.16);
@@ -1490,6 +1494,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     transition: transform 300ms ease, opacity 300ms ease;
   }
 
@@ -1755,12 +1760,14 @@
     font-weight: 800;
   }
 
+  .site-footer nav a,
   .site-footer nav button {
     width: fit-content;
     padding: 0;
-    color: var(--gold);
+    color: var(--dark-muted);
     text-align: left;
     font-weight: 900;
+    background: transparent;
   }
 
   .site-footer nav a:hover,
@@ -1987,7 +1994,7 @@
   .notice-copy span,
   .notice-copy small {
     display: block;
-    color: var(--dark-muted);
+    color: oklch(84% 0.028 105);
     font-size: 12px;
     line-height: 1.45;
   }
@@ -2004,7 +2011,7 @@
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    color: var(--dark-muted);
+    color: oklch(84% 0.028 105);
     font-size: 12px;
     font-weight: 800;
     white-space: nowrap;
@@ -2247,13 +2254,13 @@
 
     .hero-copy h1 {
       margin-bottom: 20px;
-      font-size: 34px;
-      line-height: 1.18;
+      font-size: 33px;
+      line-height: 1.16;
     }
 
     .hero-copy p:not(.section-kicker) {
       margin-bottom: 20px;
-      font-size: 14px;
+      font-size: 15px;
     }
 
     .hero-meta-strip {
@@ -2459,29 +2466,17 @@
       right: 14px;
       bottom: 14px;
       width: auto;
-      grid-template-columns: 40px 1fr;
-      gap: 12px;
-      padding: 14px;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 12px;
     }
 
     .notice-mark {
-      width: 40px;
-      height: 40px;
-    }
-
-    .notice-mark::before {
-      left: 19px;
-      top: 8px;
-      height: 24px;
-    }
-
-    .notice-mark::after {
-      left: 21px;
-      top: 8px;
+      display: none;
     }
 
     .notice-copy h2 {
-      font-size: 15px;
+      font-size: 14px;
     }
 
     .notice-copy small {
@@ -2492,11 +2487,23 @@
       grid-column: 1 / -1;
       grid-template-columns: 1fr auto auto;
       align-items: center;
+      gap: 6px;
     }
 
     .notice-check {
       grid-column: auto;
       white-space: normal;
+      font-size: 11px;
+    }
+
+    .bottom-notice .line-button.small {
+      min-height: 32px;
+      padding-inline: 10px;
+    }
+
+    .notice-close {
+      width: 32px;
+      height: 32px;
     }
   }
 

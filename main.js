@@ -273,10 +273,10 @@ const archives = [
     people: "10명 참가",
     summary: "새 시즌의 흐름을 만든 3월 정기전입니다. 수상 순간과 단체 사진을 함께 담았습니다.",
     images: [
-      "images/archive-2026-03-1.jpeg",
-      "images/archive-2026-03-2.jpeg",
-      "images/archive-2026-03-3.jpeg",
-      "images/archive-2026-03-4.jpeg"
+      "images/archive-2026-03-1-display.jpg",
+      "images/archive-2026-03-2-display.jpg",
+      "images/archive-2026-03-3-display.jpg",
+      "images/archive-2026-03-4-display.jpg"
     ]
   },
   {
@@ -286,7 +286,7 @@ const archives = [
     location: "삼산동 울산골프존",
     people: "9명 참가",
     summary: "한 해의 마지막 스코어와 시상 순간을 남긴 송년 모임입니다.",
-    images: ["images/archive-2025-12.webp"]
+    images: ["images/archive-2025-12-display.jpg"]
   },
   {
     date: "2025.09.30",
@@ -295,7 +295,7 @@ const archives = [
     location: "골프존파크 선암 솔밭스크린",
     people: "9명 참가",
     summary: "가을 시즌 컨디션을 확인한 3분기 정기전입니다.",
-    images: ["images/archive-2025-09.webp"]
+    images: ["images/archive-2025-09-display.jpg"]
   },
   {
     date: "2025.05.01",
@@ -304,7 +304,7 @@ const archives = [
     location: "힐스카이CC",
     people: "8명 참가",
     summary: "스크린을 벗어나 실제 코스에서 팀워크를 맞춘 상반기 필드 라운딩입니다.",
-    images: ["images/archive-2025-05.webp"]
+    images: ["images/archive-2025-05-display.jpg"]
   },
   {
     date: "2025.02.25",
@@ -313,7 +313,7 @@ const archives = [
     location: "골프존파크 두왕테크노골프점",
     people: "13명 참가",
     summary: "2025년 동호회 활동의 출발점이 된 1분기 정기 모임입니다.",
-    images: ["images/archive-2025-02.webp"]
+    images: ["images/archive-2025-02-display.jpg"]
   }
 ];
 
@@ -329,12 +329,12 @@ const heroSlides = [
     caption: "필드 라운드 코스 스냅"
   },
   {
-    image: "images/archive-2026-03-1.jpeg",
+    image: "images/archive-2026-03-1-display.jpg",
     date: "2026.03.04",
     caption: "3월 정기 스크린 라운드"
   },
   {
-    image: "images/archive-2025-05.webp",
+    image: "images/archive-2025-05-display.jpg",
     date: "2025.05.01",
     caption: "상반기 필드 라운딩"
   }
@@ -372,26 +372,26 @@ class KolonSiteHeader extends HTMLElement {
           <a class="brand" href="#top" aria-label="홈으로 이동">
             <span class="brand-mark" aria-hidden="true"></span>
             <strong>Kolon Golf Society</strong>
-            <span>premium screen golf club</span>
+            <span>screen golf society</span>
           </a>
           <nav class="main-nav" aria-label="메인 메뉴">
-            <a href="#features">Club</a>
-            <a href="#schedule">Schedule</a>
-            <a href="#members">Members</a>
-            <a href="#archive">Rounds</a>
+            <a href="#features">동호회</a>
+            <a href="#schedule">일정</a>
+            <a href="#members">회원</a>
+            <a href="#archive">기록</a>
           </nav>
           <div class="account-links">
-            <button type="button" data-open-modal="rsvpModal">Notice</button>
-            <button type="button" data-open-modal="joinModal">Join</button>
+            <button type="button" data-open-modal="rsvpModal">공지</button>
+            <button type="button" data-open-modal="joinModal">가입 문의</button>
           </div>
         </div>
 
         <nav class="mobile-panel" id="mobileNav" aria-label="모바일 메뉴">
-          <a href="#features">Club</a>
-          <a href="#schedule">Schedule</a>
-          <a href="#members">Members</a>
-          <a href="#archive">Rounds</a>
-          <button type="button" data-open-modal="joinModal">Join</button>
+          <a href="#features">동호회</a>
+          <a href="#schedule">일정</a>
+          <a href="#members">회원</a>
+          <a href="#archive">기록</a>
+          <button type="button" data-open-modal="joinModal">가입 문의</button>
         </nav>
       </header>
     `;
@@ -411,14 +411,14 @@ class KolonHero extends HTMLElement {
         <div class="hero-inner">
           <div class="hero-copy" data-reveal>
             <p class="section-kicker">Kolon Golf Society</p>
-            <h1 id="heroTitle">함께 걷는 페어웨이,<br />함께 만드는<br />라운딩의 품격</h1>
+            <h1 id="heroTitle">코오롱 스크린<br />골프 동호회</h1>
             <p>
-              매월 정기 라운딩과 스크린 모임을 함께하는 코오롱 골프 동호회입니다.
-              일정, 회원, 지난 라운드의 사진과 기록을 한 곳에서 확인합니다.
+              정기 스크린 라운드와 필드 행사를 함께하며, 회원과 지난 라운드의 사진과 기록을 한 곳에 정리합니다.
+              다음 모임의 흐름도 이 페이지에서 가장 먼저 확인할 수 있습니다.
             </p>
             <div class="hero-meta-strip" aria-label="동호회 주요 정보">
-              <span><strong>Next Round</strong>2분기 말 예정</span>
-              <span><strong>Latest Record</strong>베이스타즈CC</span>
+              <span><strong>Next Round</strong>2분기 말 스크린 행사</span>
+              <span><strong>Latest Record</strong>2026.04 베이스타즈CC</span>
               <span><strong>Members</strong>18명</span>
             </div>
             <div class="button-row">
@@ -428,7 +428,7 @@ class KolonHero extends HTMLElement {
           </div>
           <figure class="hero-media" data-reveal>
             <span class="hero-photo-tag" aria-hidden="true">Club Round</span>
-            <img id="heroImage" src="${heroSlides[0].image}" alt="코오롱 골프 동호회 대표 라운딩 사진" fetchpriority="high" />
+            <img id="heroImage" src="${heroSlides[0].image}" alt="코오롱 골프 동호회 대표 라운딩 사진" fetchpriority="high" decoding="async" />
             <figcaption>
               <span id="heroDate">${heroSlides[0].date}</span>
               <strong id="heroCaption">${heroSlides[0].caption}</strong>
@@ -506,7 +506,7 @@ class KolonImageStatement extends HTMLElement {
     this.dataset.ready = "true";
     this.innerHTML = `
       <section class="image-statement" aria-label="동호회 활동 사진">
-        <img src="images/archive-2026-04-1.png" alt="코오롱 스크린 골프 동호회 4월 필드 행사 중식 모임 사진" loading="lazy" />
+        <img src="images/archive-2026-04-1.png" alt="코오롱 스크린 골프 동호회 4월 필드 행사 중식 모임 사진" loading="lazy" decoding="async" />
         <div class="statement-copy" data-reveal>
           <p class="section-kicker">Round Memory</p>
           <h2>필드에서 시작한 라운드는 함께 모인 자리까지 오래 이어집니다.</h2>
@@ -692,7 +692,7 @@ class KolonArchive extends HTMLElement {
         return `
           <article class="archive-card" data-reveal>
             <button class="archive-photo" type="button" data-archive-index="${archiveIndex}" aria-label="${archive.title} 사진 보기">
-              <img src="${archive.images[0]}" alt="${archive.title} 대표 사진" loading="lazy" />
+              <img src="${archive.images[0]}" alt="${archive.title} 대표 사진" loading="lazy" decoding="async" />
               <span>View photos</span>
             </button>
             <div class="archive-body">
@@ -721,7 +721,7 @@ class KolonArchive extends HTMLElement {
           </div>
           <article class="featured-round" data-reveal>
             <button class="featured-photo" type="button" data-archive-index="0" aria-label="${featured.title} 사진 보기">
-              <img src="${featured.images[0]}" alt="${featured.title} 대표 사진" loading="lazy" />
+              <img src="${featured.images[0]}" alt="${featured.title} 대표 사진" loading="lazy" decoding="async" />
               <span>View featured round</span>
             </button>
             <div class="featured-body">
@@ -861,7 +861,7 @@ class KolonBottomNotice extends HTMLElement {
         <div class="notice-actions">
           <label class="notice-check">
             <input type="checkbox" data-notice-snooze />
-            <span>일주일간 열지 않기</span>
+            <span>7일간 숨기기</span>
           </label>
           <button class="line-button small" type="button" data-open-modal="rsvpModal">상세 보기</button>
           <button class="notice-close" type="button" data-close-bottom-notice aria-label="하단 일정 공지 닫기"></button>
@@ -883,11 +883,11 @@ class KolonFooter extends HTMLElement {
             <strong>Kolon Golf Society</strong>
           </a>
           <nav aria-label="푸터 메뉴">
-            <a href="#features">Club</a>
-            <a href="#schedule">Schedule</a>
-            <a href="#members">Members</a>
-            <a href="#archive">Rounds</a>
-            <button type="button" data-open-modal="joinModal">Join</button>
+            <a href="#features">동호회</a>
+            <a href="#schedule">일정</a>
+            <a href="#members">회원</a>
+            <a href="#archive">기록</a>
+            <button type="button" data-open-modal="joinModal">가입 문의</button>
           </nav>
           <address>
             회장 김무건 · gun77@kolon.com<br />
