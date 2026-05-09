@@ -1,4 +1,4 @@
-const members = [
+﻿const members = [
   { handle: "덕충안길", name: "권순노", role: "정회원", note: "페이드 장인" },
   { handle: "살려줘제바알", name: "김경수", role: "정회원", note: "벙커 탈출 1위" },
   { handle: "오!건2", name: "김무건", role: "회장", note: "경기 운영" },
@@ -1531,6 +1531,135 @@ const initMessages = () => {
   loadList(getListFor("guestbook"), "guestbook");
 };
 
+const initMemberExperienceEnhancements = () => {
+  const apiBase = () =>
+    (typeof getMessageApiBase === "function"
+      ? getMessageApiBase()
+      : document.querySelector('meta[name="message-api-base"]')?.content || "/api").replace(/\/$/, "");
+
+  const makeLink = (href, text, className, action) => {
+    const link = document.createElement("a");
+    link.href = href;
+    link.className = className;
+    link.textContent = text;
+    link.dataset.memberAction = action;
+    return link;
+  };
+
+  const heroButtons = document.querySelector(".hero-copy .button-row");
+  if (heroButtons && !heroButtons.querySelector('[data-member-action="guestbook"]')) {
+    heroButtons.append(makeLink("#guestbook", "방명록 남기기", "line-button", "guestbook"));
+  }
+
+  const heroCopy = document.querySelector(".hero-copy");
+  const heroMeta = document.querySelector(".hero-meta-strip");
+  if (heroCopy && heroMeta && !heroCopy.querySelector(".member-quick-panel")) {
+    heroMeta.insertAdjacentHTML(
+      "afterend",
+      `<nav class="member-quick-panel" aria-label="회원 빠른 이동">
+        <a href="#schedule"><strong>다음 모임</strong><span>일시와 준비사항</span></a>
+        <a href="#archive"><strong>지난 사진</strong><span>라운드 기록 보기</span></a>
+        <a href="#guestbook"><strong>한마디</strong><span>방명록 남기기</span></a>
+      </nav>`
+    );
+  }
+
+  document.querySelectorAll(".search-link").forEach((link) => {
+    link.setAttribute("href", "#archive");
+    link.setAttribute("aria-label", "지난 라운드와 사진 보기");
+    link.setAttribute("title", "지난 라운드 보기");
+  });
+
+  const scheduleSection = document.getElementById("schedule");
+  if (scheduleSection && !scheduleSection.querySelector(".next-round-brief")) {
+    scheduleSection.insertAdjacentHTML(
+      "afterbegin",
+      `<aside class="next-round-brief" data-reveal>
+        <p class="section-kicker">Member checklist</p>
+        <h3>이번 모임 전에 이것만 확인하세요</h3>
+        <ul>
+          <li><strong>일정</strong><span>2분기 말 스크린 행사 예정</span></li>
+          <li><strong>준비</strong><span>참석 여부, 개인 장비, 이동 시간을 미리 체크</span></li>
+          <li><strong>기록</strong><span>라운드 후 사진과 후기는 아카이브 댓글에 남기기</span></li>
+        </ul>
+      </aside>`
+    );
+  }
+
+  const archiveSection = document.getElementById("archive");
+  if (archiveSection && !archiveSection.querySelector(".archive-invite-panel")) {
+    archiveSection.insertAdjacentHTML(
+      "afterbegin",
+      `<aside class="archive-invite-panel" data-reveal>
+        <div>
+          <p class="section-kicker">Round memories</p>
+          <h3>사진만 넘기지 말고, 그날의 한 장면도 남겨주세요.</h3>
+        </div>
+        <a class="line-button small" href="#archive">라운드 기록 보기</a>
+      </aside>`
+    );
+  }
+
+  const decorateArchiveCards = () => {
+    document.querySelectorAll("[data-archive-index]").forEach((trigger) => {
+      const index = Number(trigger.getAttribute("data-archive-index"));
+      const archive = Array.isArray(archives) ? archives[index] : null;
+      const card = trigger.closest("article, .archive-card, .featured-round, li, div");
+      if (!archive || !card || card.querySelector(".archive-card-actions")) return;
+      card.insertAdjacentHTML(
+        "beforeend",
+        `<div class="archive-card-actions" data-archive-actions="${archive.id}">
+          <span class="archive-card-chip">사진 ${archive.images?.length || 1}장</span>
+          <span class="archive-card-chip" data-comment-count>댓글 확인 중</span>
+          <button class="archive-card-comment" type="button" data-archive-index="${index}">댓글 남기기</button>
+        </div>`
+      );
+    });
+  };
+
+  const loadArchiveCommentCounts = async () => {
+    if (!Array.isArray(archives)) return;
+    const targets = Array.from(document.querySelectorAll("[data-archive-actions]"));
+    await Promise.all(targets.map(async (target) => {
+      const archiveId = target.getAttribute("data-archive-actions");
+      const countNode = target.querySelector("[data-comment-count]");
+      if (!archiveId || !countNode) return;
+      try {
+        const url = `${apiBase()}/messages?type=archive_comment&archiveId=${encodeURIComponent(archiveId)}`;
+        const response = await fetch(url, { headers: { "Accept": "application/json" } });
+        const data = await response.json();
+        const count = Array.isArray(data.items) ? data.items.length : 0;
+        countNode.textContent = count ? `댓글 ${count}개` : "첫 댓글 기다리는 중";
+      } catch {
+        countNode.textContent = "댓글 준비 중";
+      }
+    }));
+  };
+
+  decorateArchiveCards();
+  loadArchiveCommentCounts();
+
+  const membersSection = document.getElementById("members");
+  if (membersSection && !membersSection.querySelector(".member-pulse-card")) {
+    membersSection.insertAdjacentHTML(
+      "afterbegin",
+      `<aside class="member-pulse-card" data-reveal>
+        <p class="section-kicker">Member mood</p>
+        <h3>이번 달도 함께 칠 사람들의 이름이 먼저 보이게.</h3>
+        <p>명단은 관리용 목록이 아니라, 다음 라운드에서 다시 만날 얼굴을 확인하는 공간으로 다듬었습니다.</p>
+      </aside>`
+    );
+  }
+
+  document.querySelectorAll("img").forEach((image) => {
+    const syncRatio = () => {
+      if (!image.naturalWidth || !image.naturalHeight) return;
+      image.classList.toggle("is-portrait-photo", image.naturalHeight > image.naturalWidth * 1.08);
+    };
+    if (image.complete) syncRatio();
+    image.addEventListener("load", syncRatio, { once: true });
+  });
+};
 const initBottomNotice = () => {
   const notice = document.querySelector("[data-bottom-notice]");
   if (!notice) return;
@@ -1584,7 +1713,9 @@ const initPage = () => {
   initModals();
   initLightbox();
   initMessages();
+  initMemberExperienceEnhancements();
   initBottomNotice();
 };
 
 initPage();
+
