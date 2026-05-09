@@ -1,3 +1,8 @@
 name = "kolongolf"
 compatibility_date = "2026-05-10"
 pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kolongolf-messages"
+database_id = "54eda93f-b63e-48b2-adc3-b63007510ef7"
