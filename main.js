@@ -343,8 +343,8 @@ const heroSlides = [
 const nextNotice = {
   eyebrow: "Next Round",
   title: "2분기 말 스크린 행사 예정",
-  meta: "확정 대기 · 운영진 공지 예정",
-  body: "세부 일정이 확정되면 회장/총무 안내와 함께 홈페이지 일정에서도 알려드리겠습니다."
+  meta: "세부 일정 준비 중 · 스크린 라운드",
+  body: "일정이 잡히는 대로 회장/총무 안내를 통해 함께 나눌 예정입니다."
 };
 
 const defineElement = (name, elementClass) => {
@@ -413,8 +413,8 @@ class KolonHero extends HTMLElement {
             <p class="section-kicker">Kolon Golf Society</p>
             <h1 id="heroTitle">코오롱 스크린<br />골프 동호회</h1>
             <p>
-              정기 스크린 라운드와 필드 행사를 함께하며, 회원과 지난 라운드의 사진과 기록을 한 곳에 정리합니다.
-              다음 모임의 흐름도 이 페이지에서 가장 먼저 확인할 수 있습니다.
+              정기 스크린 라운드와 필드 행사를 함께 즐기는 코오롱 골프 동호회입니다.
+              좋은 샷, 아쉬운 퍼트, 라운드 뒤 웃음까지 오래 남기는 모임입니다.
             </p>
             <div class="hero-meta-strip" aria-label="동호회 주요 정보">
               <span><strong>Next Round</strong>2분기 말 스크린 행사</span>
@@ -461,10 +461,10 @@ class KolonIntro extends HTMLElement {
         </div>
         <div class="intro-copy" data-reveal>
           <p>
-            코오롱 골프 동호회는 정기 일정, 친선 경기, 필드 라운딩 기록을 차분하게 공유합니다.
-            누구나 부담 없이 합류하고, 함께한 순간은 사진과 기록으로 오래 남깁니다.
+            코오롱 골프 동호회는 정기 라운드와 친선 경기로 함께 실력을 겨루고 친목을 쌓습니다.
+            실력 차이는 있어도 편하게 합류하고, 함께한 순간은 사진과 이야기로 오래 남깁니다.
           </p>
-          <a class="text-button" href="#schedule">다가오는 일정 보기</a>
+          <a class="text-button" href="#schedule">다음 모임 보기</a>
         </div>
       </section>
     `;
@@ -476,24 +476,24 @@ class KolonPrinciples extends HTMLElement {
     if (this.dataset.ready) return;
     this.dataset.ready = "true";
     this.innerHTML = `
-      <section class="principles-section site-section" aria-label="동호회 핵심 운영 방식">
+      <section class="principles-section site-section" aria-label="동호회 분위기">
         <article class="principle-item" data-reveal>
           <span class="principle-index">01</span>
           <span class="principle-icon" aria-hidden="true">${principleIcons.round}</span>
           <h3>정기적으로 만나는 라운드</h3>
-          <p>다음 모임의 상태와 운영 안내를 한눈에 확인할 수 있게 정리합니다.</p>
+          <p>바쁜 일상 사이에서도 다시 만날 약속을 만들며 모임을 이어갑니다.</p>
         </article>
         <article class="principle-item" data-reveal>
           <span class="principle-index">02</span>
           <span class="principle-icon" aria-hidden="true">${principleIcons.score}</span>
           <h3>부담 없이 합류하는 경기</h3>
-          <p>회원명부와 운영진 정보를 간결하게 보여주어 모임 흐름을 쉽게 파악합니다.</p>
+          <p>스코어는 겨루되 분위기는 편하게, 서로 응원하며 한 라운드를 즐깁니다.</p>
         </article>
         <article class="principle-item" data-reveal>
           <span class="principle-index">03</span>
           <span class="principle-icon" aria-hidden="true">${principleIcons.memory}</span>
           <h3>사진과 기록으로 남는 모임</h3>
-          <p>라운딩 사진, 장소, 수상 기록을 모임별 이야기로 보관합니다.</p>
+          <p>멋진 샷과 즐거웠던 자리를 사진과 이야기로 남겨 다음 만남을 기다립니다.</p>
         </article>
       </section>
     `;
@@ -532,7 +532,7 @@ class KolonSchedule extends HTMLElement {
             <p class="section-kicker">Schedule</p>
             <h2 id="scheduleTitle">Next Round Board</h2>
           </div>
-          <p>다가오는 스크린 행사와 지난 필드 기록을 한 화면에서 확인합니다.</p>
+          <p>다음 모임은 2분기 말 스크린 라운드로 준비 중입니다.</p>
         </div>
 
         <div class="schedule-board" data-reveal>
@@ -545,11 +545,11 @@ class KolonSchedule extends HTMLElement {
             </div>
             <div class="event-content">
               <div class="event-topline">
-                <p class="event-state">확정 대기</p>
+                <p class="event-state">준비 중</p>
                 <span>Screen Round</span>
               </div>
               <h3>2026년 2분기 말 스크린 행사</h3>
-              <p>세부 일정과 장소가 확정되면 회장/총무 안내와 함께 홈페이지 일정에서도 바로 확인할 수 있습니다.</p>
+              <p>이번 모임도 편하게 만나 한 라운드 즐기는 자리로 준비 중입니다. 세부 일정은 회장/총무 안내로 함께 나눌 예정입니다.</p>
             </div>
           </article>
 
@@ -557,11 +557,11 @@ class KolonSchedule extends HTMLElement {
             <dl>
               <div>
                 <dt>일시</dt>
-                <dd>2026년 2분기 말 예정</dd>
+                <dd>2분기 말 예정</dd>
               </div>
               <div>
                 <dt>장소</dt>
-                <dd>운영진 공지 예정</dd>
+                <dd>추후 안내</dd>
               </div>
               <div>
                 <dt>방식</dt>
@@ -569,11 +569,11 @@ class KolonSchedule extends HTMLElement {
               </div>
               <div>
                 <dt>상태</dt>
-                <dd>참가 방식 확정 대기</dd>
+                <dd>세부 일정 준비 중</dd>
               </div>
             </dl>
             <div class="button-row">
-              <button class="solid-button" type="button" data-open-modal="rsvpModal">공지 확인</button>
+              <button class="solid-button" type="button" data-open-modal="rsvpModal">일정 안내</button>
               <a class="line-button" href="#archive">4월 행사 보기</a>
             </div>
           </div>
@@ -581,7 +581,7 @@ class KolonSchedule extends HTMLElement {
 
         <div class="section-heading compact" data-reveal>
           <p class="section-kicker">Schedule</p>
-          <h3>최근 운영 흐름</h3>
+          <h3>최근 모임 이야기</h3>
         </div>
 
         <div class="schedule-notes">
@@ -593,12 +593,12 @@ class KolonSchedule extends HTMLElement {
           <article data-reveal>
             <span>02</span>
             <h3>2분기 말 스크린 행사 예정</h3>
-            <p>다음 일정은 스크린 라운드로 진행할 예정이며 세부 정보는 준비 중입니다.</p>
+            <p>다음 만남은 스크린 라운드로 준비 중입니다. 가볍게 모여 다시 한 번 즐길 예정입니다.</p>
           </article>
           <article data-reveal>
             <span>03</span>
-            <h3>운영진 상세 안내 예정</h3>
-            <p>일시, 장소, 참가 방식이 확정되면 운영진 안내와 홈페이지 일정에 함께 공지합니다.</p>
+            <h3>함께 맞추는 다음 약속</h3>
+            <p>일시와 장소가 정해지면 회장/총무 안내를 통해 회원들과 함께 나눌 예정입니다.</p>
           </article>
         </div>
       </section>
@@ -717,7 +717,7 @@ class KolonArchive extends HTMLElement {
           <div class="section-heading centered" data-reveal>
             <p class="section-kicker">Archive</p>
             <h2 id="archiveTitle">지난 라운드 이야기</h2>
-            <p>주요 라운드 기록은 크게, 나머지 모임은 카드형 아카이브로 이어집니다.</p>
+            <p>함께 웃고 겨뤘던 라운드의 순간들을 모았습니다.</p>
           </div>
           <article class="featured-round" data-reveal>
             <button class="featured-photo" type="button" data-archive-index="0" aria-label="${featured.title} 사진 보기">
@@ -782,9 +782,9 @@ class KolonModalStack extends HTMLElement {
           </div>
           <div class="modal-body">
             <p>일시: 2026년 2분기 말 예정</p>
-            <p>장소: 운영진 공지 예정</p>
+            <p>장소: 추후 안내</p>
             <p>방식: 스크린 라운드</p>
-            <p>자세한 일정과 참가 방식은 운영진 안내와 함께 홈페이지에서도 알려드리겠습니다.</p>
+            <p>자세한 일정은 회장/총무 안내를 통해 회원들과 함께 나눌 예정입니다.</p>
           </div>
         </div>
       </div>
@@ -816,8 +816,8 @@ class KolonModalStack extends HTMLElement {
             <button class="line-button small" type="button" data-close-modal>닫기</button>
           </div>
           <div class="modal-body">
-            <p>장소: 운영진 공지 예정</p>
-            <p>주소: 장소 확정 후 안내</p>
+            <p>장소: 추후 안내</p>
+            <p>주소: 장소가 정해지면 함께 나눌 예정</p>
             <p>일시: 2026년 2분기 말 예정</p>
           </div>
         </div>
