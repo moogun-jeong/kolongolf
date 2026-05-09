@@ -1,4 +1,4 @@
-const corsHeaders = {
+﻿const corsHeaders = {
   "access-control-allow-origin": "*",
   "access-control-allow-methods": "GET, POST, OPTIONS",
   "access-control-allow-headers": "content-type"
@@ -30,14 +30,14 @@ const hashValue = async (value) => {
 };
 
 const requireDatabase = (env) => {
-  if (!env.DB) throw json({ error: "D1 DB binding(DB)이 필요합니다." }, { status: 503 });
+  if (!env.DB) throw json({ error: "D1 DB binding(DB) is required." }, { status: 503 });
   return env.DB;
 };
 
 const validateTurnstile = async (request, env, token) => {
   if (!env.TURNSTILE_SECRET_KEY) return;
   if (!token) {
-    throw json({ error: "보안 확인을 완료해주세요." }, { status: 400 });
+    throw json({ error: "Security verification is required." }, { status: 400 });
   }
 
   const remoteip = request.headers.get("CF-Connecting-IP") || "";
@@ -52,7 +52,7 @@ const validateTurnstile = async (request, env, token) => {
   });
   const result = await response.json();
   if (!result.success) {
-    throw json({ error: "보안 확인에 실패했습니다. 다시 시도해주세요." }, { status: 400 });
+    throw json({ error: "Security verification failed. Please try again." }, { status: 400 });
   }
 };
 
@@ -62,14 +62,13 @@ const checkRateLimit = async (request, env, db) => {
   const salt = env.MESSAGE_SALT || "kolongolf";
   const ipHash = await hashValue(`${salt}:${ip}`);
   const userAgentHash = await hashValue(`${salt}:${userAgent}`);
-  const windowStart = Date.now() - 60 * 1000;
   const recent = await db
-    .prepare("SELECT COUNT(*) AS count FROM messages WHERE ip_hash = ? AND created_at > ?")
-    .bind(ipHash, windowStart)
+    .prepare("SELECT COUNT(*) AS count FROM messages WHERE ip_hash = ? AND created_at > datetime('now', '-1 minute')")
+    .bind(ipHash)
     .first();
 
   if (Number(recent?.count || 0) >= 5) {
-    throw json({ error: "잠시 후 다시 남겨주세요." }, { status: 429 });
+    throw json({ error: "Too many messages. Please try again in a moment." }, { status: 429 });
   }
 
   return { ipHash, userAgentHash };
@@ -87,9 +86,9 @@ export async function onRequestGet({ request, env }) {
     const archiveId = normalize(url.searchParams.get("archiveId"), 80);
     const limit = Math.min(Math.max(Number(url.searchParams.get("limit")) || 20, 1), 50);
 
-    if (!allowedTypes.has(type)) return json({ error: "지원하지 않는 글 유형입니다." }, { status: 400 });
+    if (!allowedTypes.has(type)) return json({ error: "Unsupported message type." }, { status: 400 });
     if (type === "archive_comment" && !archiveId) {
-      return json({ error: "아카이브 댓글에는 archiveId가 필요합니다." }, { status: 400 });
+      return json({ error: "archiveId is required for archive comments." }, { status: 400 });
     }
 
     const statement =
@@ -98,7 +97,7 @@ export async function onRequestGet({ request, env }) {
             .prepare(
               `SELECT id, type, archive_id AS archiveId, author_name AS authorName, body, created_at AS createdAt
                FROM messages
-               WHERE type = ? AND archive_id IS NULL AND status = 'published'
+               WHERE type = ? AND archive_id IS NULL AND status = 'visible'
                ORDER BY created_at DESC
                LIMIT ?`
             )
@@ -107,7 +106,7 @@ export async function onRequestGet({ request, env }) {
             .prepare(
               `SELECT id, type, archive_id AS archiveId, author_name AS authorName, body, created_at AS createdAt
                FROM messages
-               WHERE type = ? AND archive_id = ? AND status = 'published'
+               WHERE type = ? AND archive_id = ? AND status = 'visible'
                ORDER BY created_at DESC
                LIMIT ?`
             )
@@ -117,7 +116,7 @@ export async function onRequestGet({ request, env }) {
     return json({ items: result.results || [] });
   } catch (error) {
     if (error instanceof Response) return error;
-    return json({ error: "글을 불러오지 못했습니다." }, { status: 500 });
+    return json({ error: "Could not load messages." }, { status: 500 });
   }
 }
 
@@ -131,28 +130,27 @@ export async function onRequestPost({ request, env }) {
     const body = normalize(payload.body, 500);
     const turnstileToken = normalize(payload.turnstileToken, 2048);
 
-    if (!allowedTypes.has(type)) return json({ error: "지원하지 않는 글 유형입니다." }, { status: 400 });
+    if (!allowedTypes.has(type)) return json({ error: "Unsupported message type." }, { status: 400 });
     if (type === "archive_comment" && !archiveId) {
-      return json({ error: "아카이브 댓글에는 archiveId가 필요합니다." }, { status: 400 });
+      return json({ error: "archiveId is required for archive comments." }, { status: 400 });
     }
     if (authorName.length < 1 || body.length < 1) {
-      return json({ error: "이름과 내용을 모두 입력해주세요." }, { status: 400 });
+      return json({ error: "Name and message are required." }, { status: 400 });
     }
 
     await validateTurnstile(request, env, turnstileToken);
     const { ipHash, userAgentHash } = await checkRateLimit(request, env, db);
-    const id = crypto.randomUUID();
-    const now = Date.now();
     const storedArchiveId = type === "guestbook" ? null : archiveId;
 
-    await db
+    const result = await db
       .prepare(
         `INSERT INTO messages (
-          id, type, archive_id, author_name, body, status, ip_hash, user_agent_hash, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, 'published', ?, ?, ?, ?)`
+          type, archive_id, author_name, body, status, ip_hash, user_agent_hash, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, 'visible', ?, ?, datetime('now'), datetime('now'))`
       )
-      .bind(id, type, storedArchiveId, authorName, body, ipHash, userAgentHash, now, now)
+      .bind(type, storedArchiveId, authorName, body, ipHash, userAgentHash)
       .run();
+    const id = result.meta?.last_row_id ?? null;
 
     return json({
       item: {
@@ -161,11 +159,11 @@ export async function onRequestPost({ request, env }) {
         archiveId: storedArchiveId,
         authorName,
         body,
-        createdAt: now
+        createdAt: new Date().toISOString()
       }
     }, { status: 201 });
   } catch (error) {
     if (error instanceof Response) return error;
-    return json({ error: "글을 저장하지 못했습니다." }, { status: 500 });
+    return json({ error: "Could not save message." }, { status: 500 });
   }
 }
