@@ -125,12 +125,12 @@ const validateImages = (images) => {
   });
 };
 
-const loadImagesForPosts = async (db, posts) => {
+const loadImagesForPosts = async (db, posts, includeHidden = false) => {
   const items = await Promise.all(posts.map(async (post) => {
     const images = await db
       .prepare(`SELECT id, image_data_url AS dataUrl, alt, sort_order AS sortOrder, status
                 FROM archive_post_images
-                WHERE archive_post_id = ? AND status = 'visible'
+                WHERE archive_post_id = ? ${includeHidden ? "" : "AND status = 'visible'"}
                 ORDER BY sort_order ASC, id ASC`)
       .bind(post.id)
       .all();
@@ -170,7 +170,7 @@ export async function onRequestGet({ request, env }) {
           .bind(limit)
           .all();
 
-    const items = await loadImagesForPosts(db, result.results || []);
+    const items = await loadImagesForPosts(db, result.results || [], isAdmin);
     return json({ items });
   } catch (error) {
     if (error instanceof Response) return error;
@@ -227,11 +227,21 @@ export async function onRequestPatch({ request, env }) {
     await ensureTables(db);
     requireAdmin(request, env);
     const payload = await request.json().catch(() => ({}));
+    const imageId = Number(payload.imageId);
     const id = Number(payload.id);
     const status = normalize(payload.status, 16);
-    if (!Number.isInteger(id) || id < 1) return json({ error: "아카이브를 찾을 수 없습니다." }, { status: 400 });
-    if (!allowedStatuses.has(status)) return json({ error: "사용할 수 없는 상태입니다." }, { status: 400 });
+    if (!allowedStatuses.has(status) && status !== "visible" && status !== "hidden") return json({ error: "사용할 수 없는 상태입니다." }, { status: 400 });
 
+    if (Number.isInteger(imageId) && imageId > 0) {
+      if (!new Set(["visible", "hidden"]).has(status)) return json({ error: "사진 상태는 공개 또는 숨김만 가능합니다." }, { status: 400 });
+      const result = await db
+        .prepare("UPDATE archive_post_images SET status = ? WHERE id = ?")
+        .bind(status, imageId)
+        .run();
+      return json({ ok: true, changed: result.meta?.changes || 0 });
+    }
+
+    if (!Number.isInteger(id) || id < 1) return json({ error: "아카이브를 찾을 수 없습니다." }, { status: 400 });
     const result = await db
       .prepare("UPDATE archive_posts SET status = ?, updated_at = datetime('now') WHERE id = ?")
       .bind(status, id)
@@ -249,6 +259,15 @@ export async function onRequestDelete({ request, env }) {
     await ensureTables(db);
     requireAdmin(request, env);
     const payload = await request.json().catch(() => ({}));
+    const imageId = Number(payload.imageId);
+    if (Number.isInteger(imageId) && imageId > 0) {
+      const result = await db
+        .prepare("DELETE FROM archive_post_images WHERE id = ?")
+        .bind(imageId)
+        .run();
+      return json({ ok: true, deleted: result.meta?.changes || 0 });
+    }
+
     const id = Number(payload.id);
     if (!Number.isInteger(id) || id < 1) return json({ error: "아카이브를 찾을 수 없습니다." }, { status: 400 });
 
@@ -262,3 +281,4 @@ export async function onRequestDelete({ request, env }) {
     return json({ error: "아카이브를 삭제하지 못했습니다." }, { status: 500 });
   }
 }
+

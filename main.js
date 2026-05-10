@@ -2099,6 +2099,16 @@ const initArchiveUploadsAndAdmin = () => {
     adminArchiveList.innerHTML = items.map((item) => {
       const cover = item.images?.[0]?.dataUrl || "";
       const statusLabel = item.status === "visible" ? "공개" : item.status === "hidden" ? "숨김" : "대기";
+      const imageTools = (item.images || []).map((image, imageIndex) => `
+        <figure class="admin-archive-image ${image.status === "hidden" ? "is-hidden-image" : ""}">
+          <img src="${image.dataUrl}" alt="${escapeText(image.alt || item.title)}" loading="lazy" decoding="async" />
+          <figcaption>
+            <span>${image.status === "hidden" ? "숨김" : `사진 ${imageIndex + 1}`}</span>
+            <button class="line-button small" type="button" data-admin-archive-image-action="${image.status === "hidden" ? "visible" : "hidden"}" data-image-id="${image.id}">${image.status === "hidden" ? "다시 보이기" : "사진 숨기기"}</button>
+            <button class="line-button small danger" type="button" data-admin-archive-image-action="delete" data-image-id="${image.id}">사진 삭제</button>
+          </figcaption>
+        </figure>
+      `).join("");
       return `
         <article class="admin-archive-card">
           ${cover ? `<img src="${cover}" alt="${escapeText(item.title)} 대표 사진" loading="lazy" decoding="async" />` : ""}
@@ -2106,6 +2116,7 @@ const initArchiveUploadsAndAdmin = () => {
             <div class="admin-message-head"><span>${statusLabel}</span><strong>${escapeText(item.title)}</strong><em>${escapeText(item.authorName || "익명")}</em></div>
             <p>${escapeText(item.summary)}</p>
             <div class="admin-message-meta"><span>#${item.id}</span><span>${escapeText(item.date)}</span><span>${escapeText(item.location)}</span><span>사진 ${item.images?.length || 0}장</span></div>
+            ${imageTools ? `<div class="admin-archive-images">${imageTools}</div>` : ""}
             <div class="admin-message-actions">
               <button class="line-button small" type="button" data-admin-archive-action="visible" data-archive-id="${item.id}">공개</button>
               <button class="line-button small" type="button" data-admin-archive-action="hidden" data-archive-id="${item.id}">숨기기</button>
@@ -2134,19 +2145,35 @@ const initArchiveUploadsAndAdmin = () => {
   adminArchiveList?.addEventListener("click", async (event) => {
     const target = event.target;
     if (!(target instanceof Element)) return;
-    const button = target.closest("[data-admin-archive-action]");
+    const imageButton = target.closest("[data-admin-archive-image-action]");
+    const archiveButton = target.closest("[data-admin-archive-action]");
+    const button = imageButton || archiveButton;
     if (!(button instanceof HTMLButtonElement)) return;
+
+    const imageAction = imageButton instanceof HTMLButtonElement ? imageButton.dataset.adminArchiveImageAction : "";
+    const archiveAction = archiveButton instanceof HTMLButtonElement ? archiveButton.dataset.adminArchiveAction : "";
+    const imageId = Number(button.dataset.imageId);
     const id = Number(button.dataset.archiveId);
-    const action = button.dataset.adminArchiveAction;
-    if (!id || !action) return;
-    if (action === "delete" && !window.confirm("이 아카이브와 사진을 완전히 삭제할까요?")) return;
+
+    if (imageAction) {
+      if (!imageId) return;
+      if (imageAction === "delete" && !window.confirm("이 사진을 완전히 삭제할까요?")) return;
+    } else {
+      if (!id || !archiveAction) return;
+      if (archiveAction === "delete" && !window.confirm("이 아카이브와 사진을 완전히 삭제할까요?")) return;
+    }
+
     button.disabled = true;
     setText(adminArchiveStatus, "변경사항을 저장하는 중입니다.");
     try {
-      if (action === "delete") {
+      if (imageAction === "delete") {
+        await adminArchiveRequest({ method: "DELETE", body: { imageId } });
+      } else if (imageAction) {
+        await adminArchiveRequest({ method: "PATCH", body: { imageId, status: imageAction } });
+      } else if (archiveAction === "delete") {
         await adminArchiveRequest({ method: "DELETE", body: { id } });
       } else {
-        await adminArchiveRequest({ method: "PATCH", body: { id, status: action } });
+        await adminArchiveRequest({ method: "PATCH", body: { id, status: archiveAction } });
       }
       await loadAdminArchives();
       await loadPublicArchives();
@@ -2217,6 +2244,7 @@ const initPage = () => {
 };
 
 initPage();
+
 
 
 
