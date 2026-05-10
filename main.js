@@ -1651,6 +1651,227 @@ const initMemberExperienceEnhancements = () => {
     image.addEventListener("load", syncRatio, { once: true });
   });
 };
+const initMessageAdmin = () => {
+  const footerNav = document.querySelector(".site-footer nav");
+  if (!footerNav || footerNav.querySelector("[data-admin-open]")) return;
+
+  const launcher = document.createElement("button");
+  launcher.type = "button";
+  launcher.className = "admin-footer-button";
+  launcher.dataset.adminOpen = "true";
+  launcher.textContent = "관리자";
+  footerNav.append(launcher);
+
+  document.body.insertAdjacentHTML(
+    "beforeend",
+    `<div class="modal admin-panel-modal" id="messageAdminPanel" aria-hidden="true">
+      <section class="modal-card admin-panel-card" role="dialog" aria-modal="true" aria-labelledby="adminPanelTitle">
+        <div class="modal-head">
+          <div>
+            <p class="section-kicker">댓글 관리</p>
+            <h3 id="adminPanelTitle">방명록과 아카이브 댓글 관리</h3>
+            <p>비밀번호 확인 후 글을 숨기거나 완전히 삭제할 수 있습니다.</p>
+          </div>
+          <button class="notice-close" type="button" data-admin-close aria-label="관리자 창 닫기"></button>
+        </div>
+        <div class="admin-panel-body">
+          <form class="admin-auth-form" data-admin-auth>
+            <label>
+              <span>관리자 비밀번호</span>
+              <input type="password" name="adminToken" autocomplete="current-password" placeholder="Cloudflare ADMIN_TOKEN" />
+            </label>
+            <button class="solid-button" type="submit">댓글 불러오기</button>
+          </form>
+          <div class="admin-toolbar">
+            <label>
+              <span>보기</span>
+              <select data-admin-filter>
+                <option value="">전체 댓글</option>
+                <option value="guestbook">방명록</option>
+                <option value="archive_comment">아카이브 댓글</option>
+              </select>
+            </label>
+            <button class="line-button small" type="button" data-admin-refresh>새로고침</button>
+          </div>
+          <p class="message-status" data-admin-status>관리자 비밀번호를 입력하면 최근 댓글을 불러옵니다.</p>
+          <div class="admin-message-list" data-admin-list></div>
+        </div>
+      </section>
+    </div>`
+  );
+
+  const modal = document.getElementById("messageAdminPanel");
+  const form = modal?.querySelector("[data-admin-auth]");
+  const tokenInput = modal?.querySelector("input[name='adminToken']");
+  const list = modal?.querySelector("[data-admin-list]");
+  const status = modal?.querySelector("[data-admin-status]");
+  const filter = modal?.querySelector("[data-admin-filter]");
+  const refresh = modal?.querySelector("[data-admin-refresh]");
+  const storageKey = "kolongolf:admin-token";
+  let cachedItems = [];
+
+  const setStatus = (message, isError = false) => {
+    if (!status) return;
+    status.textContent = message;
+    status.classList.toggle("is-error", isError);
+  };
+
+  const open = () => {
+    modal?.classList.add("open");
+    modal?.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+    if (tokenInput instanceof HTMLInputElement) {
+      tokenInput.value = window.sessionStorage.getItem(storageKey) || "";
+      tokenInput.focus();
+    }
+  };
+
+  const close = () => {
+    modal?.classList.remove("open");
+    modal?.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+  };
+
+  const getToken = () => tokenInput instanceof HTMLInputElement ? tokenInput.value.trim() : "";
+
+  const escapeText = (value) => String(value || "").replace(/[&<>"]/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;"
+  }[char]));
+
+  const formatDate = (value) => {
+    if (!value) return "";
+    try {
+      return new Intl.DateTimeFormat("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      }).format(new Date(value));
+    } catch {
+      return "";
+    }
+  };
+
+  const labelType = (type) => type === "archive_comment" ? "아카이브 댓글" : "방명록";
+  const labelStatus = (item) => item.status === "hidden" ? "숨김" : "노출 중";
+
+  const render = (items) => {
+    if (!list) return;
+    cachedItems = items;
+    if (!items.length) {
+      list.innerHTML = `<p class="message-empty">표시할 댓글이 없습니다.</p>`;
+      return;
+    }
+
+    list.innerHTML = items.map((item) => `
+      <article class="admin-message-card ${item.status === "hidden" ? "is-hidden-message" : ""}">
+        <div class="admin-message-head">
+          <span>${labelType(item.type)}</span>
+          <strong>${escapeText(item.authorName || "익명")}</strong>
+          <em>${labelStatus(item)}</em>
+        </div>
+        <p>${escapeText(item.body)}</p>
+        <div class="admin-message-meta">
+          <span>#${item.id}</span>
+          ${item.archiveId ? `<span>${escapeText(item.archiveId)}</span>` : ""}
+          <time>${formatDate(item.createdAt)}</time>
+        </div>
+        <div class="admin-message-actions">
+          ${item.status === "hidden"
+            ? `<button class="line-button small" type="button" data-admin-action="show" data-message-id="${item.id}">다시 보이기</button>`
+            : `<button class="line-button small" type="button" data-admin-action="hide" data-message-id="${item.id}">숨기기</button>`}
+          <button class="line-button small danger" type="button" data-admin-action="delete" data-message-id="${item.id}">완전 삭제</button>
+        </div>
+      </article>
+    `).join("");
+  };
+
+  const adminRequest = async (path, options = {}) => {
+    const token = getToken();
+    if (!token) throw new Error("관리자 비밀번호를 입력해주세요.");
+    const response = await fetch(`${getMessageApiBase().replace(/\/$/, "")}${path}`, {
+      ...options,
+      headers: {
+        "Accept": "application/json",
+        "Authorization": `Bearer ${token}`,
+        ...(options.body ? { "Content-Type": "application/json" } : {}),
+        ...options.headers
+      }
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || "요청을 처리하지 못했습니다.");
+    window.sessionStorage.setItem(storageKey, token);
+    return data;
+  };
+
+  const load = async () => {
+    setStatus("댓글을 불러오는 중입니다.");
+    const type = filter instanceof HTMLSelectElement ? filter.value : "";
+    try {
+      const params = new URLSearchParams({ admin: "1", limit: "200" });
+      if (type) params.set("type", type);
+      const data = await adminRequest(`/messages?${params.toString()}`);
+      render(data.items || []);
+      setStatus(`최근 댓글 ${data.items?.length || 0}개를 불러왔습니다.`);
+    } catch (error) {
+      render([]);
+      setStatus(error.message || "댓글을 불러오지 못했습니다.", true);
+    }
+  };
+
+  launcher.addEventListener("click", open);
+  modal?.querySelector("[data-admin-close]")?.addEventListener("click", close);
+  modal?.addEventListener("click", (event) => {
+    if (event.target === modal) close();
+  });
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    load();
+  });
+
+  refresh?.addEventListener("click", load);
+  filter?.addEventListener("change", () => {
+    if (cachedItems.length) load();
+  });
+
+  list?.addEventListener("click", async (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const button = target.closest("[data-admin-action]");
+    if (!(button instanceof HTMLButtonElement)) return;
+    const id = Number(button.dataset.messageId);
+    const action = button.dataset.adminAction;
+    if (!id || !action) return;
+
+    if (action === "delete" && !window.confirm("정말 완전히 삭제할까요? 이 작업은 되돌릴 수 없습니다.")) return;
+
+    button.disabled = true;
+    setStatus("변경사항을 저장하는 중입니다.");
+    try {
+      if (action === "delete") {
+        await adminRequest("/messages", {
+          method: "DELETE",
+          body: JSON.stringify({ id })
+        });
+      } else {
+        await adminRequest("/messages", {
+          method: "PATCH",
+          body: JSON.stringify({ id, status: action === "hide" ? "hidden" : "visible" })
+        });
+      }
+      await load();
+    } catch (error) {
+      setStatus(error.message || "변경사항을 저장하지 못했습니다.", true);
+    } finally {
+      button.disabled = false;
+    }
+  });
+};
 const initBottomNotice = () => {
   const notice = document.querySelector("[data-bottom-notice]");
   if (!notice) return;
@@ -1704,10 +1925,12 @@ const initPage = () => {
   initModals();
   initLightbox();
   initMessages();
+  initMessageAdmin();
   initMemberExperienceEnhancements();
   initBottomNotice();
 };
 
 initPage();
+
 
 

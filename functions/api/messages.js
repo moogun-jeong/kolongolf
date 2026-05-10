@@ -1,7 +1,7 @@
 ﻿const corsHeaders = {
   "access-control-allow-origin": "*",
-  "access-control-allow-methods": "GET, POST, OPTIONS",
-  "access-control-allow-headers": "content-type"
+  "access-control-allow-methods": "GET, POST, PATCH, DELETE, OPTIONS",
+  "access-control-allow-headers": "content-type, authorization"
 };
 
 const json = (body, init = {}) =>
@@ -16,6 +16,7 @@ const json = (body, init = {}) =>
   });
 
 const allowedTypes = new Set(["guestbook", "archive_comment"]);
+const allowedStatuses = new Set(["visible", "hidden"]);
 
 const normalize = (value, maxLength) =>
   String(value || "")
@@ -32,6 +33,22 @@ const hashValue = async (value) => {
 const requireDatabase = (env) => {
   if (!env.DB) throw json({ error: "D1 DB binding(DB) is required." }, { status: 503 });
   return env.DB;
+};
+
+const getAdminToken = (request) => {
+  const auth = request.headers.get("authorization") || "";
+  const match = auth.match(/^Bearer\s+(.+)$/i);
+  return normalize(match?.[1] || "", 2048);
+};
+
+const requireAdmin = (request, env) => {
+  const configured = normalize(env.ADMIN_TOKEN, 2048);
+  if (!configured) {
+    throw json({ error: "관리자 비밀번호가 아직 설정되지 않았습니다." }, { status: 503 });
+  }
+  if (getAdminToken(request) !== configured) {
+    throw json({ error: "관리자 비밀번호가 올바르지 않습니다." }, { status: 401 });
+  }
 };
 
 const validateTurnstile = async (request, env, token) => {
@@ -74,6 +91,18 @@ const checkRateLimit = async (request, env, db) => {
   return { ipHash, userAgentHash };
 };
 
+const selectColumns = `id, type, archive_id AS archiveId, author_name AS authorName, body, status, created_at AS createdAt, updated_at AS updatedAt`;
+
+const parseMessageId = async (request) => {
+  const url = new URL(request.url);
+  const body = await request.json().catch(() => ({}));
+  const id = Number(body.id || url.searchParams.get("id"));
+  if (!Number.isInteger(id) || id < 1) {
+    throw json({ error: "삭제하거나 수정할 글을 찾을 수 없습니다." }, { status: 400 });
+  }
+  return { id, body };
+};
+
 export async function onRequestOptions() {
   return new Response(null, { status: 204, headers: corsHeaders });
 }
@@ -82,10 +111,38 @@ export async function onRequestGet({ request, env }) {
   try {
     const db = requireDatabase(env);
     const url = new URL(request.url);
-    const type = normalize(url.searchParams.get("type"), 32) || "guestbook";
+    const isAdmin = url.searchParams.get("admin") === "1";
+    const requestedType = normalize(url.searchParams.get("type"), 32);
     const archiveId = normalize(url.searchParams.get("archiveId"), 80);
-    const limit = Math.min(Math.max(Number(url.searchParams.get("limit")) || 20, 1), 50);
+    const limit = Math.min(Math.max(Number(url.searchParams.get("limit")) || 20, 1), isAdmin ? 200 : 50);
 
+    if (isAdmin) {
+      requireAdmin(request, env);
+      const where = [];
+      const binds = [];
+      if (requestedType) {
+        if (!allowedTypes.has(requestedType)) return json({ error: "Unsupported message type." }, { status: 400 });
+        where.push("type = ?");
+        binds.push(requestedType);
+      }
+      if (archiveId) {
+        where.push("archive_id = ?");
+        binds.push(archiveId);
+      }
+      const result = await db
+        .prepare(
+          `SELECT ${selectColumns}
+           FROM messages
+           ${where.length ? `WHERE ${where.join(" AND ")}` : ""}
+           ORDER BY created_at DESC
+           LIMIT ?`
+        )
+        .bind(...binds, limit)
+        .all();
+      return json({ items: result.results || [] });
+    }
+
+    const type = requestedType || "guestbook";
     if (!allowedTypes.has(type)) return json({ error: "Unsupported message type." }, { status: 400 });
     if (type === "archive_comment" && !archiveId) {
       return json({ error: "archiveId is required for archive comments." }, { status: 400 });
@@ -165,5 +222,45 @@ export async function onRequestPost({ request, env }) {
   } catch (error) {
     if (error instanceof Response) return error;
     return json({ error: "Could not save message." }, { status: 500 });
+  }
+}
+
+export async function onRequestPatch({ request, env }) {
+  try {
+    const db = requireDatabase(env);
+    requireAdmin(request, env);
+    const { id, body } = await parseMessageId(request);
+    const status = normalize(body.status, 16);
+    if (!allowedStatuses.has(status)) {
+      return json({ error: "사용할 수 없는 상태입니다." }, { status: 400 });
+    }
+
+    const result = await db
+      .prepare("UPDATE messages SET status = ?, updated_at = datetime('now') WHERE id = ?")
+      .bind(status, id)
+      .run();
+
+    return json({ ok: true, changed: result.meta?.changes || 0 });
+  } catch (error) {
+    if (error instanceof Response) return error;
+    return json({ error: "글 상태를 변경하지 못했습니다." }, { status: 500 });
+  }
+}
+
+export async function onRequestDelete({ request, env }) {
+  try {
+    const db = requireDatabase(env);
+    requireAdmin(request, env);
+    const { id } = await parseMessageId(request);
+
+    const result = await db
+      .prepare("DELETE FROM messages WHERE id = ?")
+      .bind(id)
+      .run();
+
+    return json({ ok: true, deleted: result.meta?.changes || 0 });
+  } catch (error) {
+    if (error instanceof Response) return error;
+    return json({ error: "글을 삭제하지 못했습니다." }, { status: 500 });
   }
 }
