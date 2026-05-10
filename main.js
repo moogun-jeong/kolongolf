@@ -1872,6 +1872,291 @@ const initMessageAdmin = () => {
     }
   });
 };
+const initArchiveUploadsAndAdmin = () => {
+  const apiBase = () => `${getMessageApiBase().replace(/\/$/, "")}/archives`;
+  const archiveRoot = document.getElementById("archive");
+
+  const setText = (node, message, isError = false) => {
+    if (!node) return;
+    node.textContent = message;
+    node.classList.toggle("is-error", isError);
+  };
+
+  const escapeText = (value) => String(value || "").replace(/[&<>"]/g, (char) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;"
+  }[char]));
+
+  const compressImage = (file) => new Promise((resolve, reject) => {
+    if (!file.type.startsWith("image/")) {
+      reject(new Error("이미지 파일만 올릴 수 있습니다."));
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      reject(new Error("사진 원본은 8MB 이하만 올릴 수 있습니다."));
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("사진을 읽지 못했습니다."));
+    reader.onload = () => {
+      const image = new Image();
+      image.onerror = () => reject(new Error("사진을 처리하지 못했습니다."));
+      image.onload = () => {
+        const maxSize = 1400;
+        const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+        const width = Math.max(1, Math.round(image.width * scale));
+        const height = Math.max(1, Math.round(image.height * scale));
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext("2d");
+        context.fillStyle = "#f8f4e8";
+        context.fillRect(0, 0, width, height);
+        context.drawImage(image, 0, 0, width, height);
+        let dataUrl = canvas.toDataURL("image/jpeg", 0.76);
+        if (dataUrl.length > 360000) dataUrl = canvas.toDataURL("image/jpeg", 0.62);
+        if (dataUrl.length > 380000) {
+          reject(new Error("압축 후에도 사진이 큽니다. 더 작은 사진을 선택해주세요."));
+          return;
+        }
+        resolve({ dataUrl, alt: file.name.replace(/\.[^.]+$/, "") });
+      };
+      image.src = String(reader.result || "");
+    };
+    reader.readAsDataURL(file);
+  });
+
+  const renderPublicArchives = (list, items) => {
+    if (!list) return;
+    if (!items.length) {
+      list.innerHTML = `<p class="message-empty">아직 공개된 회원 업로드가 없습니다.</p>`;
+      return;
+    }
+    list.innerHTML = items.map((item) => {
+      const cover = item.images?.[0]?.dataUrl || "";
+      const imageCount = item.images?.length || 0;
+      return `
+        <article class="archive-card community-archive-card">
+          ${cover ? `<a class="archive-photo" href="${cover}" target="_blank" rel="noopener" aria-label="${escapeText(item.title)} 사진 크게 보기"><img src="${cover}" alt="${escapeText(item.title)} 대표 사진" loading="lazy" decoding="async" /><span>사진 보기</span></a>` : ""}
+          <div class="archive-body">
+            <p class="archive-meta">${escapeText(item.date)} · 회원 업로드</p>
+            <h3>${escapeText(item.title)}</h3>
+            <p>${escapeText(item.summary)}</p>
+            <div class="archive-foot">
+              <span>${escapeText(item.location)}</span>
+              ${item.people ? `<span>${escapeText(item.people)}</span>` : ""}
+              <span>사진 ${imageCount}장</span>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join("");
+  };
+
+  const loadPublicArchives = async () => {
+    const list = document.querySelector("[data-public-archive-list]");
+    if (!list) return;
+    list.innerHTML = `<p class="message-empty">회원 업로드를 불러오는 중입니다.</p>`;
+    try {
+      const response = await fetch(`${apiBase()}?limit=12`, { headers: { "Accept": "application/json" } });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "회원 업로드를 불러오지 못했습니다.");
+      renderPublicArchives(list, data.items || []);
+    } catch (error) {
+      list.innerHTML = `<p class="message-empty is-error">${escapeText(error.message || "회원 업로드를 불러오지 못했습니다.")}</p>`;
+    }
+  };
+
+  if (archiveRoot && !archiveRoot.querySelector("[data-archive-upload-section]")) {
+    archiveRoot.insertAdjacentHTML(
+      "beforeend",
+      `<section class="community-archive-section site-section" data-archive-upload-section>
+        <div class="section-heading split" data-reveal>
+          <div>
+            <p class="section-kicker">회원 업로드</p>
+            <h2>함께한 사진을 직접 올려주세요.</h2>
+          </div>
+          <p>올린 사진과 기록은 관리자 확인 후 아카이브에 공개됩니다.</p>
+        </div>
+        <div class="community-archive-board">
+          <form class="community-archive-form" data-archive-upload-form>
+            <div class="form-grid two">
+              <label><span>작성자</span><input name="authorName" maxlength="24" placeholder="이름 또는 별명" required /></label>
+              <label><span>날짜</span><input name="date" type="date" required /></label>
+            </div>
+            <label><span>제목</span><input name="title" maxlength="80" placeholder="예: 5월 정기전" required /></label>
+            <div class="form-grid two">
+              <label><span>장소</span><input name="location" maxlength="80" placeholder="예: 울산골프존" required /></label>
+              <label><span>참석 인원</span><input name="people" maxlength="40" placeholder="예: 8명 참가" /></label>
+            </div>
+            <label><span>한 줄 기록</span><textarea name="summary" maxlength="500" placeholder="그날의 분위기나 기억에 남는 장면을 적어주세요." required></textarea></label>
+            <label><span>사진</span><input name="images" type="file" accept="image/*" multiple required /><small>최대 4장, 업로드 전 자동으로 작게 압축됩니다.</small></label>
+            <div class="message-form-actions">
+              <button class="solid-button" type="submit">아카이브 신청하기</button>
+              <p class="message-status" data-archive-upload-status>승인 후 홈페이지에 표시됩니다.</p>
+            </div>
+          </form>
+          <div class="community-archive-list-card">
+            <div class="message-list-head">
+              <div><p class="section-kicker">공개된 회원 업로드</p><h3>새로 올라온 기록</h3></div>
+              <button class="line-button small" type="button" data-public-archive-refresh>새로고침</button>
+            </div>
+            <div class="archive-grid community-archive-grid" data-public-archive-list></div>
+          </div>
+        </div>
+      </section>`
+    );
+  }
+
+  const uploadForm = document.querySelector("[data-archive-upload-form]");
+  const uploadStatus = document.querySelector("[data-archive-upload-status]");
+  uploadForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const formData = new FormData(uploadForm);
+    const files = Array.from(uploadForm.querySelector("input[type='file']")?.files || []).slice(0, 4);
+    const button = uploadForm.querySelector("button[type='submit']");
+    if (!files.length) {
+      setText(uploadStatus, "사진을 1장 이상 올려주세요.", true);
+      return;
+    }
+    button?.setAttribute("disabled", "true");
+    setText(uploadStatus, "사진을 압축하고 저장하는 중입니다.");
+    try {
+      const images = await Promise.all(files.map(compressImage));
+      const payload = {
+        authorName: String(formData.get("authorName") || ""),
+        date: String(formData.get("date") || ""),
+        title: String(formData.get("title") || ""),
+        location: String(formData.get("location") || ""),
+        people: String(formData.get("people") || ""),
+        summary: String(formData.get("summary") || ""),
+        images
+      };
+      const response = await fetch(apiBase(), {
+        method: "POST",
+        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "아카이브 신청을 저장하지 못했습니다.");
+      uploadForm.reset();
+      setText(uploadStatus, "신청이 접수됐습니다. 관리자 확인 후 공개됩니다.");
+    } catch (error) {
+      setText(uploadStatus, error.message || "아카이브 신청을 저장하지 못했습니다.", true);
+    } finally {
+      button?.removeAttribute("disabled");
+    }
+  });
+
+  document.querySelector("[data-public-archive-refresh]")?.addEventListener("click", loadPublicArchives);
+  loadPublicArchives();
+
+  const adminBody = document.querySelector("#messageAdminPanel .admin-panel-body");
+  if (adminBody && !adminBody.querySelector("[data-admin-archive-board]")) {
+    adminBody.insertAdjacentHTML(
+      "beforeend",
+      `<section class="admin-archive-board" data-admin-archive-board>
+        <div class="message-list-head">
+          <div><p class="section-kicker">아카이브 관리</p><h3>회원 업로드 승인 관리</h3></div>
+          <button class="line-button small" type="button" data-admin-archive-refresh>업로드 불러오기</button>
+        </div>
+        <p class="message-status" data-admin-archive-status>회원이 올린 아카이브를 승인하거나 숨길 수 있습니다.</p>
+        <div class="admin-archive-list" data-admin-archive-list></div>
+      </section>`
+    );
+  }
+
+  const getAdminToken = () => document.querySelector("#messageAdminPanel input[name='adminToken']")?.value.trim() || "";
+  const adminArchiveStatus = document.querySelector("[data-admin-archive-status]");
+  const adminArchiveList = document.querySelector("[data-admin-archive-list]");
+
+  const adminArchiveRequest = async (options = {}) => {
+    const token = getAdminToken();
+    if (!token) throw new Error("관리자 비밀번호를 입력해주세요.");
+    const response = await fetch(options.path ? `${apiBase()}${options.path}` : `${apiBase()}?admin=1&limit=200`, {
+      method: options.method || "GET",
+      headers: {
+        "Accept": "application/json",
+        "Authorization": `Bearer ${token}`,
+        ...(options.body ? { "Content-Type": "application/json" } : {})
+      },
+      body: options.body ? JSON.stringify(options.body) : undefined
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || "요청을 처리하지 못했습니다.");
+    return data;
+  };
+
+  const renderAdminArchives = (items) => {
+    if (!adminArchiveList) return;
+    if (!items.length) {
+      adminArchiveList.innerHTML = `<p class="message-empty">관리할 회원 업로드가 없습니다.</p>`;
+      return;
+    }
+    adminArchiveList.innerHTML = items.map((item) => {
+      const cover = item.images?.[0]?.dataUrl || "";
+      const statusLabel = item.status === "visible" ? "공개" : item.status === "hidden" ? "숨김" : "대기";
+      return `
+        <article class="admin-archive-card">
+          ${cover ? `<img src="${cover}" alt="${escapeText(item.title)} 대표 사진" loading="lazy" decoding="async" />` : ""}
+          <div>
+            <div class="admin-message-head"><span>${statusLabel}</span><strong>${escapeText(item.title)}</strong><em>${escapeText(item.authorName || "익명")}</em></div>
+            <p>${escapeText(item.summary)}</p>
+            <div class="admin-message-meta"><span>#${item.id}</span><span>${escapeText(item.date)}</span><span>${escapeText(item.location)}</span><span>사진 ${item.images?.length || 0}장</span></div>
+            <div class="admin-message-actions">
+              <button class="line-button small" type="button" data-admin-archive-action="visible" data-archive-id="${item.id}">공개</button>
+              <button class="line-button small" type="button" data-admin-archive-action="hidden" data-archive-id="${item.id}">숨기기</button>
+              <button class="line-button small" type="button" data-admin-archive-action="pending" data-archive-id="${item.id}">대기</button>
+              <button class="line-button small danger" type="button" data-admin-archive-action="delete" data-archive-id="${item.id}">완전 삭제</button>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join("");
+  };
+
+  const loadAdminArchives = async () => {
+    setText(adminArchiveStatus, "회원 업로드를 불러오는 중입니다.");
+    try {
+      const data = await adminArchiveRequest();
+      renderAdminArchives(data.items || []);
+      setText(adminArchiveStatus, `회원 업로드 ${data.items?.length || 0}개를 불러왔습니다.`);
+    } catch (error) {
+      renderAdminArchives([]);
+      setText(adminArchiveStatus, error.message || "회원 업로드를 불러오지 못했습니다.", true);
+    }
+  };
+
+  document.querySelector("[data-admin-archive-refresh]")?.addEventListener("click", loadAdminArchives);
+  adminArchiveList?.addEventListener("click", async (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const button = target.closest("[data-admin-archive-action]");
+    if (!(button instanceof HTMLButtonElement)) return;
+    const id = Number(button.dataset.archiveId);
+    const action = button.dataset.adminArchiveAction;
+    if (!id || !action) return;
+    if (action === "delete" && !window.confirm("이 아카이브와 사진을 완전히 삭제할까요?")) return;
+    button.disabled = true;
+    setText(adminArchiveStatus, "변경사항을 저장하는 중입니다.");
+    try {
+      if (action === "delete") {
+        await adminArchiveRequest({ method: "DELETE", body: { id } });
+      } else {
+        await adminArchiveRequest({ method: "PATCH", body: { id, status: action } });
+      }
+      await loadAdminArchives();
+      await loadPublicArchives();
+    } catch (error) {
+      setText(adminArchiveStatus, error.message || "변경사항을 저장하지 못했습니다.", true);
+    } finally {
+      button.disabled = false;
+    }
+  });
+};
 const initBottomNotice = () => {
   const notice = document.querySelector("[data-bottom-notice]");
   if (!notice) return;
@@ -1926,11 +2211,13 @@ const initPage = () => {
   initLightbox();
   initMessages();
   initMessageAdmin();
+  initArchiveUploadsAndAdmin();
   initMemberExperienceEnhancements();
   initBottomNotice();
 };
 
 initPage();
+
 
 
 
