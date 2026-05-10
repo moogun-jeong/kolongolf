@@ -3129,3 +3129,61 @@
     }
   }
 }
+
+@layer components {
+  .archive-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .archive-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .archive-foot {
+    margin-top: auto;
+  }
+
+  .archive-card-actions {
+    margin-top: 0;
+    padding: 0 24px 24px;
+  }
+
+  .featured-body .archive-card-actions {
+    padding: 4px 0 0;
+  }
+
+  .archive-card-chip,
+  .archive-card-comment {
+    min-height: 34px;
+    padding-inline: 13px;
+    border-radius: 999px;
+    line-height: 1;
+  }
+
+  .archive-card-comment {
+    margin-left: auto;
+  }
+
+  .archive-invite-panel,
+  .next-round-brief {
+    border-color: oklch(73% 0.118 82 / 0.32);
+  }
+}
+
+@layer utilities {
+  @media (max-width: 760px) {
+    .archive-card-actions {
+      padding: 0 20px 20px;
+    }
+
+    .archive-card-comment {
+      width: 100%;
+      justify-content: center;
+      margin-left: 0;
+    }
+  }
+}

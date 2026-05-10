@@ -738,7 +738,7 @@ class KolonArchive extends HTMLElement {
           <article class="archive-card" data-reveal>
             <button class="archive-photo" type="button" data-archive-index="${archiveIndex}" aria-label="${archive.title} 사진 보기">
               <img src="${archive.images[0]}" alt="${archive.title} 대표 사진" loading="lazy" decoding="async" />
-              <span>View photos</span>
+              <span>사진 보기</span>
             </button>
             <div class="archive-body">
               <p class="archive-meta">${archive.date} · ${archive.label}</p>
@@ -767,7 +767,7 @@ class KolonArchive extends HTMLElement {
           <article class="featured-round" data-reveal>
             <button class="featured-photo" type="button" data-archive-index="0" aria-label="${featured.title} 사진 보기">
               <img src="${featured.images[0]}" alt="${featured.title} 대표 사진" loading="lazy" decoding="async" />
-              <span>View featured round</span>
+              <span>대표 라운드 보기</span>
             </button>
             <div class="featured-body">
               <p class="archive-meta">${featured.date} · ${featured.label}</p>
@@ -1557,9 +1557,9 @@ const initMemberExperienceEnhancements = () => {
     heroMeta.insertAdjacentHTML(
       "afterend",
       `<nav class="member-quick-panel" aria-label="회원 빠른 이동">
-        <a href="#schedule"><strong>다음 모임</strong><span>일시와 준비사항</span></a>
-        <a href="#archive"><strong>지난 사진</strong><span>라운드 기록 보기</span></a>
-        <a href="#guestbook"><strong>한마디</strong><span>방명록 남기기</span></a>
+        <a href="#schedule"><strong>다음 모임</strong><span>언제 어디서 만나는지</span></a>
+        <a href="#archive"><strong>지난 사진</strong><span>함께한 순간 다시 보기</span></a>
+        <a href="#guestbook"><strong>한마디</strong><span>오늘의 인사 남기기</span></a>
       </nav>`
     );
   }
@@ -1575,12 +1575,12 @@ const initMemberExperienceEnhancements = () => {
     scheduleSection.insertAdjacentHTML(
       "afterbegin",
       `<aside class="next-round-brief" data-reveal>
-        <p class="section-kicker">Member checklist</p>
-        <h3>이번 모임 전에 이것만 확인하세요</h3>
+        <p class="section-kicker">다음 모임</p>
+        <h3>모임 전에 필요한 내용을 한눈에 볼 수 있어요.</h3>
         <ul>
-          <li><strong>일정</strong><span>2분기 말 스크린 행사 예정</span></li>
-          <li><strong>준비</strong><span>참석 여부, 개인 장비, 이동 시간을 미리 체크</span></li>
-          <li><strong>기록</strong><span>라운드 후 사진과 후기는 아카이브 댓글에 남기기</span></li>
+          <li><strong>언제</strong><span>2분기 말 스크린 행사 예정</span></li>
+          <li><strong>준비</strong><span>개인 장비와 이동 시간을 미리 챙겨주세요</span></li>
+          <li><strong>후기</strong><span>라운드가 끝난 뒤 사진과 한마디를 남겨주세요</span></li>
         </ul>
       </aside>`
     );
@@ -1592,10 +1592,10 @@ const initMemberExperienceEnhancements = () => {
       "afterbegin",
       `<aside class="archive-invite-panel" data-reveal>
         <div>
-          <p class="section-kicker">Round memories</p>
-          <h3>사진만 넘기지 말고, 그날의 한 장면도 남겨주세요.</h3>
+          <p class="section-kicker">지난 라운드</p>
+          <h3>함께했던 사진과 그날의 이야기를 둘러보세요.</h3>
         </div>
-        <a class="line-button small" href="#archive">라운드 기록 보기</a>
+        <a class="line-button small" href="#archive">사진과 댓글 보기</a>
       </aside>`
     );
   }
@@ -1604,9 +1604,10 @@ const initMemberExperienceEnhancements = () => {
     document.querySelectorAll("[data-archive-index]").forEach((trigger) => {
       const index = Number(trigger.getAttribute("data-archive-index"));
       const archive = Array.isArray(archives) ? archives[index] : null;
-      const card = trigger.closest("article, .archive-card, .featured-round, li, div");
-      if (!archive || !card || card.querySelector(".archive-card-actions")) return;
-      card.insertAdjacentHTML(
+      const card = trigger.closest(".archive-card") || trigger.closest(".featured-round");
+      const target = card?.classList.contains("featured-round") ? card.querySelector(".featured-body") : card;
+      if (!archive || !target || target.querySelector(".archive-card-actions")) return;
+      target.insertAdjacentHTML(
         "beforeend",
         `<div class="archive-card-actions" data-archive-actions="${archive.id}">
           <span class="archive-card-chip">사진 ${archive.images?.length || 1}장</span>
@@ -1639,17 +1640,7 @@ const initMemberExperienceEnhancements = () => {
   decorateArchiveCards();
   loadArchiveCommentCounts();
 
-  const membersSection = document.getElementById("members");
-  if (membersSection && !membersSection.querySelector(".member-pulse-card")) {
-    membersSection.insertAdjacentHTML(
-      "afterbegin",
-      `<aside class="member-pulse-card" data-reveal>
-        <p class="section-kicker">Member mood</p>
-        <h3>이번 달도 함께 칠 사람들의 이름이 먼저 보이게.</h3>
-        <p>명단은 관리용 목록이 아니라, 다음 라운드에서 다시 만날 얼굴을 확인하는 공간으로 다듬었습니다.</p>
-      </aside>`
-    );
-  }
+
 
   document.querySelectorAll("img").forEach((image) => {
     const syncRatio = () => {
@@ -1718,4 +1709,5 @@ const initPage = () => {
 };
 
 initPage();
+
 
