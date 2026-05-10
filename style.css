@@ -3341,3 +3341,53 @@
     }
   }
 }
+
+@layer components {
+  .bottom-notice {
+    width: min(700px, calc(100% - 44px));
+    gap: 18px;
+    padding: 18px;
+  }
+
+  .notice-copy h2 {
+    font-size: 18px;
+  }
+
+  .notice-copy span,
+  .notice-copy small {
+    font-size: 13px;
+  }
+
+  .notice-check {
+    font-size: 13px;
+  }
+}
+
+@layer utilities {
+  @media (max-width: 760px) {
+    .bottom-notice {
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      width: auto;
+      gap: 10px;
+      padding: 13px 13px 13px 14px;
+    }
+
+    .notice-copy h2 {
+      font-size: 14px;
+    }
+
+    .bottom-notice .line-button.small {
+      min-height: 34px;
+      padding-inline: 11px;
+      font-size: 12px;
+    }
+
+    .notice-close {
+      width: 34px;
+      height: 34px;
+      flex-basis: 34px;
+    }
+  }
+}

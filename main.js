@@ -947,7 +947,7 @@ class KolonBottomNotice extends HTMLElement {
         <div class="notice-actions">
           <label class="notice-check">
             <input type="checkbox" data-notice-snooze />
-            <span>7일간 숨기기</span>
+            <span>오늘 하루 숨기기</span>
           </label>
           <button class="line-button small" type="button" data-open-modal="rsvpModal">상세 보기</button>
           <button class="notice-close" type="button" data-close-bottom-notice aria-label="하단 일정 공지 닫기"></button>
@@ -1877,7 +1877,7 @@ const initBottomNotice = () => {
   if (!notice) return;
 
   const storageKey = "kolongolf:bottom-notice:hidden-until";
-  const week = 7 * 24 * 60 * 60 * 1000;
+  const hideForToday = 24 * 60 * 60 * 1000;
   const checkbox = notice.querySelector("[data-notice-snooze]");
   const close = notice.querySelector("[data-close-bottom-notice]");
 
@@ -1891,7 +1891,7 @@ const initBottomNotice = () => {
 
   const setHiddenUntil = () => {
     try {
-      window.localStorage.setItem(storageKey, String(Date.now() + week));
+      window.localStorage.setItem(storageKey, String(Date.now() + hideForToday));
     } catch {
       // Storage can be unavailable in private browsing or embedded previews.
     }
@@ -1931,6 +1931,7 @@ const initPage = () => {
 };
 
 initPage();
+
 
 
 
