@@ -1,23 +1,42 @@
 ﻿const members = [
   { handle: "덕충안길", name: "권순노", role: "정회원", note: "페이드 장인" },
   { handle: "살려줘제바알", name: "김경수", role: "정회원", note: "벙커 탈출 1위" },
-  { handle: "오!건2", name: "김무건", role: "회장", note: "경기 운영" },
+  { handle: "무건파세이브", name: "김무건", role: "정회원", note: "파 세이브 감각" },
   { handle: "인생무생", name: "김무생", role: "정회원", note: "후반 집중력" },
   { handle: "울산땡주", name: "김영주", role: "정회원", note: "파3 스페셜" },
   { handle: "원조가가멜", name: "김정훈", role: "정회원", note: "백스핀 컨트롤" },
   { handle: "백돌이깬다", name: "김태연", role: "정회원", note: "정확한 어프로치" },
   { handle: "준빵", name: "김효준", role: "정회원", note: "스윙 템포" },
-  { handle: "빽스윙쫌만더", name: "서무환", role: "정회원", note: "장타 본능" },
+  { handle: "빽스윙쫌만더", name: "서무환", role: "회장", note: "클럽 리딩" },
   { handle: "날아라호", name: "심재호", role: "정회원", note: "탄도 조절" },
   { handle: "오상택", name: "오상택", role: "정회원", note: "코스 매니지먼트" },
   { handle: "필드난폭자", name: "윤석현", role: "정회원", note: "공격적 플레이" },
   { handle: "타키온", name: "이동수", role: "정회원", note: "퍼팅 스트로크" },
-  { handle: "무근정", name: "정무근", role: "총무", note: "운영 관리" },
+  { handle: "무근정타", name: "정무근", role: "총무", note: "운영 관리", email: "moogunjeong@kolon.com" },
   { handle: "울산정쁘로", name: "정성원", role: "정회원", note: "아이언 정밀도" },
   { handle: "원펀쓰리강냉", name: "천기준", role: "정회원", note: "파워 스윙" },
   { handle: "무적부대", name: "추정술", role: "정회원", note: "위기 탈출" },
   { handle: "장금이에이스", name: "하선재", role: "정회원", note: "정교한 퍼터" }
 ];
+
+const rolePriority = {
+  회장: 1,
+  총무: 2,
+  정회원: 3,
+};
+
+const getRoleMember = (role) => members.find((member) => member.role === role);
+
+const contactLine = (role) => {
+  const member = getRoleMember(role);
+  if (!member) return "";
+  return `${role}: ${member.name}${member.email ? ` · ${member.email}` : ""}`;
+};
+
+const contactAddressHtml = () => ["회장", "총무"]
+  .map(contactLine)
+  .filter(Boolean)
+  .join("<br />");
 
 const memberAnimals = [
   ["stag", "사슴", 82],
@@ -674,7 +693,9 @@ class KolonMembers extends HTMLElement {
     };
 
     const indexedMembers = members.map((member, index) => ({ ...member, index }));
-    const staffMembers = indexedMembers.filter((member) => member.role !== "정회원");
+    const staffMembers = indexedMembers
+      .filter((member) => member.role !== "정회원")
+      .sort((left, right) => (rolePriority[left.role] || 99) - (rolePriority[right.role] || 99));
     const regularMembers = indexedMembers.filter((member) => member.role === "정회원");
 
     const staffItems = staffMembers
@@ -875,8 +896,8 @@ class KolonModalStack extends HTMLElement {
           </div>
           <div class="modal-body">
             <p>정기 라운드, 기록 공유, 친선 매치를 함께하는 코오롱 골프 동호회입니다.</p>
-            <p>회장: 김무건 · gun77@kolon.com</p>
-            <p>총무: 정무근 · moogunjeong@kolon.com</p>
+            <p>${contactLine("회장")}</p>
+            <p>${contactLine("총무")}</p>
           </div>
         </div>
       </div>
@@ -977,8 +998,7 @@ class KolonFooter extends HTMLElement {
             <button type="button" data-open-modal="joinModal">가입 문의</button>
           </nav>
           <address>
-            회장 김무건 · gun77@kolon.com<br />
-            총무 정무근 · moogunjeong@kolon.com
+            ${contactAddressHtml()}
           </address>
         </div>
       </footer>
