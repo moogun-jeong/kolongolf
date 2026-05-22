@@ -25,6 +25,8 @@
 *   동물 이모티콘 SVG 자산 18개가 모두 `200` 응답하는 것을 확인.
 *   정적 검증 스크립트로 동물 ID 18개, 이모티콘 코드 18개가 모두 고유함을 확인.
 *   Chromium headless DOM/스크린샷 검증은 현재 환경의 원격 폰트 및 한글 glyph 렌더링 오류(`remote_font_face_source`, `render_text_harfbuzz`)로 타임아웃되어 완료하지 못함. 기존 검증 로그와 같은 환경 이슈로 판단하고, DOM/자산/정적 검증으로 보완.
+*   원격 최신 변경 위에 리베이스 후 커밋 `af17eff`를 GitHub `main` 브랜치에 SSH 푸시 완료.
+*   `https://kolongolf.pages.dev/`, `https://moogun-jeong.github.io/kolongolf/`에서 `20260522-1` 캐시 버전과 `@twemoji/svg@15.0.0` 회원 이모티콘 렌더링 코드 반영 확인.
 
 #### **기술적 결정 이유**
 *   **SVG 이미지 이모티콘 선택**: 네이티브 이모지는 OS와 폰트에 따라 모양이 달라지고 headless 환경에서는 렌더링이 불안정할 수 있어, 동일한 고화질 SVG 이모티콘 이미지로 통일.
