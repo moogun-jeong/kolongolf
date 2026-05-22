@@ -38,151 +38,41 @@ const contactAddressHtml = () => ["회장", "총무"]
   .filter(Boolean)
   .join("<br />");
 
+const emojiAssetBase = "https://cdn.jsdelivr.net/npm/@twemoji/svg@15.0.0";
+
 const memberAnimals = [
-  ["stag", "사슴", 82],
-  ["fox", "여우", 42],
-  ["bear", "곰", 72],
-  ["otter", "수달", 180],
-  ["owl", "부엉이", 108],
-  ["tiger", "호랑이", 58],
-  ["horse", "말", 96],
-  ["hawk", "매", 34],
-  ["dolphin", "돌고래", 214],
-  ["lynx", "스라소니", 318],
-  ["crane", "두루미", 24],
-  ["panther", "표범", 150],
-  ["cheetah", "치타", 88],
-  ["eagle", "독수리", 64],
-  ["heron", "왜가리", 196],
-  ["bison", "들소", 46],
-  ["seal", "물개", 226],
-  ["swan", "백조", 126]
+  { id: "deer", label: "사슴", code: "1f98c", hue: 82 },
+  { id: "fox", label: "여우", code: "1f98a", hue: 42 },
+  { id: "bear", label: "곰", code: "1f43b", hue: 72 },
+  { id: "otter", label: "수달", code: "1f9a6", hue: 180 },
+  { id: "owl", label: "부엉이", code: "1f989", hue: 108 },
+  { id: "tiger", label: "호랑이", code: "1f42f", hue: 58 },
+  { id: "horse", label: "말", code: "1f434", hue: 96 },
+  { id: "eagle", label: "독수리", code: "1f985", hue: 34 },
+  { id: "dolphin", label: "돌고래", code: "1f42c", hue: 214 },
+  { id: "leopard", label: "표범", code: "1f406", hue: 318 },
+  { id: "swan", label: "백조", code: "1f9a2", hue: 24 },
+  { id: "panda", label: "판다", code: "1f43c", hue: 150 },
+  { id: "monkey", label: "원숭이", code: "1f435", hue: 88 },
+  { id: "elephant", label: "코끼리", code: "1f418", hue: 64 },
+  { id: "lion", label: "사자", code: "1f981", hue: 196 },
+  { id: "hedgehog", label: "고슴도치", code: "1f994", hue: 46 },
+  { id: "penguin", label: "펭귄", code: "1f427", hue: 226 },
+  { id: "flamingo", label: "플라밍고", code: "1f9a9", hue: 126 }
 ];
 
-const memberAnimalSprite = `
-  <svg class="member-animal-sprite" aria-hidden="true" focusable="false">
-    <defs>
-      <symbol id="animal-stag" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M18 16c-4-6-3-10 1-12M20 16c-9-1-10-8-8-12M46 16c4-6 3-10-1-12M44 16c9-1 10-8 8-12" fill="none" stroke="var(--animal-line)" stroke-width="2.4" stroke-linecap="round" />
-        <path d="M19 22l-7-6 2 12M45 22l7-6-2 12" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2" stroke-linejoin="round" />
-        <path d="M20 30c0-10 24-10 24 0v8c0 8-5 14-12 14S20 46 20 38z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" />
-        <path d="M28 34h.01M36 34h.01" stroke="var(--animal-line)" stroke-width="3.2" stroke-linecap="round" />
-        <path d="M29 42c2 2 4 2 6 0" fill="none" stroke="var(--animal-line)" stroke-width="2" stroke-linecap="round" />
-      </symbol>
-      <symbol id="animal-fox" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M16 15l12 9h8l12-9-4 24c-1 8-6 13-12 13s-11-5-12-13z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
-        <path d="M24 33l8 17 8-17" fill="var(--animal-soft)" stroke="var(--animal-line)" stroke-width="2" stroke-linejoin="round" />
-        <path d="M26 31h.01M38 31h.01" stroke="var(--animal-line)" stroke-width="3.2" stroke-linecap="round" />
-        <path d="M31 40h2" stroke="var(--animal-line)" stroke-width="2.4" stroke-linecap="round" />
-      </symbol>
-      <symbol id="animal-bear" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <circle cx="20" cy="21" r="8" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.2" />
-        <circle cx="44" cy="21" r="8" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.2" />
-        <circle cx="32" cy="35" r="18" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" />
-        <ellipse cx="32" cy="42" rx="9" ry="7" fill="var(--animal-soft)" stroke="var(--animal-line)" stroke-width="2" />
-        <path d="M26 33h.01M38 33h.01M30 41h4M28 46c3 2 5 2 8 0" stroke="var(--animal-line)" stroke-width="2.6" stroke-linecap="round" />
-      </symbol>
-      <symbol id="animal-otter" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M19 32c0-10 6-17 13-17s13 7 13 17v7c0 8-6 14-13 14s-13-6-13-14z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" />
-        <ellipse cx="32" cy="40" rx="10" ry="8" fill="var(--animal-soft)" stroke="var(--animal-line)" stroke-width="2" />
-        <path d="M25 33h.01M39 33h.01M31 39h2M18 39l8 2M18 45l8-1M46 39l-8 2M46 45l-8-1" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
-      </symbol>
-      <symbol id="animal-owl" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M17 19l8 3 7-7 7 7 8-3v17c0 10-6 17-15 17s-15-7-15-17z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
-        <circle cx="26" cy="34" r="7" fill="var(--animal-soft)" stroke="var(--animal-line)" stroke-width="2" />
-        <circle cx="38" cy="34" r="7" fill="var(--animal-soft)" stroke="var(--animal-line)" stroke-width="2" />
-        <path d="M26 34h.01M38 34h.01M30 42l2 3 2-3" stroke="var(--animal-line)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
-      </symbol>
-      <symbol id="animal-tiger" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M20 23l-5-6 1 12M44 23l5-6-1 12" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2" stroke-linejoin="round" />
-        <path d="M18 34c0-12 8-19 14-19s14 7 14 19c0 11-6 18-14 18s-14-7-14-18z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" />
-        <path d="M32 18v9M24 24l5 4M40 24l-5 4M21 33l7 1M43 33l-7 1" fill="none" stroke="var(--animal-line)" stroke-width="2" stroke-linecap="round" />
-        <path d="M26 36h.01M38 36h.01M30 44c2 2 4 2 6 0" stroke="var(--animal-line)" stroke-width="2.6" stroke-linecap="round" />
-      </symbol>
-      <symbol id="animal-horse" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M40 13c-10 1-18 7-19 17l-2 17h19c7 0 11-5 11-12V22c0-6-3-9-9-9z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
-        <path d="M31 17c-4 5-5 11-5 22M43 23h.01M31 38c5 2 8 1 11-1" fill="none" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
-        <path d="M20 30c6-7 13-9 20-10" fill="none" stroke="var(--animal-soft)" stroke-width="5" stroke-linecap="round" />
-      </symbol>
-      <symbol id="animal-hawk" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M17 31c8-13 22-15 33-8-3 1-6 4-7 8 5 0 8 3 10 6-10 2-18 0-23-5-3 7-8 12-15 15 2-6 2-11 2-16z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
-        <path d="M39 25l10 2-7 4M34 28h.01M22 38c6-1 12-4 17-9" fill="none" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
-      </symbol>
-      <symbol id="animal-dolphin" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M14 37c9-15 25-22 39-13-5 0-8 2-10 6 5 1 8 4 10 8-13 5-25 2-33-5l-8 8z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
-        <path d="M28 28l-3-9 10 7M41 31h.01" stroke="var(--animal-line)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-      </symbol>
-      <symbol id="animal-lynx" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M20 22l-4-10 9 8M44 22l4-10-9 8" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2" stroke-linejoin="round" />
-        <path d="M18 34c0-11 7-18 14-18s14 7 14 18c0 10-6 17-14 17s-14-7-14-17z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" />
-        <path d="M24 36h.01M40 36h.01M31 43h2M17 19l-4-5M47 19l4-5M24 46c5 3 11 3 16 0" stroke="var(--animal-line)" stroke-width="2.4" stroke-linecap="round" />
-      </symbol>
-      <symbol id="animal-crane" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M37 15c-7 4-10 12-9 23 1 8-3 12-9 13h24c-5-3-7-8-6-16 1-6 5-8 12-9l-10-4z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
-        <path d="M41 21l13 2-12 4M36 23h.01M27 51v6M37 51v6" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
-      </symbol>
-      <symbol id="animal-panther" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M18 22l8-7 3 8h6l3-8 8 7-2 17c-1 8-6 13-12 13s-11-5-12-13z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
-        <path d="M25 34l4 1M39 34l-4 1M30 43c2 2 4 2 6 0M22 39l7 1M42 40l7-1" fill="none" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
-      </symbol>
-      <symbol id="animal-cheetah" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M19 31c0-10 6-17 13-17s13 7 13 17v6c0 9-6 15-13 15s-13-6-13-15z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" />
-        <path d="M23 23l-4-6M41 23l4-6M27 32h.01M37 32h.01M27 24h.01M38 24h.01M24 40h.01M40 40h.01M31 43c2 2 4 2 6 0" stroke="var(--animal-line)" stroke-width="2.4" stroke-linecap="round" />
-      </symbol>
-      <symbol id="animal-eagle" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M17 34c8-13 18-19 31-14-5 2-8 6-9 11 5 1 8 3 11 7-10 4-19 2-26-4-1 5-4 9-8 12 0-4 0-8 1-12z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
-        <path d="M37 25l15 2-12 6M33 29h.01M25 35c4-1 8-3 11-7" fill="none" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
-      </symbol>
-      <symbol id="animal-heron" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M41 16c-9 2-13 9-11 20 1 7-4 12-12 15h24c-4-3-6-8-4-15 2-6 7-8 14-10l-10-4z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
-        <path d="M45 22l11 3-12 3M38 23h.01M25 51v6M35 51v6" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
-      </symbol>
-      <symbol id="animal-bison" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M18 29c-5-7-3-13 4-15M46 29c5-7 3-13-4-15" fill="none" stroke="var(--animal-line)" stroke-width="2.8" stroke-linecap="round" />
-        <path d="M18 34c0-10 7-17 14-17s14 7 14 17c0 10-6 17-14 17s-14-7-14-17z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" />
-        <path d="M20 25c5-5 19-6 24 0" fill="none" stroke="var(--animal-soft)" stroke-width="6" stroke-linecap="round" />
-        <path d="M26 36h.01M38 36h.01M29 44c2 2 4 2 6 0" stroke="var(--animal-line)" stroke-width="2.5" stroke-linecap="round" />
-      </symbol>
-      <symbol id="animal-seal" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M18 37c0-11 7-18 15-18 9 0 16 8 15 19-1 8-7 14-15 14S18 46 18 37z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" />
-        <path d="M27 35h.01M39 35h.01M32 39h.01M18 43l10-2M18 48l10-3M46 41l10 2M46 45l10 3" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
-        <path d="M28 45c3 2 5 2 8 0" fill="none" stroke="var(--animal-line)" stroke-width="2" stroke-linecap="round" />
-      </symbol>
-      <symbol id="animal-swan" viewBox="0 0 64 64">
-        <circle cx="32" cy="32" r="30" fill="var(--animal-bg)" />
-        <path d="M38 14c-9 2-13 9-10 18 2 5 0 9-7 13 9 5 22 5 30-3-7 1-12-1-14-6-2-4 1-8 8-10z" fill="var(--animal-fill)" stroke="var(--animal-line)" stroke-width="2.4" stroke-linejoin="round" />
-        <path d="M41 21l12 3-11 4M38 22h.01M22 45c8 3 18 2 28-3" stroke="var(--animal-line)" stroke-width="2.2" stroke-linecap="round" />
-      </symbol>
-    </defs>
-  </svg>
-`;
-
 const getMemberAnimal = (index) => {
-  const [id, label, hue] = memberAnimals[index % memberAnimals.length];
-  return { id, label, hue };
+  const animal = memberAnimals[index % memberAnimals.length];
+  return {
+    ...animal,
+    asset: `${emojiAssetBase}/${animal.code}.svg`
+  };
 };
 
 const renderMemberAnimal = (animal, name) => `
-  <svg class="member-animal" viewBox="0 0 64 64" role="img" aria-label="${name} 회원 ${animal.label} 캐릭터" focusable="false" style="--animal-hue: ${animal.hue};">
-    <use href="#animal-${animal.id}"></use>
-  </svg>
+  <span class="member-animal" role="img" aria-label="${name} 회원 ${animal.label} 이모티콘" data-animal="${animal.id}" style="--animal-hue: ${animal.hue};">
+    <img class="member-animal-emoji" src="${animal.asset}" alt="" width="44" height="44" loading="lazy" decoding="async" aria-hidden="true" />
+  </span>
 `;
 
 const svgOrnaments = {
@@ -721,7 +611,6 @@ class KolonMembers extends HTMLElement {
             <button class="line-button small" id="memberReset" type="button">초기화</button>
           </div>
         </div>
-        ${memberAnimalSprite}
         <div class="staff-grid" aria-label="운영진">
           ${staffItems}
         </div>
@@ -2264,7 +2153,6 @@ const initPage = () => {
 };
 
 initPage();
-
 
 
 

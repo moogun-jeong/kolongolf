@@ -1,15 +1,15 @@
-# **TASK.md - 프리미엄 골프 클럽형 홈 전면 개선**
+# **TASK.md - 회원명부 동물 이모티콘 개선**
 
-`home_redisign.md`의 설계에 맞춰 현재 홈페이지를 딥그린·아이보리·골드 기반의 프리미엄 골프 동호회형 디자인으로 개선하고, 검증 후 커밋·푸시·배포까지 완료합니다.
+현재 회원 명부의 SVG 동물 캐릭터 식별성이 낮아 보이는 문제를 개선하기 위해, 회원별로 모두 다른 고해상도 컬러 동물 이모티콘을 적용하고 검증 후 커밋·푸시·배포까지 완료합니다.
 
 ## **1. 현재 진행 중인 작업 (Current Active Task)**
-*   [x] 작업 맥락 학습: `AGENTS.md`, `TASK.md`, `PROJECT_LOG.md`, `home_redisign.md` 확인
-*   [x] 현재 Web Components 기반 홈 구조와 회원명부 SVG 구조 확인
-*   [x] 히어로·소개·일정·아카이브·CTA 구간에 inline SVG 장식 보강
-*   [x] 회원명부 카드의 골프 소품 마크를 개별 동물 캐릭터 SVG로 교체
-*   [x] CSS 반응형, 접근성, 캐시 버전 정리
-*   [x] `PROJECT_LOG.md`/`blueprint.md` 기록 및 로컬 검증
-*   [x] 선별 커밋 후 `git@github.com:moogun-jeong/kolongolf.git` SSH 푸시
+*   [x] 작업 맥락 학습: `AGENTS.md`, `TASK.md`, `PROJECT_LOG.md`, `GEMINI.md`, `blueprint.md` 확인
+*   [x] 현재 회원명부 SVG 스프라이트와 카드 스타일 구조 확인
+*   [x] 회원별 고유 동물 이모티콘 18종 적용 및 접근성 라벨 유지
+*   [x] 카드 내 이모티콘 크기, 배경, 반응형 스타일 개선
+*   [x] `PROJECT_LOG.md`/`blueprint.md` 기록 및 캐시 버전 갱신
+*   [x] 로컬 문법, 자산, 정적 검증 및 Chromium headless 이슈 기록
+*   [ ] 선별 커밋 후 원격 푸시 및 배포 확인
 
 ## **2. 완료된 작업 (Completed Tasks)**
 *   [x] **프리미엄 골프 클럽형 홈페이지 전면 개선**
