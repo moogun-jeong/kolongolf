@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "preview": "python3 -m http.server 8000 --bind 0.0.0.0",
-    "dev": "wrangler pages dev ."
+    "dev": "wrangler pages dev .",
+    "db:local:init": "wrangler d1 execute kolongolf-messages --local --file=./sql/local-schema.sql"
   },
   "repository": {
     "type": "git",
