@@ -274,8 +274,21 @@ const messageCopy = {
 const getTurnstileSiteKey = () =>
   document.querySelector('meta[name="cf-turnstile-sitekey"]')?.getAttribute("content")?.trim() || "";
 
-const getMessageApiBase = () =>
-  document.querySelector('meta[name="message-api-base"]')?.getAttribute("content")?.trim() || "/api";
+const isLocalApiDevelopment = () => {
+  const { hostname, port } = window.location;
+  return (
+    (["localhost", "127.0.0.1"].includes(hostname) && port === "8788") ||
+    (hostname.endsWith(".app.github.dev") && hostname.includes("-8788."))
+  );
+};
+
+const getMessageApiBase = () => {
+  if (isLocalApiDevelopment()) return "/api";
+  return (
+    document.querySelector('meta[name="message-api-base"]')?.getAttribute("content")?.trim() ||
+    "https://kolongolf.pages.dev/api"
+  );
+};
 
 const messageFormTemplate = (type, placeholder, buttonText) => `
   <form class="message-form" data-message-form data-message-type="${type}">
