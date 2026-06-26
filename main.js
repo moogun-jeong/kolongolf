@@ -9,7 +9,7 @@
   { handle: "준빵", name: "김효준", role: "정회원", note: "스윙 템포" },
   { handle: "빽스윙쫌만더", name: "서무환", role: "회장", note: "클럽 리딩", email: "pleaselove@kolon.com" },
   { handle: "날아라호", name: "심재호", role: "정회원", note: "탄도 조절" },
-  { handle: "오상택", name: "오상택", role: "정회원", note: "코스 매니지먼트" },
+  { handle: "오프로672", name: "오상택", role: "정회원", note: "코스 매니지먼트" },
   { handle: "필드난폭자", name: "윤석현", role: "정회원", note: "공격적 플레이" },
   { handle: "타키온", name: "이동수", role: "정회원", note: "퍼팅 스트로크" },
   { handle: "무근정", name: "정무근", role: "총무", note: "운영 관리", email: "moogunjeong@kolon.com" },
@@ -154,6 +154,28 @@ const principleIcons = {
 
 const archives = [
   {
+    id: "2026-06-screen",
+    date: "2026.06.23",
+    label: "스크린 행사",
+    title: "2026년 6월 스크린골프 동호회 행사",
+    location: "골프존파크 두왕테크노점",
+    people: "6명 참가",
+    summary: "골프존파크 두왕테크노점에서 동강시스타CC 코스로 18홀 스트로크 라운드를 진행했습니다. 서무환, 정무근, 김영주, 김효준, 김경수, 하선재 회원이 함께한 6월 스크린 행사입니다.",
+    highlights: ["동강시스타CC", "18홀 스트로크", "6명 참가"],
+    details: [
+      "일시: 2026년 6월 23일(화) 17:00",
+      "장소: 골프존파크 두왕테크노점(울산 남구 테크노산업로 78-11)",
+      "참석: 서무환, 정무근, 김영주, 김효준, 김경수, 하선재",
+      "경기 설정: 동강시스타CC, G투어모드/블루, 그린 스피드 약간 빠름",
+      "운영: 방 2개 운영, 1조 1·2·3번 / 2조 4·5·6번 조 편성",
+      "세부 규칙: 바람 강하게, 컨시드 1.5m, 멀리건 없음"
+    ],
+    images: [
+      "images/archive-2026-06-1.jpeg",
+      "images/archive-2026-06-notice.png"
+    ]
+  },
+  {
     id: "2026-04-baystars",
     date: "2026.04.10",
     label: "필드 행사",
@@ -234,6 +256,11 @@ const archives = [
 
 const heroSlides = [
   {
+    image: "images/archive-2026-06-1.jpeg",
+    date: "2026.06.23",
+    caption: "6월 스크린골프 동호회 행사"
+  },
+  {
     image: "images/archive-2026-04-2.png",
     date: "2026.04.10",
     caption: "4월 베이스타즈CC 필드 행사"
@@ -256,10 +283,10 @@ const heroSlides = [
 ];
 
 const nextNotice = {
-  eyebrow: "Next Round",
-  title: "2분기 말 스크린 행사 예정",
-  meta: "세부 일정 준비 중 · 스크린 라운드",
-  body: "일정이 잡히는 대로 회장/총무 안내를 통해 함께 나눌 예정입니다."
+  eyebrow: "Latest Round",
+  title: "2026년 6월 스크린 행사",
+  meta: "6.23(화) 17:00 · 골프존파크 두왕테크노점",
+  body: "동강시스타CC 18홀 스트로크로 6명이 함께한 6월 모임입니다."
 };
 
 const messageCopy = {
@@ -384,13 +411,13 @@ class KolonHero extends HTMLElement {
               좋은 샷, 아쉬운 퍼트, 라운드 뒤 웃음까지 오래 남기는 모임입니다.
             </p>
             <div class="hero-meta-strip" aria-label="동호회 주요 정보">
-              <span><strong>Next Round</strong>2분기 말 스크린 행사</span>
-              <span><strong>Latest Record</strong>2026.04 베이스타즈CC</span>
+              <span><strong>Latest Round</strong>2026.06 스크린 행사</span>
+              <span><strong>Course</strong>동강시스타CC</span>
               <span><strong>Members</strong>18명</span>
             </div>
             <div class="button-row">
-              <a class="solid-button" href="#schedule">월례회 일정 보기</a>
-              <a class="line-button" href="#archive">지난 라운드 보기</a>
+              <a class="solid-button" href="#schedule">6월 일정 보기</a>
+              <a class="line-button" href="#archive">행사 사진 보기</a>
             </div>
           </div>
           <figure class="hero-media" data-reveal>
@@ -402,8 +429,8 @@ class KolonHero extends HTMLElement {
             </figcaption>
             <div class="hero-course-card" aria-label="최근 주요 기록">
               <span>Featured</span>
-              <strong>Hole-in-one</strong>
-              <small>STARS 8번 홀 · 이동수 팀장</small>
+              <strong>Screen Round</strong>
+              <small>두왕테크노점 · 6명 참가</small>
             </div>
           </figure>
         </div>
@@ -473,14 +500,14 @@ class KolonImageStatement extends HTMLElement {
     this.dataset.ready = "true";
     this.innerHTML = `
       <section class="image-statement" aria-label="동호회 활동 사진">
-        <img src="images/archive-2026-04-1.png" alt="코오롱 스크린 골프 동호회 4월 필드 행사 중식 모임 사진" loading="lazy" decoding="async" />
+        <img src="images/archive-2026-06-1.jpeg" alt="코오롱 스크린 골프 동호회 6월 스크린 행사 단체 사진" loading="lazy" decoding="async" />
         <div class="statement-copy" data-reveal>
           <p class="section-kicker">Round Memory</p>
-          <h2>필드에서 시작한 라운드는 함께 모인 자리까지 오래 이어집니다.</h2>
-          <div class="statement-badges" aria-label="4월 필드 행사 주요 기록">
-            <span>2026.04.10</span>
-            <span>Baystars CC</span>
-            <span>Hole-in-one</span>
+          <h2>스크린 라운드 뒤 함께 남긴 사진이 다음 모임을 기다리게 합니다.</h2>
+          <div class="statement-badges" aria-label="6월 스크린 행사 주요 기록">
+            <span>2026.06.23</span>
+            <span>DuWang Techno</span>
+            <span>6 Members</span>
           </div>
         </div>
       </section>
@@ -497,51 +524,51 @@ class KolonSchedule extends HTMLElement {
         <div class="section-heading split" data-reveal>
           <div>
             <p class="section-kicker">Schedule</p>
-            <h2 id="scheduleTitle">Next Round Board</h2>
+            <h2 id="scheduleTitle">Screen Event Board</h2>
           </div>
-          <p>다음 모임은 2분기 말 스크린 라운드로 준비 중입니다.</p>
+          <p>2026년 6월 스크린 행사는 6월 23일 화요일 17시에 진행되었습니다.</p>
         </div>
 
         <div class="schedule-board" data-reveal>
           <article class="next-event">
             ${svgOrnaments.scheduleMap}
             <div class="event-date-lockup" aria-hidden="true">
-              <span>Q2</span>
-              <strong>Late</strong>
+              <span>JUN</span>
+              <strong>23</strong>
               <small>2026</small>
             </div>
             <div class="event-content">
               <div class="event-topline">
-                <p class="event-state">준비 중</p>
+                <p class="event-state">진행 완료</p>
                 <span>Screen Round</span>
               </div>
-              <h3>2026년 2분기 말 스크린 행사</h3>
-              <p>이번 모임도 편하게 만나 한 라운드 즐기는 자리로 준비 중입니다. 세부 일정은 회장/총무 안내로 함께 나눌 예정입니다.</p>
+              <h3>2026년 6월 스크린골프 동호회 행사</h3>
+              <p>골프존파크 두왕테크노점에서 동강시스타CC 코스로 18홀 스트로크 라운드를 함께했습니다. 경기 중 석식과 사진 촬영까지 이어진 6월 모임입니다.</p>
             </div>
           </article>
 
-          <div class="event-detail-panel" aria-label="다음 일정 상세 정보">
+          <div class="event-detail-panel" aria-label="2026년 6월 스크린 행사 상세 정보">
             <dl>
               <div>
                 <dt>일시</dt>
-                <dd>2분기 말 예정</dd>
+                <dd>2026.06.23(화) 17:00</dd>
               </div>
               <div>
                 <dt>장소</dt>
-                <dd>추후 안내</dd>
+                <dd>골프존파크 두왕테크노점</dd>
               </div>
               <div>
                 <dt>방식</dt>
-                <dd>스크린 라운드</dd>
+                <dd>동강시스타CC · 18홀 스트로크</dd>
               </div>
               <div>
-                <dt>상태</dt>
-                <dd>세부 일정 준비 중</dd>
+                <dt>참석</dt>
+                <dd>서무환, 정무근, 김영주, 김효준, 김경수, 하선재</dd>
               </div>
             </dl>
             <div class="button-row">
-              <button class="solid-button" type="button" data-open-modal="rsvpModal">일정 안내</button>
-              <a class="line-button" href="#archive">4월 행사 보기</a>
+              <button class="solid-button" type="button" data-open-modal="rsvpModal">공지 상세 보기</button>
+              <a class="line-button" href="#archive">6월 사진 보기</a>
             </div>
           </div>
         </div>
@@ -554,13 +581,13 @@ class KolonSchedule extends HTMLElement {
         <div class="schedule-notes">
           <article data-reveal>
             <span>01</span>
-            <h3>4월 베이스타즈CC 필드 행사</h3>
-            <p>라운딩부터 이동수 팀장님의 홀인원, 공동 1위 시상, 중식 모임까지 함께한 자리였습니다.</p>
+            <h3>6월 스크린골프 동호회 행사</h3>
+            <p>서무환, 정무근, 김영주, 김효준, 김경수, 하선재 회원이 두왕테크노점에서 동강시스타CC 18홀 스트로크를 함께했습니다.</p>
           </article>
           <article data-reveal>
             <span>02</span>
-            <h3>2분기 말 스크린 행사 예정</h3>
-            <p>다음 만남은 스크린 라운드로 준비 중입니다. 가볍게 모여 다시 한 번 즐길 예정입니다.</p>
+            <h3>4월 베이스타즈CC 필드 행사</h3>
+            <p>라운딩부터 이동수 팀장님의 홀인원, 공동 1위 시상, 중식 모임까지 함께한 자리였습니다.</p>
           </article>
           <article data-reveal>
             <span>03</span>
@@ -773,16 +800,17 @@ class KolonModalStack extends HTMLElement {
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="rsvpTitle">
           <div class="modal-head">
             <div>
-              <p class="section-kicker">Next Screen Event</p>
-              <h3 id="rsvpTitle">2분기 말 스크린 행사 안내</h3>
+              <p class="section-kicker">Screen Event</p>
+              <h3 id="rsvpTitle">2026년 6월 스크린 행사 안내</h3>
             </div>
             <button class="line-button small" type="button" data-close-modal>닫기</button>
           </div>
           <div class="modal-body">
-            <p>일시: 2026년 2분기 말 예정</p>
-            <p>장소: 추후 안내</p>
-            <p>방식: 스크린 라운드</p>
-            <p>자세한 일정은 회장/총무 안내를 통해 회원들과 함께 나눌 예정입니다.</p>
+            <p>일시: 2026년 6월 23일(화) 17:00</p>
+            <p>장소: 골프존파크 두왕테크노점(울산 남구 테크노산업로 78-11)</p>
+            <p>코스: 동강시스타CC · 18홀 스트로크</p>
+            <p>참석: 서무환, 정무근, 김영주, 김효준, 김경수, 하선재</p>
+            <p>운영: 경기 중 석식 제공, 게임 후 사진 촬영 및 안내사항 공지</p>
           </div>
         </div>
       </div>
@@ -809,14 +837,14 @@ class KolonModalStack extends HTMLElement {
           <div class="modal-head">
             <div>
               <p class="section-kicker">Location</p>
-              <h3 id="locationTitle">다음 일정 장소 안내</h3>
+              <h3 id="locationTitle">6월 스크린 행사 장소 안내</h3>
             </div>
             <button class="line-button small" type="button" data-close-modal>닫기</button>
           </div>
           <div class="modal-body">
-            <p>장소: 추후 안내</p>
-            <p>주소: 장소가 정해지면 함께 나눌 예정</p>
-            <p>일시: 2026년 2분기 말 예정</p>
+            <p>장소: 골프존파크 두왕테크노점</p>
+            <p>주소: 울산 남구 테크노산업로 78-11</p>
+            <p>일시: 2026년 6월 23일(화) 17:00</p>
           </div>
         </div>
       </div>
@@ -1497,11 +1525,11 @@ const initMemberExperienceEnhancements = () => {
     scheduleSection.insertAdjacentHTML(
       "afterbegin",
       `<aside class="next-round-brief" data-reveal>
-        <p class="section-kicker">다음 모임</p>
-        <h3>모임 전에 필요한 내용을 한눈에 볼 수 있어요.</h3>
+        <p class="section-kicker">6월 모임</p>
+        <h3>6월 스크린 행사 내용을 한눈에 볼 수 있어요.</h3>
         <ul>
-          <li><strong>언제</strong><span>2분기 말 스크린 행사 예정</span></li>
-          <li><strong>준비</strong><span>개인 장비와 이동 시간을 미리 챙겨주세요</span></li>
+          <li><strong>언제</strong><span>2026년 6월 23일(화) 17:00</span></li>
+          <li><strong>어디서</strong><span>골프존파크 두왕테크노점</span></li>
           <li><strong>후기</strong><span>라운드가 끝난 뒤 사진과 한마디를 남겨주세요</span></li>
         </ul>
       </aside>`
@@ -2166,8 +2194,3 @@ const initPage = () => {
 };
 
 initPage();
-
-
-
-
-
