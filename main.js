@@ -256,11 +256,6 @@ const archives = [
 
 const heroSlides = [
   {
-    image: "images/archive-2026-06-1.jpeg",
-    date: "2026.06.23",
-    caption: "6월 스크린골프 동호회 행사"
-  },
-  {
     image: "images/archive-2026-04-2.png",
     date: "2026.04.10",
     caption: "4월 베이스타즈CC 필드 행사"
@@ -429,8 +424,8 @@ class KolonHero extends HTMLElement {
             </figcaption>
             <div class="hero-course-card" aria-label="최근 주요 기록">
               <span>Featured</span>
-              <strong>Screen Round</strong>
-              <small>두왕테크노점 · 6명 참가</small>
+              <strong>Hole-in-one</strong>
+              <small>STARS 8번 홀 · 이동수 팀장</small>
             </div>
           </figure>
         </div>
@@ -500,14 +495,14 @@ class KolonImageStatement extends HTMLElement {
     this.dataset.ready = "true";
     this.innerHTML = `
       <section class="image-statement" aria-label="동호회 활동 사진">
-        <img src="images/archive-2026-06-1.jpeg" alt="코오롱 스크린 골프 동호회 6월 스크린 행사 단체 사진" loading="lazy" decoding="async" />
+        <img src="images/archive-2026-04-1.png" alt="코오롱 스크린 골프 동호회 4월 필드 행사 중식 모임 사진" loading="lazy" decoding="async" />
         <div class="statement-copy" data-reveal>
           <p class="section-kicker">Round Memory</p>
-          <h2>스크린 라운드 뒤 함께 남긴 사진이 다음 모임을 기다리게 합니다.</h2>
-          <div class="statement-badges" aria-label="6월 스크린 행사 주요 기록">
-            <span>2026.06.23</span>
-            <span>DuWang Techno</span>
-            <span>6 Members</span>
+          <h2>필드에서 시작한 라운드는 함께 모인 자리까지 오래 이어집니다.</h2>
+          <div class="statement-badges" aria-label="4월 필드 행사 주요 기록">
+            <span>2026.04.10</span>
+            <span>Baystars CC</span>
+            <span>Hole-in-one</span>
           </div>
         </div>
       </section>
