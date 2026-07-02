@@ -16,14 +16,20 @@
   { handle: "울산정쁘로", name: "정성원", role: "정회원", note: "아이언 정밀도" },
   { handle: "원펀쓰리강냉", name: "천기준", role: "정회원", note: "파워 스윙" },
   { handle: "무적부대", name: "추정술", role: "정회원", note: "위기 탈출" },
-  { handle: "장금이에이스", name: "하선재", role: "정회원", note: "정교한 퍼터" }
+  { handle: "장금이에이스", name: "하선재", role: "정회원", note: "정교한 퍼터" },
+  { handle: "서승규", name: "서승규", role: "신입회원", note: "침착한 코스 리딩" },
+  { handle: "안상욱", name: "안상욱", role: "신입회원", note: "강한 임팩트" },
+  { handle: "박동성", name: "박동성", role: "신입회원", note: "클러치 퍼팅" }
 ];
 
 const rolePriority = {
   회장: 1,
   총무: 2,
   정회원: 3,
+  신입회원: 4,
 };
+
+const staffRoles = new Set(["회장", "총무"]);
 
 const getRoleMember = (role) => members.find((member) => member.role === role);
 
@@ -58,7 +64,10 @@ const memberAnimals = [
   { id: "lion", label: "사자", code: "1f981", hue: 196 },
   { id: "hedgehog", label: "고슴도치", code: "1f994", hue: 46 },
   { id: "penguin", label: "펭귄", code: "1f427", hue: 226 },
-  { id: "flamingo", label: "플라밍고", code: "1f9a9", hue: 126 }
+  { id: "flamingo", label: "플라밍고", code: "1f9a9", hue: 126 },
+  { id: "wolf", label: "늑대", code: "1f43a", hue: 252 },
+  { id: "shark", label: "상어", code: "1f988", hue: 205 },
+  { id: "rhino", label: "코뿔소", code: "1f98f", hue: 286 }
 ];
 
 const getMemberAnimal = (index) => {
@@ -278,10 +287,10 @@ const heroSlides = [
 ];
 
 const nextNotice = {
-  eyebrow: "Latest Round",
-  title: "2026년 6월 스크린 행사",
-  meta: "6.23(화) 17:00 · 골프존파크 두왕테크노점",
-  body: "동강시스타CC 18홀 스트로크로 6명이 함께한 6월 모임입니다."
+  eyebrow: "Next Event",
+  title: "제8회 석노협 스크린골프대회",
+  meta: "7.4(토) 08:00 · 골프존파크 삼산한국골프점",
+  body: "코오롱인더스트리 A/B팀이 용원 GC 백로·무학 코스에 참가합니다."
 };
 
 const messageCopy = {
@@ -406,12 +415,12 @@ class KolonHero extends HTMLElement {
               좋은 샷, 아쉬운 퍼트, 라운드 뒤 웃음까지 오래 남기는 모임입니다.
             </p>
             <div class="hero-meta-strip" aria-label="동호회 주요 정보">
-              <span><strong>Latest Round</strong>2026.06 스크린 행사</span>
-              <span><strong>Course</strong>동강시스타CC</span>
-              <span><strong>Members</strong>18명</span>
+              <span><strong>Next Event</strong>제8회 석노협 대회</span>
+              <span><strong>Course</strong>용원 GC 백로·무학</span>
+              <span><strong>Members</strong>21명</span>
             </div>
             <div class="button-row">
-              <a class="solid-button" href="#schedule">6월 일정 보기</a>
+              <a class="solid-button" href="#schedule">대회 일정 보기</a>
               <a class="line-button" href="#archive">행사 사진 보기</a>
             </div>
           </div>
@@ -521,49 +530,49 @@ class KolonSchedule extends HTMLElement {
             <p class="section-kicker">Schedule</p>
             <h2 id="scheduleTitle">Screen Event Board</h2>
           </div>
-          <p>2026년 6월 스크린 행사는 6월 23일 화요일 17시에 진행되었습니다.</p>
+          <p>2026년 7월 4일 토요일, 제8회 석노협 의장배 스크린골프대회에 코오롱인더스트리 2개 팀이 참가합니다.</p>
         </div>
 
         <div class="schedule-board" data-reveal>
           <article class="next-event">
             ${svgOrnaments.scheduleMap}
             <div class="event-date-lockup" aria-hidden="true">
-              <span>JUN</span>
-              <strong>23</strong>
+              <span>JUL</span>
+              <strong>04</strong>
               <small>2026</small>
             </div>
             <div class="event-content">
               <div class="event-topline">
-                <p class="event-state">진행 완료</p>
-                <span>Screen Round</span>
+                <p class="event-state">참가 예정</p>
+                <span>Chairman Cup</span>
               </div>
-              <h3>2026년 6월 스크린골프 동호회 행사</h3>
-              <p>골프존파크 두왕테크노점에서 동강시스타CC 코스로 18홀 스트로크 라운드를 함께했습니다. 경기 중 석식과 사진 촬영까지 이어진 6월 모임입니다.</p>
+              <h3>제8회 석노협 스크린골프대회 참가 안내</h3>
+              <p>울산석유화학공업단지 노동조합 협의회 주관 의장배 대회입니다. 코오롱인더스트리는 A팀과 B팀, 총 8명이 회사별 4인 1팀 방식으로 참가합니다.</p>
             </div>
           </article>
 
-          <div class="event-detail-panel" aria-label="2026년 6월 스크린 행사 상세 정보">
+          <div class="event-detail-panel" aria-label="제8회 석노협 스크린골프대회 상세 정보">
             <dl>
               <div>
                 <dt>일시</dt>
-                <dd>2026.06.23(화) 17:00</dd>
+                <dd>2026.07.04(토) 08:00</dd>
               </div>
               <div>
                 <dt>장소</dt>
-                <dd>골프존파크 두왕테크노점</dd>
+                <dd>골프존파크 삼산한국골프점</dd>
               </div>
               <div>
                 <dt>방식</dt>
-                <dd>동강시스타CC · 18홀 스트로크</dd>
+                <dd>회사별 4인 1팀 · 투비전 NX · 용원 GC 백로·무학</dd>
               </div>
               <div>
-                <dt>참석</dt>
-                <dd>서무환, 정무근, 김영주, 김효준, 김경수, 하선재</dd>
+                <dt>선수</dt>
+                <dd>A팀 김효준, 서무환, 정무근, 허선재 · B팀 김경수, 박동성, 윤석현, 천기준</dd>
               </div>
             </dl>
             <div class="button-row">
               <button class="solid-button" type="button" data-open-modal="rsvpModal">공지 상세 보기</button>
-              <a class="line-button" href="#archive">6월 사진 보기</a>
+              <button class="line-button" type="button" data-open-modal="locationModal">장소 안내</button>
             </div>
           </div>
         </div>
@@ -576,18 +585,18 @@ class KolonSchedule extends HTMLElement {
         <div class="schedule-notes">
           <article data-reveal>
             <span>01</span>
-            <h3>6월 스크린골프 동호회 행사</h3>
-            <p>서무환, 정무근, 김영주, 김효준, 김경수, 하선재 회원이 두왕테크노점에서 동강시스타CC 18홀 스트로크를 함께했습니다.</p>
+            <h3>석노협 의장배 대회 참가</h3>
+            <p>7월 4일 오전 8시, 삼산한국골프점에서 코오롱인더스트리 A/B팀이 참가합니다.</p>
           </article>
           <article data-reveal>
             <span>02</span>
-            <h3>4월 베이스타즈CC 필드 행사</h3>
-            <p>라운딩부터 이동수 팀장님의 홀인원, 공동 1위 시상, 중식 모임까지 함께한 자리였습니다.</p>
+            <h3>핵심 경기 조건</h3>
+            <p>투비전 NX, 용원 GC 백로·무학, 투어모드 G투어 난이도, 컨시드 1.5m와 멀리건 없음 조건으로 진행됩니다.</p>
           </article>
           <article data-reveal>
             <span>03</span>
-            <h3>함께 맞추는 다음 약속</h3>
-            <p>일시와 장소가 정해지면 회장/총무 안내를 통해 회원들과 함께 나눌 예정입니다.</p>
+            <h3>참가 선수 응원</h3>
+            <p>참가 선수들의 좋은 성적과 즐거운 경기를 함께 응원합니다.</p>
           </article>
         </div>
       </section>
@@ -619,9 +628,9 @@ class KolonMembers extends HTMLElement {
 
     const indexedMembers = members.map((member, index) => ({ ...member, index }));
     const staffMembers = indexedMembers
-      .filter((member) => member.role !== "정회원")
+      .filter((member) => staffRoles.has(member.role))
       .sort((left, right) => (rolePriority[left.role] || 99) - (rolePriority[right.role] || 99));
-    const regularMembers = indexedMembers.filter((member) => member.role === "정회원");
+    const regularMembers = indexedMembers.filter((member) => !staffRoles.has(member.role));
 
     const staffItems = staffMembers
       .map((member) => renderMemberCard(member, member.index, "staff-card"))
@@ -795,17 +804,19 @@ class KolonModalStack extends HTMLElement {
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="rsvpTitle">
           <div class="modal-head">
             <div>
-              <p class="section-kicker">Screen Event</p>
-              <h3 id="rsvpTitle">2026년 6월 스크린 행사 안내</h3>
+              <p class="section-kicker">Tournament</p>
+              <h3 id="rsvpTitle">제8회 석노협 스크린골프대회 참가 안내</h3>
             </div>
             <button class="line-button small" type="button" data-close-modal>닫기</button>
           </div>
           <div class="modal-body">
-            <p>일시: 2026년 6월 23일(화) 17:00</p>
-            <p>장소: 골프존파크 두왕테크노점(울산 남구 테크노산업로 78-11)</p>
-            <p>코스: 동강시스타CC · 18홀 스트로크</p>
-            <p>참석: 서무환, 정무근, 김영주, 김효준, 김경수, 하선재</p>
-            <p>운영: 경기 중 석식 제공, 게임 후 사진 촬영 및 안내사항 공지</p>
+            <p>일시: 2026년 7월 4일(토) 08:00</p>
+            <p>장소: 골프존파크 삼산한국골프점</p>
+            <p>방식: 회사별 4인 1팀 · 투비전 NX · 용원 GC 백로·무학</p>
+            <p>A팀(301호): 김효준, 서무환, 정무근, 허선재</p>
+            <p>B팀(302호): 김경수, 박동성, 윤석현, 천기준</p>
+            <p>주요 설정: 투어모드/G투어 난이도, 블루 티, 컨시드 1.5m, 멀리건 없음, 매트룰 적용</p>
+            <p>퍼팅 가이드와 퍼팅 방향키는 사용할 수 없습니다. 좋은 성적과 즐거운 경기를 응원합니다.</p>
           </div>
         </div>
       </div>
@@ -832,14 +843,14 @@ class KolonModalStack extends HTMLElement {
           <div class="modal-head">
             <div>
               <p class="section-kicker">Location</p>
-              <h3 id="locationTitle">6월 스크린 행사 장소 안내</h3>
+              <h3 id="locationTitle">석노협 대회 장소 안내</h3>
             </div>
             <button class="line-button small" type="button" data-close-modal>닫기</button>
           </div>
           <div class="modal-body">
-            <p>장소: 골프존파크 두왕테크노점</p>
-            <p>주소: 울산 남구 테크노산업로 78-11</p>
-            <p>일시: 2026년 6월 23일(화) 17:00</p>
+            <p>장소: 골프존파크 삼산한국골프점</p>
+            <p>일시: 2026년 7월 4일(토) 08:00</p>
+            <p>참가: 코오롱인더스트리 A팀(301호), B팀(302호)</p>
           </div>
         </div>
       </div>
@@ -1520,12 +1531,12 @@ const initMemberExperienceEnhancements = () => {
     scheduleSection.insertAdjacentHTML(
       "afterbegin",
       `<aside class="next-round-brief" data-reveal>
-        <p class="section-kicker">6월 모임</p>
-        <h3>6월 스크린 행사 내용을 한눈에 볼 수 있어요.</h3>
+        <p class="section-kicker">7월 대회</p>
+        <h3>제8회 석노협 스크린골프대회 참가 일정을 확인하세요.</h3>
         <ul>
-          <li><strong>언제</strong><span>2026년 6월 23일(화) 17:00</span></li>
-          <li><strong>어디서</strong><span>골프존파크 두왕테크노점</span></li>
-          <li><strong>후기</strong><span>라운드가 끝난 뒤 사진과 한마디를 남겨주세요</span></li>
+          <li><strong>언제</strong><span>2026년 7월 4일(토) 08:00</span></li>
+          <li><strong>어디서</strong><span>골프존파크 삼산한국골프점</span></li>
+          <li><strong>참가</strong><span>코오롱인더스트리 A/B팀, 총 8명</span></li>
         </ul>
       </aside>`
     );
