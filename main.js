@@ -180,6 +180,7 @@ const archives = [
       "경기 설정: 투어모드/G투어 난이도, 블루 티, 컨시드 1.5m, 멀리건 없음"
     ],
     images: [
+      "images/archive-2026-07-11.jpeg",
       "images/archive-2026-07-1.jpeg",
       "images/archive-2026-07-2.jpeg",
       "images/archive-2026-07-3.jpeg",
@@ -189,8 +190,7 @@ const archives = [
       "images/archive-2026-07-7.jpg",
       "images/archive-2026-07-8.jpeg",
       "images/archive-2026-07-9.jpeg",
-      "images/archive-2026-07-10.jpeg",
-      "images/archive-2026-07-11.jpeg"
+      "images/archive-2026-07-10.jpeg"
     ]
   },
   {
