@@ -163,6 +163,37 @@ const principleIcons = {
 
 const archives = [
   {
+    id: "2026-07-seoknohyup",
+    date: "2026.07.04",
+    label: "스크린 대회",
+    title: "제8회 석노협 스크린골프대회",
+    location: "골프존파크 삼산한국골프점",
+    people: "A/B팀 8명 참가",
+    summary: "울산석유화학공업단지 노동조합 협의회가 주관한 제8회 의장배 대회에 코오롱인더스트리 A/B팀이 참가했습니다. 용원 GC 백로·무학 코스에서 진행된 경기 장면과 대회 후 함께한 시상·식사 자리를 사진으로 남겼습니다.",
+    highlights: ["석노협 의장배", "A/B팀 참가", "투비전 NX"],
+    details: [
+      "일시: 2026년 7월 4일(토) 08:00",
+      "장소: 골프존파크 삼산한국골프점",
+      "주관: 울산석유화학공업단지 노동조합 협의회",
+      "방식: 회사별 4인 1팀, 투비전 NX, 용원 GC 백로·무학",
+      "참가: 코오롱인더스트리 A팀(301호) 김효준, 서무환, 정무근, 허선재 / B팀(302호) 김경수, 박동성, 윤석현, 천기준",
+      "경기 설정: 투어모드/G투어 난이도, 블루 티, 컨시드 1.5m, 멀리건 없음"
+    ],
+    images: [
+      "images/archive-2026-07-1.jpeg",
+      "images/archive-2026-07-2.jpeg",
+      "images/archive-2026-07-3.jpeg",
+      "images/archive-2026-07-4.jpeg",
+      "images/archive-2026-07-5.jpeg",
+      "images/archive-2026-07-6.jpeg",
+      "images/archive-2026-07-7.jpg",
+      "images/archive-2026-07-8.jpeg",
+      "images/archive-2026-07-9.jpeg",
+      "images/archive-2026-07-10.jpeg",
+      "images/archive-2026-07-11.jpeg"
+    ]
+  },
+  {
     id: "2026-06-screen",
     date: "2026.06.23",
     label: "스크린 행사",
@@ -287,10 +318,10 @@ const heroSlides = [
 ];
 
 const nextNotice = {
-  eyebrow: "Next Event",
-  title: "제8회 석노협 스크린골프대회",
-  meta: "7.4(토) 08:00 · 골프존파크 삼산한국골프점",
-  body: "코오롱인더스트리 A/B팀이 용원 GC 백로·무학 코스에 참가합니다."
+  eyebrow: "New Archive",
+  title: "제8회 석노협 대회 사진",
+  meta: "2026.07.04 · 골프존파크 삼산한국골프점",
+  body: "코오롱인더스트리 A/B팀의 경기와 시상 장면을 아카이브에 정리했습니다."
 };
 
 const messageCopy = {
@@ -415,12 +446,12 @@ class KolonHero extends HTMLElement {
               좋은 샷, 아쉬운 퍼트, 라운드 뒤 웃음까지 오래 남기는 모임입니다.
             </p>
             <div class="hero-meta-strip" aria-label="동호회 주요 정보">
-              <span><strong>Next Event</strong>제8회 석노협 대회</span>
+              <span><strong>Latest</strong>제8회 석노협 대회</span>
               <span><strong>Course</strong>용원 GC 백로·무학</span>
               <span><strong>Members</strong>21명</span>
             </div>
             <div class="button-row">
-              <a class="solid-button" href="#schedule">대회 일정 보기</a>
+              <a class="solid-button" href="#archive">대회 사진 보기</a>
               <a class="line-button" href="#archive">행사 사진 보기</a>
             </div>
           </div>
@@ -530,7 +561,7 @@ class KolonSchedule extends HTMLElement {
             <p class="section-kicker">Schedule</p>
             <h2 id="scheduleTitle">Screen Event Board</h2>
           </div>
-          <p>2026년 7월 4일 토요일, 제8회 석노협 의장배 스크린골프대회에 코오롱인더스트리 2개 팀이 참가합니다.</p>
+          <p>2026년 7월 4일 토요일, 제8회 석노협 의장배 스크린골프대회에 코오롱인더스트리 2개 팀이 참가했습니다.</p>
         </div>
 
         <div class="schedule-board" data-reveal>
@@ -543,11 +574,11 @@ class KolonSchedule extends HTMLElement {
             </div>
             <div class="event-content">
               <div class="event-topline">
-                <p class="event-state">참가 예정</p>
+                <p class="event-state">참가 완료</p>
                 <span>Chairman Cup</span>
               </div>
-              <h3>제8회 석노협 스크린골프대회 참가 안내</h3>
-              <p>울산석유화학공업단지 노동조합 협의회 주관 의장배 대회입니다. 코오롱인더스트리는 A팀과 B팀, 총 8명이 회사별 4인 1팀 방식으로 참가합니다.</p>
+              <h3>제8회 석노협 스크린골프대회 기록</h3>
+              <p>울산석유화학공업단지 노동조합 협의회 주관 의장배 대회입니다. 코오롱인더스트리는 A팀과 B팀, 총 8명이 회사별 4인 1팀 방식으로 참가했습니다.</p>
             </div>
           </article>
 
@@ -585,8 +616,8 @@ class KolonSchedule extends HTMLElement {
         <div class="schedule-notes">
           <article data-reveal>
             <span>01</span>
-            <h3>석노협 의장배 대회 참가</h3>
-            <p>7월 4일 오전 8시, 삼산한국골프점에서 코오롱인더스트리 A/B팀이 참가합니다.</p>
+            <h3>석노협 의장배 대회 기록</h3>
+            <p>7월 4일 오전 8시, 삼산한국골프점에서 코오롱인더스트리 A/B팀이 참가했습니다.</p>
           </article>
           <article data-reveal>
             <span>02</span>
@@ -595,8 +626,8 @@ class KolonSchedule extends HTMLElement {
           </article>
           <article data-reveal>
             <span>03</span>
-            <h3>참가 선수 응원</h3>
-            <p>참가 선수들의 좋은 성적과 즐거운 경기를 함께 응원합니다.</p>
+            <h3>대회 사진 아카이브</h3>
+            <p>경기 장면과 대회 후 시상·식사 사진을 아카이브에서 확인할 수 있습니다.</p>
           </article>
         </div>
       </section>
@@ -805,7 +836,7 @@ class KolonModalStack extends HTMLElement {
           <div class="modal-head">
             <div>
               <p class="section-kicker">Tournament</p>
-              <h3 id="rsvpTitle">제8회 석노협 스크린골프대회 참가 안내</h3>
+              <h3 id="rsvpTitle">제8회 석노협 스크린골프대회 기록</h3>
             </div>
             <button class="line-button small" type="button" data-close-modal>닫기</button>
           </div>
@@ -816,7 +847,7 @@ class KolonModalStack extends HTMLElement {
             <p>A팀(301호): 김효준, 서무환, 정무근, 허선재</p>
             <p>B팀(302호): 김경수, 박동성, 윤석현, 천기준</p>
             <p>주요 설정: 투어모드/G투어 난이도, 블루 티, 컨시드 1.5m, 멀리건 없음, 매트룰 적용</p>
-            <p>퍼팅 가이드와 퍼팅 방향키는 사용할 수 없습니다. 좋은 성적과 즐거운 경기를 응원합니다.</p>
+            <p>퍼팅 가이드와 퍼팅 방향키는 사용할 수 없는 조건으로 진행되었습니다.</p>
           </div>
         </div>
       </div>
@@ -906,7 +937,7 @@ class KolonBottomNotice extends HTMLElement {
             <input type="checkbox" data-notice-snooze />
             <span>오늘 하루 숨기기</span>
           </label>
-          <button class="line-button small" type="button" data-open-modal="rsvpModal">상세 보기</button>
+          <button class="line-button small" type="button" data-archive-index="0">사진 보기</button>
           <button class="notice-close" type="button" data-close-bottom-notice aria-label="하단 일정 공지 닫기"></button>
         </div>
       </section>
@@ -1531,8 +1562,8 @@ const initMemberExperienceEnhancements = () => {
     scheduleSection.insertAdjacentHTML(
       "afterbegin",
       `<aside class="next-round-brief" data-reveal>
-        <p class="section-kicker">7월 대회</p>
-        <h3>제8회 석노협 스크린골프대회 참가 일정을 확인하세요.</h3>
+        <p class="section-kicker">7월 대회 기록</p>
+        <h3>제8회 석노협 스크린골프대회 사진을 확인하세요.</h3>
         <ul>
           <li><strong>언제</strong><span>2026년 7월 4일(토) 08:00</span></li>
           <li><strong>어디서</strong><span>골프존파크 삼산한국골프점</span></li>
