@@ -1533,12 +1533,113 @@
     transition: opacity 180ms ease;
   }
 
-  .featured-photo span,
-  .archive-photo span {
+  .photo-count-badge,
+  .photo-gallery-cue,
+  .photo-open-label {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .photo-count-badge {
+    top: 16px;
+    left: 16px;
+    min-width: 64px;
+    min-height: 64px;
+    display: grid;
+    place-items: center;
+    padding: 9px 10px;
+    border: 1px solid oklch(92% 0.03 92 / 0.62);
+    border-radius: 8px;
+    color: var(--ink);
+    background: oklch(96% 0.038 86 / 0.92);
+    box-shadow: 0 18px 34px oklch(10% 0.036 150 / 0.24);
+  }
+
+  .photo-count-badge strong {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 34px;
+    line-height: 0.92;
+  }
+
+  .photo-count-badge small {
+    display: block;
+    margin-top: 3px;
+    font-size: 10px;
+    font-weight: 900;
+  }
+
+  .photo-gallery-cue {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    align-items: center;
+    gap: 12px;
+    min-height: 62px;
+    padding: 10px 12px;
+    border: 1px solid oklch(94% 0.02 92 / 0.42);
+    border-radius: 8px;
+    color: var(--paper);
+    background: linear-gradient(135deg, oklch(16% 0.04 150 / 0.86), oklch(23% 0.052 145 / 0.74));
+    box-shadow: 0 18px 36px oklch(8% 0.036 150 / 0.28);
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  .photo-gallery-cue strong,
+  .photo-gallery-cue small {
+    display: block;
+  }
+
+  .photo-gallery-cue strong {
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .photo-gallery-cue small {
+    margin-top: 2px;
+    color: oklch(93% 0.021 96 / 0.78);
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .photo-stack-icon {
+    position: relative;
+    width: 48px;
+    height: 38px;
+    display: block;
+  }
+
+  .photo-stack-icon i {
+    position: absolute;
+    inset: 0;
+    display: block;
+    border: 2px solid oklch(96% 0.022 92 / 0.86);
+    border-radius: 5px;
+    background: linear-gradient(135deg, oklch(77% 0.09 82 / 0.92), oklch(56% 0.075 155 / 0.92));
+    box-shadow: 0 8px 18px oklch(8% 0.035 150 / 0.22);
+  }
+
+  .photo-stack-icon i:nth-child(1) {
+    transform: translate(8px, 0) rotate(5deg);
+    opacity: 0.7;
+  }
+
+  .photo-stack-icon i:nth-child(2) {
+    transform: translate(4px, 4px) rotate(-3deg);
+    opacity: 0.86;
+  }
+
+  .photo-stack-icon i:nth-child(3) {
+    transform: translate(0, 8px);
+  }
+
+  .photo-open-label {
     position: absolute;
     left: 16px;
     bottom: 16px;
-    z-index: 1;
     min-height: 32px;
     display: inline-flex;
     align-items: center;
@@ -1564,12 +1665,20 @@
   .featured-photo:focus-visible::after,
   .archive-photo:hover::after,
   .archive-photo:focus-visible::after,
-  .featured-photo:hover span,
-  .featured-photo:focus-visible span,
-  .archive-photo:hover span,
-  .archive-photo:focus-visible span {
+  .featured-photo:hover .photo-open-label,
+  .featured-photo:focus-visible .photo-open-label,
+  .archive-photo:hover .photo-open-label,
+  .archive-photo:focus-visible .photo-open-label {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  .featured-photo:hover .photo-gallery-cue,
+  .featured-photo:focus-visible .photo-gallery-cue,
+  .archive-photo:hover .photo-gallery-cue,
+  .archive-photo:focus-visible .photo-gallery-cue {
+    opacity: 0;
+    transform: translateY(6px);
   }
 
   .featured-photo:focus-visible,
@@ -3101,6 +3210,41 @@
 
 @layer utilities {
   @media (max-width: 760px) {
+    .photo-count-badge {
+      top: 12px;
+      left: 12px;
+      min-width: 58px;
+      min-height: 58px;
+      padding: 8px;
+    }
+
+    .photo-count-badge strong {
+      font-size: 30px;
+    }
+
+    .photo-gallery-cue {
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      grid-template-columns: 48px 1fr;
+      gap: 10px;
+      min-height: 56px;
+      padding: 9px 10px;
+    }
+
+    .photo-stack-icon {
+      width: 42px;
+      height: 34px;
+    }
+
+    .photo-gallery-cue strong {
+      font-size: 12px;
+    }
+
+    .photo-gallery-cue small {
+      font-size: 10px;
+    }
+
     .member-quick-panel {
       max-width: none;
       grid-template-columns: 1fr;

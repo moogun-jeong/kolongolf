@@ -710,6 +710,27 @@ class KolonArchive extends HTMLElement {
           `
         : "";
 
+    const renderPhotoCue = (archive) => {
+      const photoCount = archive.images?.length || 1;
+      const isMulti = photoCount > 1;
+      return `
+        <span class="photo-count-badge" aria-hidden="true">
+          <strong>${photoCount}</strong>
+          <small>사진</small>
+        </span>
+        <span class="photo-gallery-cue" aria-hidden="true">
+          <span class="photo-stack-icon">
+            <i></i><i></i><i></i>
+          </span>
+          <span>
+            <strong>${isMulti ? `${photoCount}장 갤러리` : "사진 1장"}</strong>
+            <small>${isMulti ? "터치해서 모두 보기" : "터치해서 크게 보기"}</small>
+          </span>
+        </span>
+        <span class="photo-open-label">${isMulti ? `사진 ${photoCount}장 모두 보기` : "사진 보기"}</span>
+      `;
+    };
+
     const featured = archives[0];
     const featuredBadges = featured.highlights?.length
       ? featured.highlights.map((item) => `<span>${item}</span>`).join("")
@@ -719,11 +740,12 @@ class KolonArchive extends HTMLElement {
       .slice(1)
       .map((archive, index) => {
         const archiveIndex = index + 1;
+        const photoCount = archive.images?.length || 1;
         return `
           <article class="archive-card" data-reveal>
-            <button class="archive-photo" type="button" data-archive-index="${archiveIndex}" aria-label="${archive.title} 사진 보기">
+            <button class="archive-photo ${photoCount > 1 ? "is-multi-gallery" : ""}" type="button" data-archive-index="${archiveIndex}" aria-label="${archive.title} 사진 ${photoCount}장 보기">
               <img src="${archive.images[0]}" alt="${archive.title} 대표 사진" loading="lazy" decoding="async" />
-              <span>사진 보기</span>
+              ${renderPhotoCue(archive)}
             </button>
             <div class="archive-body">
               <p class="archive-meta">${archive.date} · ${archive.label}</p>
@@ -750,9 +772,9 @@ class KolonArchive extends HTMLElement {
             <p>함께 웃고 겨뤘던 라운드의 순간들을 모았습니다.</p>
           </div>
           <article class="featured-round" data-reveal>
-            <button class="featured-photo" type="button" data-archive-index="0" aria-label="${featured.title} 사진 보기">
+            <button class="featured-photo ${featured.images?.length > 1 ? "is-multi-gallery" : ""}" type="button" data-archive-index="0" aria-label="${featured.title} 사진 ${featured.images?.length || 1}장 보기">
               <img src="${featured.images[0]}" alt="${featured.title} 대표 사진" loading="lazy" decoding="async" />
-              <span>대표 라운드 보기</span>
+              ${renderPhotoCue(featured)}
             </button>
             <div class="featured-body">
               <p class="archive-meta">${featured.date} · ${featured.label}</p>
