@@ -7,6 +7,29 @@
 - 빌드: 별도 빌드 도구 없이 GitHub Pages에서 정적 파일로 배포
 - 주요 수정 지점: 회원/일정/아카이브 데이터는 `main.js`, 화면 톤과 반응형은 `style.css`
 
+## 로컬 개발
+
+| 명령 | 용도 |
+| --- | --- |
+| `npm start` | 정적 미리보기 서버 (`scripts/serve.js`, 기본 5000 포트). Replit Run 버튼이 실행하는 명령입니다. |
+| `npm run dev` | `wrangler pages dev .` — `/api` Functions까지 함께 확인할 때 사용합니다. |
+| `npm run images` | `images/`의 새 원본에서 웹용 파생본을 생성합니다. |
+
+Node 22 이상이 필요합니다(`wrangler` 4.x 요구 사항). Replit에서는 `.replit`의 `modules`가
+`nodejs-22`로 맞춰져 있습니다.
+
+## 사진 추가 방법
+
+브라우저가 받는 용량을 줄이기 위해 원본을 그대로 참조하지 않고 파생본 두 종류를 사용합니다.
+
+- `*-display.jpg` — 긴 변 1800px. 히어로, 아카이브 카드, 라이트박스 본 사진용
+- `*-thumb.jpg` — 긴 변 400px. 라이트박스 썸네일용 (`main.js`의 `thumbSource()`가 경로를 자동으로 유도)
+
+1. 원본을 `images/archive-<연도>-<월>-<번호>.jpg` 규칙으로 넣습니다.
+2. `npm run images`를 실행해 파생본을 생성합니다.
+3. `main.js`의 `archives` 배열에는 **`-display` 경로**를 적습니다.
+4. 파생본을 확인했으면 원본은 저장소에 남기지 않아도 됩니다(git 이력에 보존됩니다).
+
 ## Cloudflare 방명록/댓글 백엔드
 
 방명록과 아카이브 댓글은 Cloudflare Pages Functions와 D1을 사용합니다.

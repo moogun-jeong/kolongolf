@@ -4,6 +4,41 @@
 
 ---
 
+### **[2026-08-09] Replit 실행 환경 복구 및 아카이브 이미지 최적화**
+
+#### **주요 변경 사항**
+*   **실행 환경 복구**:
+    *   `.replit`에 `run = "npm start"`를 추가. 기존에는 실행 명령이 없어 Run 버튼이 동작하지 않았음.
+    *   `modules`를 `nodejs-20`에서 `nodejs-22`로 승격. `wrangler` 4.100은 Node 22 이상을 요구하며 Node 20에서 `npm run dev`가 즉시 실패했음.
+    *   `package.json`의 `engines.node`를 `>=22`로 맞추고 `start`, `images` 스크립트를 추가.
+*   **미리보기 서버 교체**:
+    *   `preview` 스크립트가 쓰던 `python3 -m http.server`를 의존성 없는 `scripts/serve.js`로 교체. Firebase Studio의 `.idx/dev.nix`에는 `pkgs.python3`가 있었지만 Replit `modules`에는 없어 실행 불가 상태였음.
+    *   캐시 버전 쿼리(`?v=`) 처리, MIME 매핑, 경로 탈출 차단, 404 처리를 포함.
+*   **이미지 파생본 체계 도입**:
+    *   `scripts/optimize-images.sh` 추가. 긴 변 1800px `-display`와 400px `-thumb` 두 종류를 생성하며, 축소만 수행(`>`)하고 공지 캡처(PNG)는 글자 뭉개짐을 피해 팔레트 양자화 PNG로 유지.
+    *   2026-04/06/07 세트가 원본을 그대로 참조하던 것을 모두 `-display` 경로로 교체.
+    *   `thumbSource()`를 추가해 라이트박스 썸네일이 원본 대신 `-thumb`를 사용하도록 변경. 기존에는 68x48 썸네일이 `background-image`로 4~5MB 원본을 그대로 내려받았음.
+    *   `index.html`의 `og:image`와 히어로 `preload`도 `-display` 경로로 교체.
+*   **자산 정리**:
+    *   파생본으로 대체된 원본 28개 삭제. `images/` 80MB → 7.7MB.
+    *   대체본이 없는 `20260704 MOV.mov`와 `waacky.png`는 보존.
+*   **캐시 갱신**:
+    *   `index.html`의 `style.css`, `main.js` 쿼리 버전을 `20260809-1`로 갱신.
+
+#### **검증**
+*   `node --check main.js`, `node --check scripts/serve.js`, `bash -n scripts/optimize-images.sh` 통과.
+*   `main.js`/`index.html`이 참조하는 이미지 전체와, 각 `-display`에 대응하는 `-thumb` 파생본 존재를 정적 검사로 확인(누락 0건).
+*   `npm start`로 5000 포트 기동 후 `/`, `main.js?v=20260809-1`, `style.css?v=20260809-1`, `-display`/`-thumb` 이미지 응답 200 확인.
+*   없는 경로 404, `../` 및 `%2e%2e/` 경로 탈출 시도 404 차단 확인.
+*   전송량 실측: 7월 갤러리 라이트박스 30,462KB → 479KB, 첫 화면 이미지 1,085KB → 129KB.
+
+#### **기술적 결정 이유**
+*   **파생본 경로 유도**: 이미지 데이터를 객체 배열로 바꾸면 라이트박스·카드·사진 수 계산까지 손대야 하므로, `-display` → `-thumb` 문자열 치환 헬퍼 하나로 변경 범위를 좁힘.
+*   **원본 삭제**: 삭제해도 git 이력에 남아 복구 가능하고, 브라우저 전송량은 참조 경로 변경으로 이미 해결되므로 작업 디렉터리와 배포 용량만 정리.
+*   **Replit 배포 설정 미추가**: 이미 GitHub Pages와 Cloudflare Pages로 이원화된 상태라 세 번째 배포 대상을 늘리지 않고, Replit은 개발 환경으로만 사용.
+
+---
+
 ### **[2026-08-09] 현재 작업 디렉터리 자산 커밋 및 GitHub main 반영 준비**
 
 #### **주요 변경 사항**

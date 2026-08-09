@@ -180,17 +180,17 @@ const archives = [
       "경기 설정: 투어모드/G투어 난이도, 블루 티, 컨시드 1.5m, 멀리건 없음"
     ],
     images: [
-      "images/archive-2026-07-11.jpeg",
-      "images/archive-2026-07-1.jpeg",
-      "images/archive-2026-07-2.jpeg",
-      "images/archive-2026-07-3.jpeg",
-      "images/archive-2026-07-4.jpeg",
-      "images/archive-2026-07-5.jpeg",
-      "images/archive-2026-07-6.jpeg",
-      "images/archive-2026-07-7.jpg",
-      "images/archive-2026-07-8.jpeg",
-      "images/archive-2026-07-9.jpeg",
-      "images/archive-2026-07-10.jpeg"
+      "images/archive-2026-07-11-display.jpg",
+      "images/archive-2026-07-1-display.jpg",
+      "images/archive-2026-07-2-display.jpg",
+      "images/archive-2026-07-3-display.jpg",
+      "images/archive-2026-07-4-display.jpg",
+      "images/archive-2026-07-5-display.jpg",
+      "images/archive-2026-07-6-display.jpg",
+      "images/archive-2026-07-7-display.jpg",
+      "images/archive-2026-07-8-display.jpg",
+      "images/archive-2026-07-9-display.jpg",
+      "images/archive-2026-07-10-display.jpg"
     ]
   },
   {
@@ -211,8 +211,8 @@ const archives = [
       "세부 규칙: 바람 강하게, 컨시드 1.5m, 멀리건 없음"
     ],
     images: [
-      "images/archive-2026-06-1.jpeg",
-      "images/archive-2026-06-notice.png"
+      "images/archive-2026-06-1-display.jpg",
+      "images/archive-2026-06-notice-display.png"
     ]
   },
   {
@@ -232,9 +232,9 @@ const archives = [
       "시상: 니어리스트 이동수, 다버디 심재호"
     ],
     images: [
-      "images/archive-2026-04-2.png",
-      "images/archive-2026-04-3.png",
-      "images/archive-2026-04-1.png"
+      "images/archive-2026-04-2-display.jpg",
+      "images/archive-2026-04-3-display.jpg",
+      "images/archive-2026-04-1-display.jpg"
     ]
   },
   {
@@ -294,14 +294,17 @@ const archives = [
   }
 ];
 
+// 라이트박스 썸네일은 68x48로만 보이므로 -display 대신 짝이 되는 -thumb 파생본을 씁니다.
+const thumbSource = (source) => source.replace(/-display\.(jpe?g|png)$/i, "-thumb.$1");
+
 const heroSlides = [
   {
-    image: "images/archive-2026-04-2.png",
+    image: "images/archive-2026-04-2-display.jpg",
     date: "2026.04.10",
     caption: "4월 베이스타즈CC 필드 행사"
   },
   {
-    image: "images/archive-2026-04-3.png",
+    image: "images/archive-2026-04-3-display.jpg",
     date: "2026.04.10",
     caption: "필드 라운드 코스 스냅"
   },
@@ -535,7 +538,7 @@ class KolonImageStatement extends HTMLElement {
     this.dataset.ready = "true";
     this.innerHTML = `
       <section class="image-statement" aria-label="동호회 활동 사진">
-        <img src="images/archive-2026-04-1.png" alt="코오롱 스크린 골프 동호회 4월 필드 행사 중식 모임 사진" loading="lazy" decoding="async" />
+        <img src="images/archive-2026-04-1-display.jpg" alt="코오롱 스크린 골프 동호회 4월 필드 행사 중식 모임 사진" loading="lazy" decoding="async" />
         <div class="statement-copy" data-reveal>
           <p class="section-kicker">Round Memory</p>
           <h2>필드에서 시작한 라운드는 함께 모인 자리까지 오래 이어집니다.</h2>
@@ -1284,7 +1287,7 @@ const initLightbox = () => {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "lightbox-thumb";
-      button.style.backgroundImage = `url("${src}")`;
+      button.style.backgroundImage = `url("${thumbSource(src)}")`;
       button.setAttribute("aria-label", `${thumbIndex + 1}번째 사진 보기`);
       button.addEventListener("click", () => render(thumbIndex));
       thumbs.append(button);

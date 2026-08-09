@@ -1,7 +1,16 @@
-modules = ["nodejs-20", "web", "nix"]
+# wrangler 4.x가 Node 22 이상을 요구하므로 nodejs-22를 사용합니다.
+modules = ["nodejs-22", "web", "nix"]
+
+# 빌드 단계가 없는 정적 사이트라 scripts/serve.js로 바로 띄웁니다.
+# Cloudflare Functions(/api)까지 함께 확인하려면 셸에서 `npm run dev`를 실행하세요.
+run = "npm start"
 
 [nix]
 channel = "stable-25_05"
 
 [agent]
 expertMode = true
+
+[[ports]]
+localPort = 5000
+externalPort = 80
