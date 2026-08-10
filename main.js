@@ -176,7 +176,7 @@ const archives = [
       "장소: 골프존파크 삼산한국골프점",
       "주관: 울산석유화학공업단지 노동조합 협의회",
       "방식: 회사별 4인 1팀, 투비전 NX, 용원 GC 백로·무학",
-      "참가: 코오롱인더스트리 A팀(301호) 김효준, 서무환, 정무근, 허선재 / B팀(302호) 김경수, 박동성, 윤석현, 천기준",
+      "참가: 코오롱인더스트리 A팀(301호) 김효준, 서무환, 정무근, 하선재 / B팀(302호) 김경수, 박동성, 윤석현, 천기준",
       "경기 설정: 투어모드/G투어 난이도, 블루 티, 컨시드 1.5m, 멀리건 없음"
     ],
     images: [
@@ -349,7 +349,7 @@ const latestRecordEvent = {
     ["일시", "2026.07.04(토) 08:00"],
     ["장소", "골프존파크 삼산한국골프점"],
     ["방식", "회사별 4인 1팀 · 투비전 NX · 용원 GC 백로·무학"],
-    ["선수", "A팀 김효준, 서무환, 정무근, 허선재 · B팀 김경수, 박동성, 윤석현, 천기준"]
+    ["선수", "A팀 김효준, 서무환, 정무근, 하선재 · B팀 김경수, 박동성, 윤석현, 천기준"]
   ]
 };
 
@@ -949,7 +949,7 @@ class KolonModalStack extends HTMLElement {
             <p>일시: 2026년 7월 4일(토) 08:00</p>
             <p>장소: 골프존파크 삼산한국골프점</p>
             <p>방식: 회사별 4인 1팀 · 투비전 NX · 용원 GC 백로·무학</p>
-            <p>A팀(301호): 김효준, 서무환, 정무근, 허선재</p>
+            <p>A팀(301호): 김효준, 서무환, 정무근, 하선재</p>
             <p>B팀(302호): 김경수, 박동성, 윤석현, 천기준</p>
             <p>주요 설정: 투어모드/G투어 난이도, 블루 티, 컨시드 1.5m, 멀리건 없음, 매트룰 적용</p>
             <p>퍼팅 가이드와 퍼팅 방향키는 사용할 수 없는 조건으로 진행되었습니다.</p>
@@ -1003,7 +1003,7 @@ class KolonModalStack extends HTMLElement {
           </div>
           <div class="lightbox-stage">
             <button class="lightbox-nav" id="lightboxPrev" type="button" aria-label="이전 사진">‹</button>
-            <img id="lightboxImage" src="" alt="동호회 아카이브 사진" />
+            <img id="lightboxImage" alt="동호회 아카이브 사진" />
             <button class="lightbox-nav" id="lightboxNext" type="button" aria-label="다음 사진">›</button>
           </div>
           <div class="lightbox-thumbs" id="lightboxThumbs" aria-label="썸네일 목록"></div>
