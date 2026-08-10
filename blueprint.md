@@ -6,20 +6,18 @@
 
 1. **공개 경계**: 저장소 루트 대신 공개 파일 allowlist로 만든 `dist/`만 배포. — **적용 완료** (`scripts/build.js`, `wrangler.toml`, `.github/workflows/pages.yml`)
 2. **환경 분리**: Replit의 댓글 테스트가 운영 API와 D1을 변경하지 않도록 local full stack으로 전환. — **적용 완료** (`scripts/dev.js`, 같은 출처 `/api`)
-3. **댓글 안전화**: Turnstile fail-closed, Origin 검증, 속도 제한과 운영 secret 적용. — **코드 적용 완료** (`lib/api-security.mjs`), 운영 환경 변수 설정은 남은 작업
+3. **댓글 안전화**: Turnstile fail-closed, Origin 검증, 속도 제한과 운영 secret 적용. — **코드·운영 적용 완료** (`lib/api-security.mjs`, Pages production secrets, managed Turnstile)
 4. **콘텐츠 정리**: 지난 7월 행사를 다음 일정처럼 표시하지 않고 확정 일정이 없으면 `다음 모임 준비 중`으로 안내. — **적용 완료** (`upcomingEvents` / `getNextEvent()`)
 5. **범위 축소**: 공개 회원 사진 업로드를 사용하지 않으면 비활성화하고 R2를 생략. D1 migration은 다음 DB 변경 전에 복구. — **업로드 비활성화 완료**, D1 migration은 예정대로 보류
 
 `FINAL_IMPROVEMENT_PLAN.md`의 프리렌더, 전면 모듈화, R2, 전체 CI는 필요 조건이 생길 때 해당 항목만 선택적으로 적용하는 장기 참고안으로 둡니다.
 
-### 남은 운영 조치
+### 운영 반영 결과
 
-코드로 처리할 수 없는 원격 설정입니다. 완료 전까지 공개 글쓰기는 fail-closed로 막혀 있고, GitHub Pages는 저장소 전체를 계속 노출합니다.
-
-*   Cloudflare Pages 환경 변수: `TURNSTILE_SECRET_KEY`, `MESSAGE_SALT`, 16자 이상 `ADMIN_TOKEN`
-*   `index.html`의 `cf-turnstile-sitekey` 메타 값 입력
-*   Cloudflare Pages build output directory를 `dist`, build command를 `npm run build`로 변경
-*   GitHub 저장소 Settings > Pages > Source를 **GitHub Actions**로 변경
+*   Cloudflare Pages와 GitHub Pages 모두 `dist/` allowlist만 공개하며 저장소·개발 파일 경로는 404.
+*   Cloudflare production에 `TURNSTILE_SECRET_KEY`, `MESSAGE_SALT`, 16자 이상 `ADMIN_TOKEN`을 secret으로 적용하고 공개 sitekey를 프런트엔드에 연결.
+*   Cloudflare `/api/messages`와 `/api/archives` 읽기는 유지하고, 불허 Origin 메시지 쓰기와 비활성화된 사진 업로드는 403으로 차단.
+*   다음 운영 과제는 실제 DB 기능 변경 직전의 D1 migration chain 복구. 실제 Turnstile 글쓰기 검증은 운영 D1 write 승인을 받은 뒤 수행.
 
 ## **현재 최종 개선 실행 계획 (2026-08-10)**
 
