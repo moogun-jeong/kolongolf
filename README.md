@@ -29,6 +29,9 @@
 
 > **GitHub Pages 최초 1회 설정**: 저장소 Settings > Pages > Source를 **GitHub Actions**로 바꿔야
 > `dist/`만 배포됩니다. "Deploy from a branch"로 두면 예전처럼 저장소 전체가 공개됩니다.
+>
+> `.github/workflows/pages.yml`은 workflow 파일이라 `workflow` scope가 있는 토큰으로만 push할 수 있습니다.
+> 아직 저장소에 없다면 `gh auth refresh -s workflow` 후 커밋하거나 GitHub 웹에서 직접 추가해주세요.
 
 Cloudflare Pages Functions(`functions/`)는 정적 자산이 아니라 빌드 시 번들되므로 `dist/`에 넣지 않습니다.
 

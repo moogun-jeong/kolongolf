@@ -4,6 +4,7 @@
 
 ## **1. 현재 진행 중인 작업 (Current Active Task)**
 *   [ ] 운영 Cloudflare Pages에 Turnstile sitekey/secret, `MESSAGE_SALT`, 16자 이상 `ADMIN_TOKEN` 설정 (설정 전까지 공개 글쓰기는 fail-closed로 막혀 있음)
+*   [ ] `.github/workflows/pages.yml` 커밋 (로컬에는 있으나 OAuth 토큰에 `workflow` scope가 없어 push되지 않음. `gh auth refresh -s workflow` 후 커밋하거나 GitHub 웹에서 직접 추가)
 *   [ ] GitHub 저장소 Settings > Pages > Source를 **GitHub Actions**로 변경 (변경 전까지 GitHub Pages는 저장소 전체를 계속 노출)
 *   [ ] Cloudflare Pages 프로젝트 build output directory를 `dist`, build command를 `npm run build`로 변경
 *   [ ] 다음 DB 기능 변경 직전에 D1 migration chain 복구 (`PRIORITY_IMPROVEMENT_PLAN.md` 3장 순서 준수)
