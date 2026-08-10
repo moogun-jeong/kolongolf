@@ -1542,7 +1542,9 @@ const initMessages = () => {
   };
 
   const setupTurnstile = async () => {
-    if (!siteKey) return;
+    // 로컬·Replit 개발 서버는 ALLOW_INSECURE_WRITES를 쓰므로 운영 도메인 전용
+    // sitekey를 렌더링하지 않습니다. 허용되지 않은 hostname 오류(110200)도 피합니다.
+    if (!siteKey || !isProductionHost()) return;
     try {
       await loadTurnstile();
       document.querySelectorAll("[data-turnstile-slot]").forEach((slot) => {
