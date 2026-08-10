@@ -15,3 +15,69 @@
 
 /images/*
   Cache-Control: public, max-age=604800, must-revalidate
+
+# 이전 저장소 루트 배포에서 캐시된 비공개 파일은 tombstone 단계에서도 저장하지 않습니다.
+/.gitignore
+  Cache-Control: no-store
+/.replit
+  Cache-Control: no-store
+/.github/*
+  Cache-Control: no-store
+/.idx/*
+  Cache-Control: no-store
+/.vscode/*
+  Cache-Control: no-store
+/AGENTS.md
+  Cache-Control: no-store
+/FINAL_IMPROVEMENT_PLAN.md
+  Cache-Control: no-store
+/GEMINI.md
+  Cache-Control: no-store
+/HOMEPAGE_REVIEW.md
+  Cache-Control: no-store
+/PRIORITY_IMPROVEMENT_PLAN.md
+  Cache-Control: no-store
+/PROJECT_LOG.md
+  Cache-Control: no-store
+/README.md
+  Cache-Control: no-store
+/REPLIT_MIGRATION_AUDIT.md
+  Cache-Control: no-store
+/TASK.md
+  Cache-Control: no-store
+/blueprint.md
+  Cache-Control: no-store
+/functions/*
+  Cache-Control: no-store
+/home1.png
+  Cache-Control: no-store
+/home2.png
+  Cache-Control: no-store
+/home_redisign.md
+  Cache-Control: no-store
+/image.png
+  Cache-Control: no-store
+/images/20260704*
+  Cache-Control: no-store
+/images/waacky.png
+  Cache-Control: no-store
+/kolongolf
+  Cache-Control: no-store
+/lib/*
+  Cache-Control: no-store
+/migrations/*
+  Cache-Control: no-store
+/mobile1.png
+  Cache-Control: no-store
+/notice.png
+  Cache-Control: no-store
+/package-lock.json
+  Cache-Control: no-store
+/package.json
+  Cache-Control: no-store
+/scripts/*
+  Cache-Control: no-store
+/sql/*
+  Cache-Control: no-store
+/wrangler.toml
+  Cache-Control: no-store
