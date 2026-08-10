@@ -1,63 +1,38 @@
 # **TASK.md - 홈페이지 우선 개선 범위 정리**
 
-현재의 소규모 콘텐츠 업데이트 운영 방식에 맞춰 방대한 최종 개선안에서 실제로 먼저 필요한 안전 조치만 분리해 실행 문서로 정리합니다.
+현재의 소규모 콘텐츠 업데이트 운영 방식에 맞춰 방대한 최종 개선안에서 실제로 먼저 필요한 안전 조치와 완료 결과를 분리해 기록합니다.
 
 ## **1. 현재 진행 중인 작업 (Current Active Task)**
 
-> 2026-08-10 기준. GitHub Pages 쪽은 끝났고 **Cloudflare Pages만 남았습니다.**
-> 아래 1-A → 1-B 순서대로 하면 됩니다. 1-A가 보안상 급한 항목입니다.
-> 사용자 승인에 따라 오늘 1-A/1-B의 운영 반영과 검증, 회원 이름 표기 확인,
-> Wrangler 보안 업데이트까지 연속 수행합니다. 운영 비밀값은 저장소나 로그에 남기지 않습니다.
+> 2026-08-10 기준. GitHub Pages와 Cloudflare Pages의 공개 경계 및 운영 보안 설정을 모두 반영했습니다.
+> 다음 활성 항목은 실제 DB 기능을 바꾸기 직전에 수행할 1-C이며, 그 전까지 운영 D1은 변경하지 않습니다.
 
-*   [ ] **1-A. Cloudflare Pages를 `dist/` 전용 배포로 전환** (급함 — 현재 저장소 전체 노출 중)
-*   [ ] **1-B. Cloudflare Pages 환경 변수 설정** (`MESSAGE_SALT`, `ADMIN_TOKEN`, Turnstile) — 설정 전까지 공개 글쓰기 차단 상태
+*   [x] **1-A. Cloudflare Pages를 `dist/` 전용 배포로 전환** — build/output 설정, 비공개 경로 차단, 이전 캐시 무효화까지 완료
+*   [x] **1-B. Cloudflare Pages 환경 변수 설정** (`MESSAGE_SALT`, `ADMIN_TOKEN`, Turnstile) — secret 값은 저장소·로그에 남기지 않고 production에 적용
 *   [ ] 1-C. 다음 DB 기능 변경 **직전에** D1 migration chain 복구 (`PRIORITY_IMPROVEMENT_PLAN.md` 3장 순서 준수. 지금 당장 할 필요 없음)
 *   [x] **1-D. `하선재`/`허선재` 표기를 회원명부·이전 행사 기록 기준인 `하선재`로 통일**
 *   [x] **1-E. Wrangler 4.120.0 갱신, `npm audit` 0건, 로컬 full-stack·브라우저 재검증 완료**
 
 ---
 
-### **재시작 후 첫 작업 체크포인트 (2026-08-10 인계)**
+### **재시작 후 첫 작업 체크포인트 — 완료 (2026-08-10)**
 
-**중단 지점**
-*   GitHub `main`은 `6a79d3f`이며 PR #1 병합과 GitHub Pages 배포까지 성공. 작업 트리는 clean 상태.
-*   Cloudflare Pages의 최신 Git 연동 배포는 build command 미설정으로 실패했고, 운영 `kolongolf.pages.dev`는 아직 `20260809-1` 구버전과 저장소 루트를 서비스 중.
-*   사용자가 Replit Secrets에 `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`를 등록했으나 등록 전 시작된 에이전트 셸에는 두 변수가 주입되지 않아 **Cloudflare API 변경은 아직 한 건도 실행하지 않음**.
-*   토큰 값은 읽거나 출력하지 않았고, 운영 D1과 기존 Cloudflare 리소스도 변경·삭제하지 않음.
-
-**새 터미널에서 가장 먼저 확인**
-```bash
-# 값 자체를 출력하지 말고 존재 여부만 확인
-node -e "console.log(process.env.CLOUDFLARE_API_TOKEN && process.env.CLOUDFLARE_ACCOUNT_ID ? 'configured' : 'missing')"
-git fetch origin
-git status --short --branch
-```
-첫 명령이 `configured`, Git 상태가 `main...origin/main` clean이면 아래 순서로 계속한다. 토큰을 `echo`, `env`, `printenv`, `set -x`, `curl -v`로 출력하지 않는다.
-
-**Cloudflare 완료 순서**
-1. API로 기존 Pages 프로젝트 **`kolongolf`만** 읽고 현재 `build_config`, production/preview 환경 변수의 **이름·타입**, 최근 배포 상태를 민감값 없이 확인한다. 새 Pages 프로젝트를 만들지 않는다.
-2. `build_config`만 `build_command: "npm run build"`, `destination_dir: "dist"`, `root_dir: ""`로 PATCH한다. 기존 deployment config, D1 binding, 환경 변수는 덮어쓰지 않는다.
-3. 기존 Turnstile widget 목록을 확인하고 `kolongolf.pages.dev`, `moogun-jeong.github.io`를 허용하는 적합한 widget을 사용하거나 새 widget을 만든다. 기존 widget을 삭제하거나 secret을 회전하지 않는다.
-4. Pages production secret 이름을 확인한 뒤 기존 `MESSAGE_SALT`와 `ADMIN_TOKEN`은 보존한다. 누락된 값만 안전하게 생성·설정하고, 새 widget을 만들었다면 받은 secret을 `TURNSTILE_SECRET_KEY`에 설정한다. secret 값은 저장소·문서·터미널 출력에 남기지 않는다.
-5. 공개 Turnstile sitekey만 `index.html`의 `cf-turnstile-sitekey`에 반영하고 로컬 build/full-stack/브라우저 검증 후 GitHub에 커밋·푸시한다.
-6. Git 연동 production 배포를 완료하고 아래 운영 검증을 수행한다. `/api/messages`가 404이면 즉시 이전 성공 배포로 롤백하고 원인을 확인한다.
-7. 검증 결과를 이 파일과 `PROJECT_LOG.md`에 기록하고 GitHub에 반영한다.
-
-**비파괴 운영 검증 기준**
-*   Cloudflare: `/`, `/main.js`, `/style.css`, `/robots.txt`, `/sitemap.xml`, `/api/messages` 200.
-*   Cloudflare: `/wrangler.toml`, `/package.json`, `/PROJECT_LOG.md`, `/TASK.md`, `/AGENTS.md`, `/blueprint.md`, `/home1.png` 404.
-*   불허 Origin의 무효 메시지 POST는 403, 공개 사진 업로드 POST는 403. 두 요청 모두 유효 데이터를 보내지 않아 D1을 바꾸지 않는다.
-*   GitHub Pages의 공개 정적 파일은 200, 비공개 파일과 같은 출처 `/api/messages`는 404가 정상. 화면의 메시지 API 호출은 Cloudflare 주소를 사용한다.
-*   실제 Turnstile 글쓰기 테스트는 운영 D1에 행을 추가하므로 **사용자에게 별도 허락을 받은 뒤에만** 수행한다. 허락 없이 운영 D1 write, migration, export, delete를 실행하지 않는다.
+*   기존 Pages 프로젝트 `kolongolf`만 수정해 build command `npm run build`, output `dist`, root 빈 값으로 설정. 기존 D1 binding과 `ADMIN_TOKEN`은 보존.
+*   Turnstile widget을 `kolongolf.pages.dev`, `moogun-jeong.github.io`에 연결하고 공개 sitekey를 프런트엔드에 반영. production에는 `MESSAGE_SALT`, `ADMIN_TOKEN`, `TURNSTILE_SECRET_KEY`, `SKIP_DEPENDENCY_INSTALL`이 설정됨(이름·타입만 확인, 값은 미출력).
+*   Cloudflare의 이전 저장소 루트 자산 캐시를 1회성 tombstone 배포로 무효화한 뒤 flag를 제거. 현재 공개 파일과 API는 200, 저장소·개발·원본 이미지 경로는 404.
+*   불허 Origin의 무효 메시지 POST와 비활성화된 사진 업로드 POST는 403. 운영 D1 write, migration, export, delete는 수행하지 않음.
+*   실제 Turnstile 글쓰기 테스트는 D1 행을 추가하므로 별도 사용자 허락 전까지 보류. 자동 브라우저에서는 widget 로드와 입력 활성화까지 확인했으며, 실행 환경의 동적 challenge host DNS 실패로 challenge 완료 여부는 판정하지 않음.
+*   마지막 코드 배포 기준 `main`은 `2abe779`, Cloudflare production deployment는 `9130cc5c-31ff-4e72-8595-d8bf0d50bfd6`, GitHub Pages workflow `31381941083`은 성공.
+*   Replit Secret의 `CLOUDFLARE_ACCOUNT_ID`에는 계정 ID 대신 이메일이 들어 있어 향후 API 작업 전에 올바른 32자리 계정 ID로 교정 필요. 이번 작업은 GitHub 배포 check URL에서 확인한 실제 계정 ID를 메모리에만 사용함.
 
 ---
 
-### **1-A. Cloudflare Pages `dist/` 전용 배포 전환**
+### **1-A. Cloudflare Pages `dist/` 전용 배포 전환 — 완료**
 
-**현재 상태 / 왜 하는가**
-GitHub Pages는 2026-08-10에 `dist/` allowlist 배포로 전환 완료(저장소 파일 전부 404). 그러나 **Cloudflare Pages는 아직 예전 설정**이라 저장소 전체가 그대로 공개됩니다.
+**완료 상태 / 왜 했는가**
+GitHub Pages와 Cloudflare Pages 모두 2026-08-10에 `dist/` allowlist 배포로 전환했습니다. Cloudflare edge에 남은 이전 저장소 루트 응답은 private-route middleware와 1회성 tombstone 배포로 404 전환했습니다.
 
-재현 명령 (지금도 200이면 미완료):
+회귀 확인 명령 (둘 다 404가 정상):
 ```bash
 curl -s -o /dev/null -w '%{http_code}\n' https://kolongolf.pages.dev/wrangler.toml
 curl -s -o /dev/null -w '%{http_code}\n' https://kolongolf.pages.dev/PROJECT_LOG.md
@@ -113,7 +88,7 @@ curl -s -o /dev/null -w 'api %{http_code}  (기대: 200)\n' "$B/api/messages"
 
 ---
 
-### **1-B. Cloudflare Pages 환경 변수 설정**
+### **1-B. Cloudflare Pages 환경 변수 설정 — 완료**
 
 설정 위치: `kolongolf` → Settings → Environment variables → **Production**
 (값 입력 후 **재배포해야** 반영됩니다. Functions는 배포 시점 환경을 읽음)
@@ -141,7 +116,7 @@ node -e "console.log('ADMIN_TOKEN='  + require('crypto').randomBytes(24).toStrin
    ```
    (sitekey는 공개 값이라 저장소에 커밋해도 됩니다. secret만 비밀)
 
-**완료 판정**: 홈페이지에서 방명록/댓글 입력창이 비활성화 안내 없이 열리고, 실제로 한 건 작성·표시되는지 확인.
+**완료 판정**: 홈페이지 방명록/댓글 입력창 활성화와 Turnstile widget 로드를 확인. 실제 한 건 작성·표시는 운영 D1 write이므로 별도 허락을 받은 뒤 수동 확인합니다.
 
 ---
 

@@ -4,6 +4,36 @@
 
 ---
 
+### **[2026-08-10] Cloudflare Pages 운영 보안 설정 및 배포 완료**
+
+#### **원격 설정과 Turnstile**
+*   재시작 후 `CLOUDFLARE_API_TOKEN` 존재와 유효성을 값 노출 없이 확인. `CLOUDFLARE_ACCOUNT_ID`에는 계정 ID가 아닌 이메일이 등록되어 있어 GitHub Pages 배포 check URL에서 실제 32자리 account ID를 확인해 이번 세션 메모리에서만 사용.
+*   기존 Pages 프로젝트 `kolongolf`의 build config만 `npm run build` / `dist` / 빈 root로 변경하고 기존 production `ADMIN_TOKEN`, production·preview D1 binding을 보존. 새 Pages 프로젝트나 D1 리소스는 만들지 않음.
+*   `kolongolf.pages.dev`와 `moogun-jeong.github.io`를 허용하는 managed Turnstile widget을 생성하고 공개 sitekey만 `index.html`에 반영. production에 누락된 `MESSAGE_SALT`와 `TURNSTILE_SECRET_KEY`를 secret으로 설정하고 값은 파일·문서·터미널에 출력하지 않음.
+*   Cloudflare build image의 자동 `npm clean-install`이 npm 내부 오류로 사용자 build 전에 실패해 `SKIP_DEPENDENCY_INSTALL=1`을 Wrangler `[vars]`와 production/preview 설정에 추가. 프로젝트가 Wrangler 설정을 원격 설정의 source of truth로 사용하므로 저장소 설정에도 명시.
+
+#### **공개 경계와 이전 캐시 제거**
+*   정상 정적 자산은 Pages가 직접 서비스하고 `/api/*` 및 비공개 루트·디렉터리만 Functions를 통과하도록 `_routes.json`을 축소. `functions/_middleware.js`가 해당 경로를 13-byte `404 Not Found`, `no-store`로 차단.
+*   이전 저장소 루트 배포의 장기 edge cache가 production alias에 남은 현상을 확인. `_headers`의 private-path `no-store`와 Cloudflare 전용 1회성 tombstone 생성 기능을 `scripts/build.js`에 추가해 기존 asset hash를 404 본문으로 교체.
+*   임시 `CLOUDFLARE_CACHE_TOMBSTONES=1` 배포에서 39개 경로를 무효화하고 세 차례 404를 확인한 뒤 flag를 제거. 기능은 기본 비활성 상태로 남겨 같은 유형의 캐시 사고 복구에만 재사용 가능.
+
+#### **PR·배포 결과**
+*   PR #3(운영 설정/sitekey), #4(private middleware), #5(1회성 cache tombstone), #6(flag 제거)을 순서대로 preview 검증 후 병합.
+*   마지막 코드 `main`은 `2abe77987a15b6054c52856f830a6ae61861ef0b`. Cloudflare production deployment `9130cc5c-31ff-4e72-8595-d8bf0d50bfd6`와 GitHub Pages workflow `31381941083` 성공.
+
+#### **최종 비파괴 검증**
+*   Cloudflare `/`, `/main.js`, `/style.css`, `/robots.txt`, `/sitemap.xml`, `/api/messages`, `/api/archives` 200. `wrangler.toml`, `package.json`, 프로젝트 문서, 원본 이미지, Functions·lib·migration·script 경로는 404.
+*   불허 Origin의 빈 메시지 POST와 same-origin의 비활성화된 사진 업로드 POST는 각각 403. 유효 데이터를 보내지 않았으며 운영 D1 write, migration, export, delete는 수행하지 않음.
+*   GitHub Pages 공개 정적 파일은 200, 비공개 경로와 `/api/messages`는 404. 운영 HTML은 Cloudflare 메시지 API, 공개 Turnstile sitekey, `20260810-2` 자산을 참조.
+*   로컬 desktop/mobile Chromium에서 회원 21명, 깨진 이미지·가로 overflow·console/page/request 오류 0, 메뉴와 방명록 입력 활성화를 확인. 운영에서도 widget script와 두 slot 로드, 입력 활성화, 화면 레이아웃을 확인했으나 headless 환경의 동적 challenge host DNS 실패 때문에 실제 challenge 통과 및 D1 쓰기는 별도 허락 후 수동 검증으로 남김.
+
+#### **기술적 결정**
+*   private middleware만으로는 이미 edge cache에 저장된 오래된 정적 응답을 즉시 대체하지 못해, 제한된 경로 목록과 Cloudflare build flag가 동시에 있을 때만 tombstone을 생성하도록 복구 절차를 안전하게 제한.
+*   로컬·Replit에서는 Turnstile을 초기화하지 않아 허용 hostname 오류를 막고, Cloudflare/GitHub 운영 호스트에서만 widget을 로드.
+*   Replit Secret의 `CLOUDFLARE_ACCOUNT_ID`는 향후 Cloudflare API 작업 전에 올바른 계정 ID로 교정해야 함.
+
+---
+
 ### **[2026-08-10] Cloudflare API 인계 및 재시작 대기**
 
 #### **현재 상태**
