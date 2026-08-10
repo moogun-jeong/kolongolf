@@ -17,6 +17,41 @@
 
 ---
 
+### **재시작 후 첫 작업 체크포인트 (2026-08-10 인계)**
+
+**중단 지점**
+*   GitHub `main`은 `6a79d3f`이며 PR #1 병합과 GitHub Pages 배포까지 성공. 작업 트리는 clean 상태.
+*   Cloudflare Pages의 최신 Git 연동 배포는 build command 미설정으로 실패했고, 운영 `kolongolf.pages.dev`는 아직 `20260809-1` 구버전과 저장소 루트를 서비스 중.
+*   사용자가 Replit Secrets에 `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`를 등록했으나 등록 전 시작된 에이전트 셸에는 두 변수가 주입되지 않아 **Cloudflare API 변경은 아직 한 건도 실행하지 않음**.
+*   토큰 값은 읽거나 출력하지 않았고, 운영 D1과 기존 Cloudflare 리소스도 변경·삭제하지 않음.
+
+**새 터미널에서 가장 먼저 확인**
+```bash
+# 값 자체를 출력하지 말고 존재 여부만 확인
+node -e "console.log(process.env.CLOUDFLARE_API_TOKEN && process.env.CLOUDFLARE_ACCOUNT_ID ? 'configured' : 'missing')"
+git fetch origin
+git status --short --branch
+```
+첫 명령이 `configured`, Git 상태가 `main...origin/main` clean이면 아래 순서로 계속한다. 토큰을 `echo`, `env`, `printenv`, `set -x`, `curl -v`로 출력하지 않는다.
+
+**Cloudflare 완료 순서**
+1. API로 기존 Pages 프로젝트 **`kolongolf`만** 읽고 현재 `build_config`, production/preview 환경 변수의 **이름·타입**, 최근 배포 상태를 민감값 없이 확인한다. 새 Pages 프로젝트를 만들지 않는다.
+2. `build_config`만 `build_command: "npm run build"`, `destination_dir: "dist"`, `root_dir: ""`로 PATCH한다. 기존 deployment config, D1 binding, 환경 변수는 덮어쓰지 않는다.
+3. 기존 Turnstile widget 목록을 확인하고 `kolongolf.pages.dev`, `moogun-jeong.github.io`를 허용하는 적합한 widget을 사용하거나 새 widget을 만든다. 기존 widget을 삭제하거나 secret을 회전하지 않는다.
+4. Pages production secret 이름을 확인한 뒤 기존 `MESSAGE_SALT`와 `ADMIN_TOKEN`은 보존한다. 누락된 값만 안전하게 생성·설정하고, 새 widget을 만들었다면 받은 secret을 `TURNSTILE_SECRET_KEY`에 설정한다. secret 값은 저장소·문서·터미널 출력에 남기지 않는다.
+5. 공개 Turnstile sitekey만 `index.html`의 `cf-turnstile-sitekey`에 반영하고 로컬 build/full-stack/브라우저 검증 후 GitHub에 커밋·푸시한다.
+6. Git 연동 production 배포를 완료하고 아래 운영 검증을 수행한다. `/api/messages`가 404이면 즉시 이전 성공 배포로 롤백하고 원인을 확인한다.
+7. 검증 결과를 이 파일과 `PROJECT_LOG.md`에 기록하고 GitHub에 반영한다.
+
+**비파괴 운영 검증 기준**
+*   Cloudflare: `/`, `/main.js`, `/style.css`, `/robots.txt`, `/sitemap.xml`, `/api/messages` 200.
+*   Cloudflare: `/wrangler.toml`, `/package.json`, `/PROJECT_LOG.md`, `/TASK.md`, `/AGENTS.md`, `/blueprint.md`, `/home1.png` 404.
+*   불허 Origin의 무효 메시지 POST는 403, 공개 사진 업로드 POST는 403. 두 요청 모두 유효 데이터를 보내지 않아 D1을 바꾸지 않는다.
+*   GitHub Pages의 공개 정적 파일은 200, 비공개 파일과 같은 출처 `/api/messages`는 404가 정상. 화면의 메시지 API 호출은 Cloudflare 주소를 사용한다.
+*   실제 Turnstile 글쓰기 테스트는 운영 D1에 행을 추가하므로 **사용자에게 별도 허락을 받은 뒤에만** 수행한다. 허락 없이 운영 D1 write, migration, export, delete를 실행하지 않는다.
+
+---
+
 ### **1-A. Cloudflare Pages `dist/` 전용 배포 전환**
 
 **현재 상태 / 왜 하는가**

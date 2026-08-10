@@ -4,6 +4,24 @@
 
 ---
 
+### **[2026-08-10] Cloudflare API 인계 및 재시작 대기**
+
+#### **현재 상태**
+*   사용자가 기존 Cloudflare Pages 프로젝트 `kolongolf`의 남은 설정을 계속하도록 승인하고 Replit Secrets에 `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`를 등록.
+*   등록 전 시작된 현재 에이전트의 로그인·비로그인 새 셸에서 두 변수의 존재 여부만 재확인했으나 모두 `missing`이어서 API 호출을 중단. 토큰 값은 읽거나 출력하지 않음.
+*   따라서 Pages build config, Turnstile, Pages environment variable, deployment, D1은 이 단계에서 전혀 변경되지 않음. 새 Pages 프로젝트 생성과 기존 Cloudflare 리소스 삭제도 없음.
+
+#### **재시작 전 확인된 배포 상태**
+*   PR #1을 병합한 GitHub `main` 커밋 `6a79d3f`의 GitHub Pages workflow run `31376057324`는 성공.
+*   같은 커밋의 Cloudflare Pages 연동 배포는 기존 build command 미설정 때문에 실패했고, 운영 Cloudflare는 계속 `style.css/main.js?v=20260809-1` 구버전을 서비스.
+*   재검사에서 GitHub Pages 비공개 경로는 404를 유지했지만 Cloudflare의 `wrangler.toml`, `package.json`, `PROJECT_LOG.md`, `TASK.md`, `AGENTS.md`, `blueprint.md`, `home1.png`는 여전히 200.
+
+#### **인계 기록**
+*   새 터미널에서 자격증명 존재 여부만 안전하게 확인한 뒤 기존 `kolongolf` 프로젝트 읽기 → build config 보정 → Turnstile/secret 구성 → sitekey 코드 반영 → 배포 → 비파괴 운영 검증 순서로 진행.
+*   구체적인 명령 전 안전 조건, 완료 판정, D1 변경 금지 범위를 `TASK.md`의 `재시작 후 첫 작업 체크포인트`에 기록.
+
+---
+
 ### **[2026-08-10] 운영 배포 전 콘텐츠·도구체인 최종 정리**
 
 #### **회원 이름 표기 통일**
