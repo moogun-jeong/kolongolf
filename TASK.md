@@ -3,9 +3,125 @@
 현재의 소규모 콘텐츠 업데이트 운영 방식에 맞춰 방대한 최종 개선안에서 실제로 먼저 필요한 안전 조치만 분리해 실행 문서로 정리합니다.
 
 ## **1. 현재 진행 중인 작업 (Current Active Task)**
-*   [ ] **Cloudflare Pages 프로젝트 build command를 `npm run build`, build output directory를 `dist`로 변경** (변경 전까지 `kolongolf.pages.dev`는 저장소 전체를 계속 노출. 2026-08-10 확인 시 `/wrangler.toml`, `/PROJECT_LOG.md` 200 응답)
-*   [ ] 운영 Cloudflare Pages에 Turnstile sitekey/secret, `MESSAGE_SALT`, 16자 이상 `ADMIN_TOKEN` 설정 (설정 전까지 공개 글쓰기는 fail-closed로 막혀 있음)
-*   [ ] 다음 DB 기능 변경 직전에 D1 migration chain 복구 (`PRIORITY_IMPROVEMENT_PLAN.md` 3장 순서 준수)
+
+> 2026-08-10 기준. GitHub Pages 쪽은 끝났고 **Cloudflare Pages만 남았습니다.**
+> 아래 1-A → 1-B 순서대로 하면 됩니다. 1-A가 보안상 급한 항목입니다.
+
+*   [ ] **1-A. Cloudflare Pages를 `dist/` 전용 배포로 전환** (급함 — 현재 저장소 전체 노출 중)
+*   [ ] **1-B. Cloudflare Pages 환경 변수 설정** (`MESSAGE_SALT`, `ADMIN_TOKEN`, Turnstile) — 설정 전까지 공개 글쓰기 차단 상태
+*   [ ] 1-C. 다음 DB 기능 변경 **직전에** D1 migration chain 복구 (`PRIORITY_IMPROVEMENT_PLAN.md` 3장 순서 준수. 지금 당장 할 필요 없음)
+
+---
+
+### **1-A. Cloudflare Pages `dist/` 전용 배포 전환**
+
+**현재 상태 / 왜 하는가**
+GitHub Pages는 2026-08-10에 `dist/` allowlist 배포로 전환 완료(저장소 파일 전부 404). 그러나 **Cloudflare Pages는 아직 예전 설정**이라 저장소 전체가 그대로 공개됩니다.
+
+재현 명령 (지금도 200이면 미완료):
+```bash
+curl -s -o /dev/null -w '%{http_code}\n' https://kolongolf.pages.dev/wrangler.toml
+curl -s -o /dev/null -w '%{http_code}\n' https://kolongolf.pages.dev/PROJECT_LOG.md
+```
+
+`wrangler.toml`의 `pages_build_output_dir = "dist"`는 이미 커밋되어 있지만, **build command가 비어 있으면 `dist/`가 생성되지 않습니다**(`dist/`는 `.gitignore` 대상이라 저장소에 없음). 따라서 build command와 output directory를 **둘 다** 설정해야 합니다.
+
+**방법 1 — 대시보드 (권장, 계정 로그인만 있으면 됨)**
+1. Cloudflare 대시보드 → Workers & Pages → `kolongolf` → Settings → Builds & deployments
+2. Build command: `npm run build`
+3. Build output directory: `dist`
+4. Root directory: 비움(저장소 루트)
+5. 저장 후 Deployments 탭 → 최신 배포 → **Retry deployment** (또는 아무 커밋이나 push)
+
+**방법 2 — API (셸에서 처리하고 싶을 때)**
+Cloudflare 대시보드 → My Profile → API Tokens → Create Custom Token,
+권한은 **Account → Cloudflare Pages → Edit** 하나면 충분. TTL은 1일 권장.
+
+```bash
+export CLOUDFLARE_API_TOKEN='발급받은_토큰'
+API=https://api.cloudflare.com/client/v4
+AUTH="Authorization: Bearer $CLOUDFLARE_API_TOKEN"
+
+# 계정 ID 확인
+ACCOUNT_ID=$(curl -s -H "$AUTH" "$API/accounts" | jq -r '.result[0].id')
+
+# 현재 build 설정 확인
+curl -s -H "$AUTH" "$API/accounts/$ACCOUNT_ID/pages/projects/kolongolf" \
+  | jq '.result.build_config'
+
+# build command / output directory 변경
+curl -s -X PATCH -H "$AUTH" -H 'Content-Type: application/json' \
+  "$API/accounts/$ACCOUNT_ID/pages/projects/kolongolf" \
+  -d '{"build_config":{"build_command":"npm run build","destination_dir":"dist","root_dir":""}}' \
+  | jq '.success, .result.build_config'
+
+# 재배포 트리거
+curl -s -X POST -H "$AUTH" \
+  "$API/accounts/$ACCOUNT_ID/pages/projects/kolongolf/deployments" | jq '.success'
+```
+
+**완료 판정 (빌드 끝난 뒤 실행)**
+```bash
+B=https://kolongolf.pages.dev
+for p in / /main.js /style.css /robots.txt /sitemap.xml; do
+  printf '%-16s %s  (기대: 200)\n' "$p" "$(curl -s -o /dev/null -w '%{http_code}' "$B$p")"; done
+for p in /wrangler.toml /package.json /PROJECT_LOG.md /TASK.md /AGENTS.md /blueprint.md /home1.png; do
+  printf '%-16s %s  (기대: 404)\n' "$p" "$(curl -s -o /dev/null -w '%{http_code}' "$B$p")"; done
+# API가 살아있는지 (Functions는 dist/ 밖 functions/ 에서 그대로 동작해야 함)
+curl -s -o /dev/null -w 'api %{http_code}  (기대: 200)\n' "$B/api/messages"
+```
+`/api/messages`가 404면 Functions가 깨진 것이므로 **즉시 이전 배포로 롤백**(Deployments → 직전 성공 배포 → Rollback)하고 원인부터 확인할 것.
+
+---
+
+### **1-B. Cloudflare Pages 환경 변수 설정**
+
+설정 위치: `kolongolf` → Settings → Environment variables → **Production**
+(값 입력 후 **재배포해야** 반영됩니다. Functions는 배포 시점 환경을 읽음)
+
+| 변수 | 값 | 비고 |
+|---|---|---|
+| `MESSAGE_SALT` | 임의 난수 32자 이상 | 아래 명령으로 생성. **한 번 정하면 바꾸지 말 것** — 바꾸면 기존 댓글 작성자 해시가 전부 어긋납니다 |
+| `ADMIN_TOKEN` | 임의 난수 **16자 이상** | 16자 미만이면 서버가 거부 |
+| `TURNSTILE_SECRET_KEY` | Turnstile 대시보드 발급값 | 없으면 공개 POST가 503 (fail-closed) |
+
+난수 생성:
+```bash
+node -e "console.log('MESSAGE_SALT=' + require('crypto').randomBytes(32).toString('hex'))"
+node -e "console.log('ADMIN_TOKEN='  + require('crypto').randomBytes(24).toString('base64url'))"
+```
+생성값은 Cloudflare 대시보드에만 저장하고 저장소·채팅에 남기지 말 것. `ADMIN_TOKEN`은 비밀번호 관리자에 따로 보관.
+
+**Turnstile (secret 하나로는 부족 — sitekey도 필요)**
+1. Cloudflare 대시보드 → Turnstile → Add site
+2. Domain에 `kolongolf.pages.dev`와 `moogun-jeong.github.io` 둘 다 등록
+3. 발급된 **Secret key** → 위 표대로 환경 변수에 입력
+4. 발급된 **Site key** → `index.html`의 Turnstile sitekey 자리에 입력 후 커밋·푸시
+   ```bash
+   grep -n -i 'turnstile\|sitekey' index.html main.js
+   ```
+   (sitekey는 공개 값이라 저장소에 커밋해도 됩니다. secret만 비밀)
+
+**완료 판정**: 홈페이지에서 방명록/댓글 입력창이 비활성화 안내 없이 열리고, 실제로 한 건 작성·표시되는지 확인.
+
+---
+
+### **셸이 초기화된 뒤 다시 시작할 때 (환경 복구 메모)**
+
+*   **GitHub 인증**: 워크스페이스가 초기화되면 `gh` 로그인이 풀립니다. 저장소 push 자체는 Replit 기본 자격증명으로 되지만, **`.github/workflows/` 아래 파일을 건드리는 커밋은 `workflow` scope가 없으면 거부**됩니다. 그때는:
+    ```bash
+    gh auth login --hostname github.com --git-protocol https --web --scopes workflow
+    gh auth setup-git
+    ```
+    브라우저에 one-time code를 입력하는 device flow입니다. (`gh`는 토큰을 작업 트리 안 `.config/gh/hosts.yml`에 평문 저장하므로 `.gitignore`에 `.config/`를 넣어 두었습니다. 지우지 말 것)
+*   **Cloudflare 인증**: `wrangler login`은 이 환경에서 **동작하지 않습니다.** OAuth 콜백이 컨테이너 안 `localhost:8976`으로 돌아오는데 브라우저는 로컬 PC에 있어 도달하지 못합니다. 반드시 위 1-A의 API 토큰 방식을 쓸 것.
+*   **로컬 개발 재시작**: `npm start` (= `wrangler pages dev`, 정적 + `/api` + 로컬 D1). 첫 실행 시 `.dev.vars`와 로컬 D1 스키마를 자동 생성합니다. `.dev.vars`의 `ALLOW_INSECURE_WRITES`는 **로컬 전용** — 운영 환경 변수에 절대 넣지 말 것.
+*   **배포 전 점검 3종**:
+    ```bash
+    node scripts/build.js                 # dist 생성 (루트 9개 + 이미지 48장)
+    npm run preview:static                # dist만 서빙되는지 로컬 확인
+    git fetch origin && git status --short # 워킹 트리 clean / origin과 동기 확인
+    ```
 
 ## **2. 완료된 작업 (Completed Tasks)**
 *   [x] **GitHub Pages `dist/` 전용 배포 적용 완료**

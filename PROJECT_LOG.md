@@ -23,7 +23,8 @@
 *   Actions annotation으로 `actions/checkout@v4`, `setup-node@v4`, `configure-pages@v5`, `upload-artifact@v4`의 Node.js 20 deprecation 경고 발생(강제 Node 24 실행으로 동작에는 영향 없음).
 
 #### **남은 노출 (미해결)**
-*   `kolongolf.pages.dev`는 build command/output directory가 아직 예전 설정이라 `/wrangler.toml`, `/PROJECT_LOG.md`가 계속 200. 실행 환경에 Cloudflare 자격증명이 없어 CLI 배포 불가하며, 대시보드에서 `npm run build` / `dist` 설정 후 재배포 필요.
+*   `kolongolf.pages.dev`는 build command/output directory가 아직 예전 설정이라 `/wrangler.toml`, `/PROJECT_LOG.md`가 계속 200. 실행 환경에 Cloudflare 자격증명이 없고 `wrangler login`은 OAuth 콜백이 컨테이너 내부 `localhost:8976`으로 돌아와 브라우저에서 도달 불가하므로 이 세션에서 처리 불가.
+*   **이어서 할 작업 런북을 `TASK.md` 1장(1-A/1-B)에 기록**: 대시보드 절차, Cloudflare API를 쓰는 대안 절차, 완료 판정 curl, `/api/messages` 404 시 롤백 기준, `MESSAGE_SALT`/`ADMIN_TOKEN` 생성 명령, Turnstile sitekey·secret 이원 처리, 셸 초기화 후 `gh`/`wrangler` 인증 복구 방법 포함.
 
 ---
 
