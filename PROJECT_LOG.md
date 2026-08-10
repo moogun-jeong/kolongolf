@@ -4,6 +4,120 @@
 
 ---
 
+### **[2026-08-10] 우선 개선 계획 P0/P1 구현**
+
+#### **P0-1 공개 배포 범위 제한**
+*   `scripts/build.js`를 추가해 allowlist 파일만 `dist/`로 복사(`index.html`, `404.html`, `main.js`, `style.css`, `_routes.json`, `_headers`, `robots.txt`, `sitemap.xml`, `.nojekyll`).
+*   이미지는 `index.html`/`main.js`/`style.css`의 실제 참조를 훑어 `-display`와 짝 `-thumb`까지 자동 수집. 참조되지 않는 `images/waacky.png`, `images/20260704 MOV.mov`는 배포에서 제외(48/50개 복사).
+*   `wrangler.toml`의 `pages_build_output_dir`을 `.`에서 `dist`로 변경하고, `.github/workflows/pages.yml`로 GitHub Pages도 `dist/`만 올리도록 전환.
+*   `firebase-debug.log`를 Git tree에서 제거하고 `.gitignore`에 `dist/` 추가.
+*   `404.html`을 추가해 allowlist 밖 요청이 index.html fallback(200)이 아니라 404로 응답하도록 수정.
+*   local 검증: `/wrangler.toml`, `/migrations/0001_messages.sql`, `/PRIORITY_IMPROVEMENT_PLAN.md`, `/package.json`, `/firebase-debug.log`, `/AGENTS.md`, `/lib/api-security.mjs`, `/.git/config` 모두 404. `/robots.txt` `text/plain`, `/sitemap.xml` `application/xml` 확인.
+
+#### **P0-2 Replit local과 운영 데이터 분리**
+*   `scripts/dev.js`를 추가하고 Replit Run(`npm start`)을 `wrangler pages dev`(정적 + `/api` + 로컬 D1) 실행으로 전환. 첫 실행 시 로컬 전용 `.dev.vars` 생성과 로컬 D1 스키마 초기화를 자동 수행.
+*   `getMessageApiBase()`를 "정적 전용 호스트(`*.github.io`)에서만 운영 API 주소, 그 외에는 같은 출처 `/api`"로 변경. Replit 화면에서 `kolongolf.pages.dev/api` 요청이 발생하지 않음.
+*   API에 연결되지 않은 화면에서는 방명록·댓글 입력을 비활성화하고 사유를 표시(`setWriteAvailability`).
+*   `scripts/serve.js`는 `dist/`만 서빙하는 정적 미리보기(`npm run preview:static`)로 축소하고, malformed percent-encoding URL에 400을 반환하도록 수정. `/%`, `/%E0%A4%A` 요청 후에도 서버가 계속 응답하는 것을 확인.
+
+#### **P0-3 댓글 쓰기 안전화**
+*   `lib/api-security.mjs`를 추가해 두 API가 공유하는 보안 헬퍼를 정리(Pages Functions 밖에 두어 라우트로 노출되지 않음).
+*   Turnstile fail-closed: secret이 없으면 운영에서 POST를 503으로 거부. 토큰 누락은 400, siteverify 실패·재사용은 400.
+*   `MESSAGE_SALT` 기본값 제거. 미설정 시 운영 쓰기 거부.
+*   POST/PATCH/DELETE에 Origin 검증 추가(기본 허용: `kolongolf.pages.dev`, `moogun-jeong.github.io`, 요청 자기 출처. `ALLOWED_ORIGINS`로 재정의 가능).
+*   관리자 토큰은 16자 이상 요구, 상수 시간 비교, IP 기준 10분 5회 실패 시 429. D1 스키마 변경 없이 isolate 메모리로 제한.
+*   local 검증: Origin 없음/불허 POST 403, 허용 Origin POST 201, 1분 5건 초과 429, 관리자 오인증 5회 후 429.
+*   `ALLOW_INSECURE_WRITES`는 로컬 `.dev.vars` 전용 스위치로만 사용(운영 환경 변수에 넣지 않음).
+
+#### **P1-1 지난 일정 문구 정리**
+*   `main.js`에 `upcomingEvents`(확정 미래 일정)와 `latestRecordEvent`(지난 기록)를 분리하고 `getNextEvent()`가 오늘 이후 일정만 반환하도록 구현.
+*   확정 일정이 없으면 일정 영역은 `다음 모임 준비 중` / `일정은 확정되는 대로 이 자리에 안내합니다.`를 표시하고, 상세 패널은 `지난 행사 기록`으로 라벨링.
+*   하단 일정 공지(`kolon-bottom-notice`)는 확정 미래 일정이 있을 때만 렌더링.
+*   소개 CTA와 회원 빠른 이동 문구도 확정 일정 유무에 따라 바뀌도록 수정. 7월 행사 아카이브와 사진은 그대로 유지.
+
+#### **P1-2 회원 공개 사진 업로드 비활성화**
+*   화면은 `publicArchiveUploadEnabled = false`, 서버는 `ENABLE_ARCHIVE_UPLOADS` 미설정 시 POST 403.
+*   기존 공개 데이터는 삭제하지 않고 읽기 전용 목록으로 유지하며, 남은 기록이 없으면 해당 영역 자체를 숨김. 관리자 승인 관리 화면은 유지.
+
+#### **부가 조치**
+*   `_headers`에 CSP, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` 추가. `frame-ancestors`는 Replit 미리보기 iframe이 막히지 않도록 Replit 도메인을 허용.
+*   `index.html`에 canonical 링크 추가, 정적 자산 캐시 버전을 `20260810-1`로 갱신.
+
+#### **남은 운영 조치(코드로 처리 불가)**
+*   Cloudflare Pages 환경 변수에 Turnstile secret, `MESSAGE_SALT`, 16자 이상 `ADMIN_TOKEN` 설정 및 `index.html`의 sitekey 입력. 설정 전까지 공개 글쓰기는 fail-closed로 막힘.
+*   Cloudflare Pages build output directory를 `dist`, GitHub Pages Source를 GitHub Actions로 변경.
+*   D1 migration chain 복구는 다음 DB 변경 직전 작업으로 유지(이번 범위에서 D1 스키마 변경 없음).
+
+---
+
+### **[2026-08-10] 홈페이지 우선 개선 계획으로 범위 축소**
+
+#### **운영 판단**
+*   현재 홈페이지와 공개 조회 API가 동작하고, 관리자가 문구·회원·일정·사진을 직접 갱신하는 소규모 운영 방식임을 기준으로 전면 아키텍처 전환을 보류.
+*   `FINAL_IMPROVEMENT_PLAN.md`는 장기 참고안으로 유지하고, 즉시 실행 기준은 `PRIORITY_IMPROVEMENT_PLAN.md`로 분리.
+
+#### **우선 범위**
+*   `dist/` allowlist를 통한 공개 배포 경계, Replit local/운영 API·D1 분리, 댓글 Turnstile fail-closed와 속도 제한, 지난 일정 문구 정리를 우선 작업으로 선정.
+*   공개 회원 사진 업로드를 사용하지 않으면 UI/POST를 비활성화해 현재 단계의 R2 이전을 생략하도록 결정.
+*   D1 migration 불일치는 단순 콘텐츠 수정의 선행 조건에서 제외하고, 다음 DB 변경 전 운영 schema 확인·백업·forward migration 순서로 처리하도록 정리.
+
+#### **변경 범위**
+*   이번 작업은 계획 문서와 프로젝트 기록 갱신만 수행했으며 홈페이지 코드, 운영 D1, Cloudflare/GitHub 설정은 변경하지 않음.
+
+---
+
+### **[2026-08-10] 마이그레이션 및 홈페이지 최종 개선안 수립**
+
+#### **교차 검증**
+*   `HOMEPAGE_REVIEW.md`와 `REPLIT_MIGRATION_AUDIT.md`의 근거를 현재 `main.js`, `index.html`, API Functions, D1 migrations, Replit/Cloudflare 설정, 자산 현황과 다시 대조.
+*   `scripts/serve.js`의 저장소/.git 파일 200 응답과 malformed percent URL `URIError` 종료를 local에서 재현.
+*   빈 임시 D1에 `0001_messages.sql`, `0002_archive_uploads.sql`을 적용한 후 현 API와 같은 `status='visible'` INSERT가 CHECK constraint로 실패하는 것을 재확인.
+*   2026-08-10 읽기 전용 운영 재검사에서 Cloudflare/GitHub Pages의 `firebase-debug.log`, `wrangler.toml` 노출을 확인하고, Cloudflare `robots.txt`가 HTML fallback을 반환하는 상태를 확인.
+*   Wrangler 4.100.0 설치, npm registry 4.120.0 최신, `npm audit` high 5/low 1을 재확인.
+
+#### **리뷰 보정**
+*   `#admin` 해시는 보안 경계가 아니므로 Cloudflare Access 뒤의 별도 admin page/API로 교체하도록 정리.
+*   운영 D1의 실제 schema/journal/export를 확인하기 전에 보정 migration을 적용하지 않도록 preflight와 복구 연습을 선행 관문으로 설정.
+*   자동 carousel의 `aria-live`, 미정 Event JSON-LD, 이메일 문자 마스킹, 행사 노출 횟수 같은 과장·불완전한 처방을 보정.
+*   `하선재`/`허선재`, 회원 공개 동의, 다음 행사, 관리자 Access 목록은 코드 추론이 아닌 운영자 확인 관문으로 분리.
+
+#### **최종 실행 계획**
+*   `FINAL_IMPROVEMENT_PLAN.md`에 Replit 개발 + GitHub CI + Cloudflare 단일 운영 + D1/R2 목표 구조를 확정.
+*   공개 `dist` 경계, D1 migration, API/admin/개인정보, 데이터 모델/프리렌더, 접근성, R2/성능/SEO, CI 관문을 7개 phase와 9개 PR 의존성으로 분해.
+*   각 phase에 파일별 변경, 환경 변수, 롤백, 수동/E2E 검증, Lighthouse/network/DOM budget, 전체 Definition of Done을 명시.
+*   이번 작업은 문서 통합·검증 범위로 한정하고 운영 코드, D1/R2, 원격 설정은 변경하지 않음.
+
+---
+
+### **[2026-08-09] Firebase Studio → Replit 마이그레이션 종합 진단**
+
+#### **주요 확인 사항**
+*   **현재 구조 학습**:
+    *   Vanilla JS Custom Elements 13개, OKLCH/CSS layer 기반 디자인, 정적 회원·아카이브 데이터, Cloudflare Pages Functions/D1 기반 방명록·댓글·회원 업로드·관리자 기능을 전체 점검.
+    *   Replit Run, Wrangler local full-stack, Cloudflare Pages, GitHub Pages의 화면/API 연결 차이를 비교.
+*   **공개 경계 문제 발견**:
+    *   저장소 루트 배포로 Cloudflare Pages와 GitHub Pages에서 `firebase-debug.log`, `wrangler.toml`, migration SQL 등 개발 파일이 HTTP 200으로 공개되는 상태를 확인.
+    *   Replit `scripts/serve.js`도 저장소 전체 파일을 제공하고, malformed percent-encoded URL에 `URIError`로 종료되는 문제를 재현.
+*   **환경/데이터 불일치 발견**:
+    *   Replit 기본 Run(`npm start`, 5000)이 local API가 아닌 운영 `kolongolf.pages.dev/api`에 연결되는 것을 Chromium 네트워크로 확인.
+    *   `migrations/0001_messages.sql`과 `sql/local-schema.sql`의 id/status/timestamp schema 불일치를 확인하고, 0001만 적용한 임시 D1에서 현재 API INSERT의 CHECK constraint 실패를 재현.
+*   **품질 진단**:
+    *   Chromium 138에서 1440px/390px 렌더, 콘솔·요청·가로 overflow를 확인. 렌더 오류는 없었으나 모달 초기 포커스와 Tab 이동이 배경에 남는 접근성 문제를 재현.
+    *   모바일 Lighthouse 실험에서 Performance 58, Accessibility 100, Best Practices 100, SEO 92, FCP 7.9s, LCP 8.3s, TBT 0ms, CLS 0.028 측정.
+    *   Google Fonts 렌더 차단, 초기 API 10회, DOM 905개, 모바일 전체 길이 약 17,640px를 주요 체감 개선 지점으로 선정.
+    *   `npm audit`에서 Wrangler 하위 개발 의존성 5 high/1 low를 확인하고 4.100.0 → 4.120.0 업데이트 필요성을 기록.
+
+#### **문서화**
+*   상세 근거, P0/P1/P2 우선순위, 권장 목표 구조, 단계별 완료 기준을 `REPLIT_MIGRATION_AUDIT.md`에 작성.
+*   `README.md`에 진단 문서 링크를 추가하고 `blueprint.md`에 현재 진단 및 개선 계획을 반영.
+
+#### **기술적 판단**
+*   **권장 운영 형태**: Replit은 주 개발 환경, GitHub는 소스/CI, Cloudflare Pages는 단일 운영 배포로 두고, D1은 텍스트 데이터, R2는 회원 업로드 사진을 담당하는 구성이 현재 자산을 가장 안전하게 활용함.
+*   **우선순위**: UI 전면 변경보다 공개 산출물 `dist/` 격리, Replit local/운영 데이터 분리, D1 migration chain 복구를 먼저 수행해야 함.
+*   **변경 범위 제한**: 이번 요청은 상세 학습·진단·제안이므로 운영 코드와 원격 데이터는 수정하지 않고 문서만 갱신함.
+
+---
+
 ### **[2026-08-09] Replit 실행 환경 복구 및 아카이브 이미지 최적화**
 
 #### **주요 변경 사항**

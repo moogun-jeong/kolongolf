@@ -320,11 +320,56 @@ const heroSlides = [
   }
 ];
 
-const nextNotice = {
-  eyebrow: "New Archive",
-  title: "제8회 석노협 대회 사진",
-  meta: "2026.07.04 · 골프존파크 삼산한국골프점",
-  body: "코오롱인더스트리 A/B팀의 경기와 시상 장면을 아카이브에 정리했습니다."
+// 확정된 "미래" 일정만 넣습니다. 지난 행사는 여기에 두지 않습니다.
+// 비어 있으면 일정 영역은 "다음 모임 준비 중"으로 안내하고 하단 일정 공지는 표시하지 않습니다.
+//
+// 예시:
+// {
+//   id: "2026-09-screen",
+//   date: "2026-09-05",
+//   dateLockup: { month: "SEP", day: "05", year: "2026" },
+//   eyebrow: "Regular Round",
+//   state: "참가 신청 중",
+//   title: "9월 정기 스크린 라운드",
+//   summary: "9월 정기 라운드 일정입니다.",
+//   body: "골프존파크에서 진행하는 정기 스크린 라운드입니다.",
+//   details: [["일시", "2026.09.05(토) 08:00"], ["장소", "골프존파크 삼산한국골프점"]]
+// }
+const upcomingEvents = [];
+
+// 가장 최근 지난 행사입니다. 아카이브·모달과 함께 계속 열람할 수 있도록 남겨둡니다.
+const latestRecordEvent = {
+  date: "2026-07-04",
+  dateLockup: { month: "JUL", day: "04", year: "2026" },
+  eyebrow: "Chairman Cup",
+  state: "참가 완료",
+  title: "제8회 석노협 스크린골프대회 기록",
+  body: "울산석유화학공업단지 노동조합 협의회 주관 의장배 대회입니다. 코오롱인더스트리는 A팀과 B팀, 총 8명이 회사별 4인 1팀 방식으로 참가했습니다.",
+  details: [
+    ["일시", "2026.07.04(토) 08:00"],
+    ["장소", "골프존파크 삼산한국골프점"],
+    ["방식", "회사별 4인 1팀 · 투비전 NX · 용원 GC 백로·무학"],
+    ["선수", "A팀 김효준, 서무환, 정무근, 허선재 · B팀 김경수, 박동성, 윤석현, 천기준"]
+  ]
+};
+
+const startOfToday = () => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return today;
+};
+
+// 오늘 이후의 확정 일정 중 가장 빠른 하나만 "다음 모임"으로 안내합니다.
+const getNextEvent = () => {
+  const today = startOfToday();
+  return (
+    upcomingEvents
+      .filter((event) => {
+        const eventDate = new Date(`${event.date}T00:00:00`);
+        return !Number.isNaN(eventDate.valueOf()) && eventDate >= today;
+      })
+      .sort((left, right) => left.date.localeCompare(right.date))[0] || null
+  );
 };
 
 const messageCopy = {
@@ -333,22 +378,34 @@ const messageCopy = {
   emptyArchive: "이 라운드에는 아직 댓글이 없습니다.",
   loading: "글을 불러오는 중입니다.",
   saved: "글을 남겼습니다.",
-  saving: "등록 중입니다."
+  saving: "등록 중입니다.",
+  writeUnavailable: "지금은 글을 남길 수 없습니다. 이 화면에서는 방명록 저장소에 연결되지 않았습니다.",
+  securityNotConfigured: "보안 확인(Turnstile) 설정이 끝나면 글을 남길 수 있습니다. 운영진에게 문의해주세요."
 };
 
 const getTurnstileSiteKey = () =>
   document.querySelector('meta[name="cf-turnstile-sitekey"]')?.getAttribute("content")?.trim() || "";
 
-const isLocalApiDevelopment = () => {
-  const { hostname, port } = window.location;
-  return (
-    (["localhost", "127.0.0.1"].includes(hostname) && port === "8788") ||
-    (hostname.endsWith(".app.github.dev") && hostname.includes("-8788."))
-  );
+const localHostSuffixes = [".replit.dev", ".repl.co", ".app.github.dev", ".janeway.replit.dev"];
+
+// 로컬·Replit 미리보기에서는 Turnstile 없이 쓰기가 가능하지만(서버의 로컬 전용 스위치),
+// 공개 배포 화면에서는 sitekey가 없으면 서버가 저장을 거부합니다.
+const isProductionHost = () => {
+  const { hostname } = window.location;
+  if (["localhost", "127.0.0.1", "[::1]", ""].includes(hostname)) return false;
+  return !localHostSuffixes.some((suffix) => hostname.endsWith(suffix));
 };
 
+// GitHub Pages처럼 Functions가 없는 정적 호스트에서만 운영 API 주소를 씁니다.
+// 그 외(로컬, Replit, Cloudflare Pages)는 항상 같은 출처의 `/api`를 호출해서
+// 로컬 테스트가 운영 데이터를 건드리지 않도록 합니다.
+const staticOnlyHostSuffixes = [".github.io"];
+
+const isStaticOnlyHost = () =>
+  staticOnlyHostSuffixes.some((suffix) => window.location.hostname.endsWith(suffix));
+
 const getMessageApiBase = () => {
-  if (isLocalApiDevelopment()) return "/api";
+  if (!isStaticOnlyHost()) return "/api";
   return (
     document.querySelector('meta[name="message-api-base"]')?.getAttribute("content")?.trim() ||
     "https://kolongolf.pages.dev/api"
@@ -496,7 +553,7 @@ class KolonIntro extends HTMLElement {
             코오롱 골프 동호회는 정기 라운드와 친선 경기로 함께 실력을 겨루고 친목을 쌓습니다.
             실력 차이는 있어도 편하게 합류하고, 함께한 순간은 사진과 이야기로 오래 남깁니다.
           </p>
-          <a class="text-button" href="#schedule">다음 모임 보기</a>
+          <a class="text-button" href="#schedule">${getNextEvent() ? "다음 모임 보기" : "모임 일정 보기"}</a>
         </div>
       </section>
     `;
@@ -557,6 +614,59 @@ class KolonSchedule extends HTMLElement {
   connectedCallback() {
     if (this.dataset.ready) return;
     this.dataset.ready = "true";
+    const nextEvent = getNextEvent();
+    const panelEvent = nextEvent || latestRecordEvent;
+
+    const headingCopy = nextEvent
+      ? nextEvent.summary || nextEvent.body
+      : "확정된 다음 모임이 정해지면 이 자리에서 가장 먼저 안내합니다. 지난 대회 기록은 아래에서 계속 볼 수 있습니다.";
+
+    const eventCard = nextEvent
+      ? `
+          <article class="next-event">
+            ${svgOrnaments.scheduleMap}
+            <div class="event-date-lockup" aria-hidden="true">
+              <span>${nextEvent.dateLockup.month}</span>
+              <strong>${nextEvent.dateLockup.day}</strong>
+              <small>${nextEvent.dateLockup.year}</small>
+            </div>
+            <div class="event-content">
+              <div class="event-topline">
+                <p class="event-state">${nextEvent.state}</p>
+                <span>${nextEvent.eyebrow}</span>
+              </div>
+              <h3>${nextEvent.title}</h3>
+              <p>${nextEvent.body}</p>
+            </div>
+          </article>
+        `
+      : `
+          <article class="next-event is-pending">
+            ${svgOrnaments.scheduleMap}
+            <div class="event-date-lockup" aria-hidden="true">
+              <span>Next</span>
+              <strong>TBD</strong>
+              <small>준비 중</small>
+            </div>
+            <div class="event-content">
+              <div class="event-topline">
+                <p class="event-state">일정 조율 중</p>
+                <span>Next Round</span>
+              </div>
+              <h3>다음 모임 준비 중</h3>
+              <p>일정은 확정되는 대로 이 자리에 안내합니다.</p>
+            </div>
+          </article>
+        `;
+
+    const detailRows = panelEvent.details
+      .map(([term, description]) => `
+              <div>
+                <dt>${term}</dt>
+                <dd>${description}</dd>
+              </div>`)
+      .join("");
+
     this.innerHTML = `
       <section class="schedule-section site-section" aria-labelledby="scheduleTitle">
         <div class="section-heading split" data-reveal>
@@ -564,48 +674,18 @@ class KolonSchedule extends HTMLElement {
             <p class="section-kicker">Schedule</p>
             <h2 id="scheduleTitle">Screen Event Board</h2>
           </div>
-          <p>2026년 7월 4일 토요일, 제8회 석노협 의장배 스크린골프대회에 코오롱인더스트리 2개 팀이 참가했습니다.</p>
+          <p>${headingCopy}</p>
         </div>
 
         <div class="schedule-board" data-reveal>
-          <article class="next-event">
-            ${svgOrnaments.scheduleMap}
-            <div class="event-date-lockup" aria-hidden="true">
-              <span>JUL</span>
-              <strong>04</strong>
-              <small>2026</small>
-            </div>
-            <div class="event-content">
-              <div class="event-topline">
-                <p class="event-state">참가 완료</p>
-                <span>Chairman Cup</span>
-              </div>
-              <h3>제8회 석노협 스크린골프대회 기록</h3>
-              <p>울산석유화학공업단지 노동조합 협의회 주관 의장배 대회입니다. 코오롱인더스트리는 A팀과 B팀, 총 8명이 회사별 4인 1팀 방식으로 참가했습니다.</p>
-            </div>
-          </article>
+          ${eventCard}
 
-          <div class="event-detail-panel" aria-label="제8회 석노협 스크린골프대회 상세 정보">
-            <dl>
-              <div>
-                <dt>일시</dt>
-                <dd>2026.07.04(토) 08:00</dd>
-              </div>
-              <div>
-                <dt>장소</dt>
-                <dd>골프존파크 삼산한국골프점</dd>
-              </div>
-              <div>
-                <dt>방식</dt>
-                <dd>회사별 4인 1팀 · 투비전 NX · 용원 GC 백로·무학</dd>
-              </div>
-              <div>
-                <dt>선수</dt>
-                <dd>A팀 김효준, 서무환, 정무근, 허선재 · B팀 김경수, 박동성, 윤석현, 천기준</dd>
-              </div>
+          <div class="event-detail-panel" aria-label="${panelEvent.title} 상세 정보">
+            <p class="section-kicker">${nextEvent ? "다음 모임 상세" : "지난 행사 기록"}</p>
+            <dl>${detailRows}
             </dl>
             <div class="button-row">
-              <button class="solid-button" type="button" data-open-modal="rsvpModal">공지 상세 보기</button>
+              <button class="solid-button" type="button" data-open-modal="rsvpModal">대회 상세 기록</button>
               <button class="line-button" type="button" data-open-modal="locationModal">장소 안내</button>
             </div>
           </div>
@@ -625,7 +705,7 @@ class KolonSchedule extends HTMLElement {
           <article data-reveal>
             <span>02</span>
             <h3>핵심 경기 조건</h3>
-            <p>투비전 NX, 용원 GC 백로·무학, 투어모드 G투어 난이도, 컨시드 1.5m와 멀리건 없음 조건으로 진행됩니다.</p>
+            <p>투비전 NX, 용원 GC 백로·무학, 투어모드 G투어 난이도, 컨시드 1.5m와 멀리건 없음 조건으로 진행했습니다.</p>
           </article>
           <article data-reveal>
             <span>03</span>
@@ -948,21 +1028,30 @@ class KolonBottomNotice extends HTMLElement {
   connectedCallback() {
     if (this.dataset.ready) return;
     this.dataset.ready = "true";
+
+    // 하단 공지는 "다음 일정" 안내이므로 확정된 미래 일정이 있을 때만 띄웁니다.
+    const nextEvent = getNextEvent();
+    if (!nextEvent) {
+      this.innerHTML = "";
+      this.hidden = true;
+      return;
+    }
+
     this.innerHTML = `
       <section class="bottom-notice" data-bottom-notice role="region" aria-labelledby="bottomNoticeTitle" aria-live="polite">
         <span class="notice-mark" aria-hidden="true"></span>
         <div class="notice-copy">
-          <p>${nextNotice.eyebrow}</p>
-          <h2 id="bottomNoticeTitle">${nextNotice.title}</h2>
-          <span>${nextNotice.meta}</span>
-          <small>${nextNotice.body}</small>
+          <p>${nextEvent.eyebrow}</p>
+          <h2 id="bottomNoticeTitle">${nextEvent.title}</h2>
+          <span>${nextEvent.details?.[0]?.[1] || nextEvent.date}</span>
+          <small>${nextEvent.body}</small>
         </div>
         <div class="notice-actions">
           <label class="notice-check">
             <input type="checkbox" data-notice-snooze />
             <span>오늘 하루 숨기기</span>
           </label>
-          <button class="line-button small" type="button" data-archive-index="0">사진 보기</button>
+          <a class="line-button small" href="#schedule">일정 보기</a>
           <button class="notice-close" type="button" data-close-bottom-notice aria-label="하단 일정 공지 닫기"></button>
         </div>
       </section>
@@ -1409,14 +1498,31 @@ const initMessages = () => {
   };
 
   const loadList = async (list, type, archiveId = "") => {
-    if (!list) return;
+    if (!list) return false;
     showListMessage(list, messageCopy.loading);
     try {
       const data = await requestJson(messageUrl(type, archiveId));
       renderList(list, data.items || []);
+      return true;
     } catch (error) {
       showListMessage(list, error.message || messageCopy.unavailable, true);
+      return false;
     }
+  };
+
+  // API가 없는 화면(예: Functions 없이 띄운 미리보기)에서는 폼을 비워두고 기다리게 하지 않고
+  // 아예 입력을 막은 뒤 이유를 보여줍니다.
+  let writeEnabled = true;
+  const setWriteAvailability = (available, reason = "") => {
+    writeEnabled = available;
+    document.querySelectorAll("[data-message-form]").forEach((form) => {
+      form.classList.toggle("is-unavailable", !available);
+      form.querySelectorAll("input, textarea, button").forEach((field) => {
+        field.disabled = !available;
+      });
+      if (!available) setStatus(form, reason, true);
+      else if (form.querySelector("[data-message-status]")?.classList.contains("is-error")) setStatus(form, "");
+    });
   };
 
   const loadTurnstile = () => {
@@ -1478,6 +1584,8 @@ const initMessages = () => {
         return;
       }
 
+      if (!writeEnabled) return;
+
       const type = form.dataset.messageType || "guestbook";
       const archiveId = form.dataset.archiveId || "";
       const authorName = String(formData.get("authorName") || "").trim();
@@ -1494,7 +1602,7 @@ const initMessages = () => {
       }
 
       const submitButton = form.querySelector("button[type='submit']");
-      submitButton?.setAttribute("disabled", "true");
+      if (submitButton) submitButton.disabled = true;
       setStatus(form, messageCopy.saving);
 
       try {
@@ -1511,7 +1619,7 @@ const initMessages = () => {
         setStatus(form, error.message || messageCopy.unavailable, true);
         resetTurnstile(form);
       } finally {
-        submitButton?.removeAttribute("disabled");
+        if (submitButton) submitButton.disabled = false;
       }
     });
   });
@@ -1540,10 +1648,24 @@ const initMessages = () => {
   });
 
   setupTurnstile();
-  loadList(getListFor("guestbook"), "guestbook");
+
+  (async () => {
+    const reachable = await loadList(getListFor("guestbook"), "guestbook");
+    if (!reachable) {
+      setWriteAvailability(false, messageCopy.writeUnavailable);
+      return;
+    }
+    // 공개 배포에서 sitekey가 없으면 서버가 fail-closed로 저장을 거부하므로 미리 알려줍니다.
+    if (isProductionHost() && !siteKey) {
+      setWriteAvailability(false, messageCopy.securityNotConfigured);
+      return;
+    }
+    setWriteAvailability(true);
+  })();
 };
 
 const initMemberExperienceEnhancements = () => {
+  const nextEvent = getNextEvent();
   const apiBase = () =>
     (typeof getMessageApiBase === "function"
       ? getMessageApiBase()
@@ -1569,7 +1691,7 @@ const initMemberExperienceEnhancements = () => {
     heroMeta.insertAdjacentHTML(
       "afterend",
       `<nav class="member-quick-panel" aria-label="회원 빠른 이동">
-        <a href="#schedule"><strong>다음 모임</strong><span>언제 어디서 만나는지</span></a>
+        <a href="#schedule"><strong>다음 모임</strong><span>${nextEvent ? "언제 어디서 만나는지" : "확정되면 여기서 안내"}</span></a>
         <a href="#archive"><strong>지난 사진</strong><span>함께한 순간 다시 보기</span></a>
         <a href="#guestbook"><strong>한마디</strong><span>오늘의 인사 남기기</span></a>
       </nav>`
@@ -1584,16 +1706,16 @@ const initMemberExperienceEnhancements = () => {
 
   const scheduleSection = document.getElementById("schedule");
   if (scheduleSection && !scheduleSection.querySelector(".next-round-brief")) {
+    const briefRows = (nextEvent ? nextEvent.details : latestRecordEvent.details)
+      .slice(0, 3)
+      .map(([term, description]) => `<li><strong>${term}</strong><span>${description}</span></li>`)
+      .join("");
     scheduleSection.insertAdjacentHTML(
       "afterbegin",
       `<aside class="next-round-brief" data-reveal>
-        <p class="section-kicker">7월 대회 기록</p>
-        <h3>제8회 석노협 스크린골프대회 사진을 확인하세요.</h3>
-        <ul>
-          <li><strong>언제</strong><span>2026년 7월 4일(토) 08:00</span></li>
-          <li><strong>어디서</strong><span>골프존파크 삼산한국골프점</span></li>
-          <li><strong>참가</strong><span>코오롱인더스트리 A/B팀, 총 8명</span></li>
-        </ul>
+        <p class="section-kicker">${nextEvent ? "다음 모임 안내" : "지난 대회 기록"}</p>
+        <h3>${nextEvent ? nextEvent.title : "제8회 석노협 스크린골프대회 사진을 확인하세요."}</h3>
+        <ul>${briefRows}</ul>
       </aside>`
     );
   }
@@ -1884,6 +2006,10 @@ const initMessageAdmin = () => {
     }
   });
 };
+// 회원 공개 사진 업로드는 현재 사용하지 않습니다(관리자가 직접 사진을 추가·배포).
+// 서버(`functions/api/archives.js`)의 ENABLE_ARCHIVE_UPLOADS와 함께 켜야 동작합니다.
+const publicArchiveUploadEnabled = false;
+
 const initArchiveUploadsAndAdmin = () => {
   const apiBase = () => `${getMessageApiBase().replace(/\/$/, "")}/archives`;
   const archiveRoot = document.getElementById("archive");
@@ -1968,32 +2094,7 @@ const initArchiveUploadsAndAdmin = () => {
     }).join("");
   };
 
-  const loadPublicArchives = async () => {
-    const list = document.querySelector("[data-public-archive-list]");
-    if (!list) return;
-    list.innerHTML = `<p class="message-empty">회원 업로드를 불러오는 중입니다.</p>`;
-    try {
-      const response = await fetch(`${apiBase()}?limit=12`, { headers: { "Accept": "application/json" } });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "회원 업로드를 불러오지 못했습니다.");
-      renderPublicArchives(list, data.items || []);
-    } catch (error) {
-      list.innerHTML = `<p class="message-empty is-error">${escapeText(error.message || "회원 업로드를 불러오지 못했습니다.")}</p>`;
-    }
-  };
-
-  if (archiveRoot && !archiveRoot.querySelector("[data-archive-upload-section]")) {
-    archiveRoot.insertAdjacentHTML(
-      "beforeend",
-      `<section class="community-archive-section site-section" data-archive-upload-section>
-        <div class="section-heading split" data-reveal>
-          <div>
-            <p class="section-kicker">회원 업로드</p>
-            <h2>함께한 사진을 직접 올려주세요.</h2>
-          </div>
-          <p>올린 사진과 기록은 관리자 확인 후 아카이브에 공개됩니다.</p>
-        </div>
-        <div class="community-archive-board">
+  const uploadFormHtml = `
           <form class="community-archive-form" data-archive-upload-form>
             <div class="form-grid two">
               <label><span>작성자</span><input name="authorName" maxlength="24" placeholder="이름 또는 별명" required /></label>
@@ -2010,60 +2111,112 @@ const initArchiveUploadsAndAdmin = () => {
               <button class="solid-button" type="submit">아카이브 신청하기</button>
               <p class="message-status" data-archive-upload-status>승인 후 홈페이지에 표시됩니다.</p>
             </div>
-          </form>
+          </form>`;
+
+  const publicArchiveSectionHtml = () => `<section class="community-archive-section site-section" data-archive-upload-section>
+        <div class="section-heading split" data-reveal>
+          <div>
+            <p class="section-kicker">회원 업로드</p>
+            <h2>${publicArchiveUploadEnabled ? "함께한 사진을 직접 올려주세요." : "회원이 올린 지난 기록"}</h2>
+          </div>
+          <p>${publicArchiveUploadEnabled
+            ? "올린 사진과 기록은 관리자 확인 후 아카이브에 공개됩니다."
+            : "새 사진은 운영진이 직접 정리해 올립니다. 공유하고 싶은 사진은 운영진에게 전달해주세요."}</p>
+        </div>
+        <div class="community-archive-board${publicArchiveUploadEnabled ? "" : " is-readonly"}">
+          ${publicArchiveUploadEnabled ? uploadFormHtml : ""}
           <div class="community-archive-list-card">
             <div class="message-list-head">
-              <div><p class="section-kicker">공개된 회원 업로드</p><h3>새로 올라온 기록</h3></div>
+              <div><p class="section-kicker">공개된 회원 업로드</p><h3>지금까지 올라온 기록</h3></div>
               <button class="line-button small" type="button" data-public-archive-refresh>새로고침</button>
             </div>
             <div class="archive-grid community-archive-grid" data-public-archive-list></div>
           </div>
         </div>
-      </section>`
-    );
+      </section>`;
+
+  const ensurePublicArchiveSection = () => {
+    if (!archiveRoot) return null;
+    if (!archiveRoot.querySelector("[data-archive-upload-section]")) {
+      archiveRoot.insertAdjacentHTML("beforeend", publicArchiveSectionHtml());
+      if (publicArchiveUploadEnabled) bindUploadForm();
+    }
+    return archiveRoot.querySelector("[data-public-archive-list]");
+  };
+
+  const loadPublicArchives = async () => {
+    if (!archiveRoot) return;
+    try {
+      const response = await fetch(`${apiBase()}?limit=12`, { headers: { "Accept": "application/json" } });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "회원 업로드를 불러오지 못했습니다.");
+      const items = data.items || [];
+      // 업로드를 받지 않는 동안에는 남아 있는 기록이 있을 때만 섹션을 보여줍니다.
+      if (!publicArchiveUploadEnabled && !items.length) {
+        archiveRoot.querySelector("[data-archive-upload-section]")?.remove();
+        return;
+      }
+      renderPublicArchives(ensurePublicArchiveSection(), items);
+    } catch (error) {
+      if (!publicArchiveUploadEnabled) {
+        // 조회 실패는 관리자 화면에서 확인합니다. 공개 화면에 오류 문구를 남기지 않습니다.
+        return;
+      }
+      const list = ensurePublicArchiveSection();
+      if (list) {
+        list.innerHTML = `<p class="message-empty is-error">${escapeText(error.message || "회원 업로드를 불러오지 못했습니다.")}</p>`;
+      }
+    }
+  };
+
+  function bindUploadForm() {
+    const uploadForm = document.querySelector("[data-archive-upload-form]");
+    const uploadStatus = document.querySelector("[data-archive-upload-status]");
+    uploadForm?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const formData = new FormData(uploadForm);
+      const files = Array.from(uploadForm.querySelector("input[type='file']")?.files || []).slice(0, 4);
+      const button = uploadForm.querySelector("button[type='submit']");
+      if (!files.length) {
+        setText(uploadStatus, "사진을 1장 이상 올려주세요.", true);
+        return;
+      }
+      if (button) button.disabled = true;
+      setText(uploadStatus, "사진을 압축하고 저장하는 중입니다.");
+      try {
+        const images = await Promise.all(files.map(compressImage));
+        const payload = {
+          authorName: String(formData.get("authorName") || ""),
+          date: String(formData.get("date") || ""),
+          title: String(formData.get("title") || ""),
+          location: String(formData.get("location") || ""),
+          people: String(formData.get("people") || ""),
+          summary: String(formData.get("summary") || ""),
+          images
+        };
+        const response = await fetch(apiBase(), {
+          method: "POST",
+          headers: { "Accept": "application/json", "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "아카이브 신청을 저장하지 못했습니다.");
+        uploadForm.reset();
+        setText(uploadStatus, "신청이 접수됐습니다. 관리자 확인 후 공개됩니다.");
+      } catch (error) {
+        setText(uploadStatus, error.message || "아카이브 신청을 저장하지 못했습니다.", true);
+      } finally {
+        if (button) button.disabled = false;
+      }
+    });
   }
 
-  const uploadForm = document.querySelector("[data-archive-upload-form]");
-  const uploadStatus = document.querySelector("[data-archive-upload-status]");
-  uploadForm?.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const formData = new FormData(uploadForm);
-    const files = Array.from(uploadForm.querySelector("input[type='file']")?.files || []).slice(0, 4);
-    const button = uploadForm.querySelector("button[type='submit']");
-    if (!files.length) {
-      setText(uploadStatus, "사진을 1장 이상 올려주세요.", true);
-      return;
-    }
-    button?.setAttribute("disabled", "true");
-    setText(uploadStatus, "사진을 압축하고 저장하는 중입니다.");
-    try {
-      const images = await Promise.all(files.map(compressImage));
-      const payload = {
-        authorName: String(formData.get("authorName") || ""),
-        date: String(formData.get("date") || ""),
-        title: String(formData.get("title") || ""),
-        location: String(formData.get("location") || ""),
-        people: String(formData.get("people") || ""),
-        summary: String(formData.get("summary") || ""),
-        images
-      };
-      const response = await fetch(apiBase(), {
-        method: "POST",
-        headers: { "Accept": "application/json", "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "아카이브 신청을 저장하지 못했습니다.");
-      uploadForm.reset();
-      setText(uploadStatus, "신청이 접수됐습니다. 관리자 확인 후 공개됩니다.");
-    } catch (error) {
-      setText(uploadStatus, error.message || "아카이브 신청을 저장하지 못했습니다.", true);
-    } finally {
-      button?.removeAttribute("disabled");
+  // 섹션이 나중에 삽입되므로 위임으로 새로고침 버튼을 처리합니다.
+  document.addEventListener("click", (event) => {
+    if (event.target instanceof Element && event.target.closest("[data-public-archive-refresh]")) {
+      loadPublicArchives();
     }
   });
-
-  document.querySelector("[data-public-archive-refresh]")?.addEventListener("click", loadPublicArchives);
   loadPublicArchives();
 
   const adminBody = document.querySelector("#messageAdminPanel .admin-panel-body");

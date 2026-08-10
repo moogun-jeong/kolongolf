@@ -1,8 +1,8 @@
 # wrangler 4.x가 Node 22 이상을 요구하므로 nodejs-22를 사용합니다.
 modules = ["nodejs-22", "web", "nix"]
 
-# 빌드 단계가 없는 정적 사이트라 scripts/serve.js로 바로 띄웁니다.
-# Cloudflare Functions(/api)까지 함께 확인하려면 셸에서 `npm run dev`를 실행하세요.
+# Run 버튼은 정적 파일 + /api Functions + 로컬 D1을 함께 띄웁니다.
+# 로컬 D1은 .wrangler/state에만 저장되므로 운영 D1 데이터는 바뀌지 않습니다.
 run = "npm start"
 
 [nix]
@@ -14,3 +14,11 @@ expertMode = true
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[[ports]]
+localPort = 5050
+externalPort = 3002
+
+[[ports]]
+localPort = 5119
+externalPort = 3000

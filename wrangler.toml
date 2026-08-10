@@ -1,6 +1,8 @@
 name = "kolongolf"
 compatibility_date = "2026-05-09"
-pages_build_output_dir = "."
+
+# 저장소 루트가 아니라 allowlist 빌드 결과(`npm run build`)만 배포합니다.
+pages_build_output_dir = "dist"
 
 [[d1_databases]]
 binding = "DB"

@@ -1,0 +1,17 @@
+# Cloudflare Pages 전용 응답 헤더 설정입니다. `dist/` 루트에 복사되어 적용됩니다.
+# GitHub Pages는 이 파일을 읽지 않으므로 그쪽에서는 무시됩니다.
+#
+# frame-ancestors에 Replit 도메인을 넣은 이유: `wrangler pages dev`도 이 파일을 적용하므로
+# 'none'으로 두면 Replit 미리보기 iframe에서 화면이 뜨지 않습니다.
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self' https://replit.com https://*.replit.dev https://*.repl.co; form-action 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://cdn.jsdelivr.net; connect-src 'self' https://kolongolf.pages.dev; frame-src https://challenges.cloudflare.com
+
+/api/*
+  Cache-Control: no-store
+
+/images/*
+  Cache-Control: public, max-age=604800, must-revalidate

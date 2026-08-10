@@ -1,99 +1,37 @@
-﻿const corsHeaders = {
-  "access-control-allow-origin": "*",
-  "access-control-allow-methods": "GET, POST, PATCH, DELETE, OPTIONS",
-  "access-control-allow-headers": "content-type, authorization"
-};
-
-const json = (body, init = {}) =>
-  new Response(JSON.stringify(body), {
-    ...init,
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      "cache-control": "no-store",
-      ...corsHeaders,
-      ...(init.headers || {})
-    }
-  });
+import {
+  createResponder,
+  getClientFingerprint,
+  normalize,
+  preflightResponse,
+  requireAdmin,
+  requireAllowedOrigin,
+  requireDatabase,
+  requireSalt,
+  requireTurnstile
+} from "../../lib/api-security.mjs";
 
 const allowedTypes = new Set(["guestbook", "archive_comment"]);
 const allowedStatuses = new Set(["visible", "hidden"]);
+const rateLimitPerMinute = 5;
 
-const normalize = (value, maxLength) =>
-  String(value || "")
-    .replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, "")
-    .trim()
-    .slice(0, maxLength);
+const selectColumns = `id, type, archive_id AS archiveId, author_name AS authorName, body, status, created_at AS createdAt, updated_at AS updatedAt`;
 
-const hashValue = async (value) => {
-  const input = new TextEncoder().encode(value);
-  const digest = await crypto.subtle.digest("SHA-256", input);
-  return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
-};
-
-const requireDatabase = (env) => {
-  if (!env.DB) throw json({ error: "D1 DB binding(DB) is required." }, { status: 503 });
-  return env.DB;
-};
-
-const getAdminToken = (request) => {
-  const auth = request.headers.get("authorization") || "";
-  const match = auth.match(/^Bearer\s+(.+)$/i);
-  return normalize(match?.[1] || "", 2048);
-};
-
-const requireAdmin = (request, env) => {
-  const configured = normalize(env.ADMIN_TOKEN, 2048);
-  if (!configured) {
-    throw json({ error: "관리자 비밀번호가 아직 설정되지 않았습니다." }, { status: 503 });
-  }
-  if (getAdminToken(request) !== configured) {
-    throw json({ error: "관리자 비밀번호가 올바르지 않습니다." }, { status: 401 });
-  }
-};
-
-const validateTurnstile = async (request, env, token) => {
-  if (!env.TURNSTILE_SECRET_KEY) return;
-  if (!token) {
-    throw json({ error: "Security verification is required." }, { status: 400 });
-  }
-
-  const remoteip = request.headers.get("CF-Connecting-IP") || "";
-  const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      secret: env.TURNSTILE_SECRET_KEY,
-      response: token,
-      remoteip
-    })
-  });
-  const result = await response.json();
-  if (!result.success) {
-    throw json({ error: "Security verification failed. Please try again." }, { status: 400 });
-  }
-};
-
-const checkRateLimit = async (request, env, db) => {
-  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
-  const userAgent = request.headers.get("user-agent") || "unknown";
-  const salt = env.MESSAGE_SALT || "kolongolf";
-  const ipHash = await hashValue(`${salt}:${ip}`);
-  const userAgentHash = await hashValue(`${salt}:${userAgent}`);
+const checkRateLimit = async (request, env, db, json) => {
+  const salt = requireSalt(env, json);
+  const { ipHash, userAgentHash } = await getClientFingerprint(request, salt);
   const recent = await db
     .prepare("SELECT COUNT(*) AS count FROM messages WHERE ip_hash = ? AND created_at > datetime('now', '-1 minute')")
     .bind(ipHash)
     .first();
 
-  if (Number(recent?.count || 0) >= 5) {
-    throw json({ error: "Too many messages. Please try again in a moment." }, { status: 429 });
+  if (Number(recent?.count || 0) >= rateLimitPerMinute) {
+    throw json({ error: "글을 너무 자주 남기고 있습니다. 잠시 후 다시 시도해주세요." }, { status: 429 });
   }
 
   return { ipHash, userAgentHash };
 };
 
-const selectColumns = `id, type, archive_id AS archiveId, author_name AS authorName, body, status, created_at AS createdAt, updated_at AS updatedAt`;
-
-const parseMessageId = async (request) => {
+const parseMessageId = async (request, json) => {
   const url = new URL(request.url);
   const body = await request.json().catch(() => ({}));
   const id = Number(body.id || url.searchParams.get("id"));
@@ -103,13 +41,14 @@ const parseMessageId = async (request) => {
   return { id, body };
 };
 
-export async function onRequestOptions() {
-  return new Response(null, { status: 204, headers: corsHeaders });
+export async function onRequestOptions({ request, env }) {
+  return preflightResponse(request, env);
 }
 
 export async function onRequestGet({ request, env }) {
+  const json = createResponder(request, env);
   try {
-    const db = requireDatabase(env);
+    const db = requireDatabase(env, json);
     const url = new URL(request.url);
     const isAdmin = url.searchParams.get("admin") === "1";
     const requestedType = normalize(url.searchParams.get("type"), 32);
@@ -117,7 +56,7 @@ export async function onRequestGet({ request, env }) {
     const limit = Math.min(Math.max(Number(url.searchParams.get("limit")) || 20, 1), isAdmin ? 200 : 50);
 
     if (isAdmin) {
-      requireAdmin(request, env);
+      requireAdmin(request, env, json);
       const where = [];
       const binds = [];
       if (requestedType) {
@@ -178,8 +117,10 @@ export async function onRequestGet({ request, env }) {
 }
 
 export async function onRequestPost({ request, env }) {
+  const json = createResponder(request, env);
   try {
-    const db = requireDatabase(env);
+    requireAllowedOrigin(request, env, json);
+    const db = requireDatabase(env, json);
     const payload = await request.json().catch(() => ({}));
     const type = normalize(payload.type, 32) || "guestbook";
     const archiveId = normalize(payload.archiveId, 80);
@@ -192,11 +133,11 @@ export async function onRequestPost({ request, env }) {
       return json({ error: "archiveId is required for archive comments." }, { status: 400 });
     }
     if (authorName.length < 1 || body.length < 1) {
-      return json({ error: "Name and message are required." }, { status: 400 });
+      return json({ error: "이름과 내용을 모두 입력해주세요." }, { status: 400 });
     }
 
-    await validateTurnstile(request, env, turnstileToken);
-    const { ipHash, userAgentHash } = await checkRateLimit(request, env, db);
+    await requireTurnstile(request, env, json, turnstileToken);
+    const { ipHash, userAgentHash } = await checkRateLimit(request, env, db, json);
     const storedArchiveId = type === "guestbook" ? null : archiveId;
 
     const result = await db
@@ -226,10 +167,12 @@ export async function onRequestPost({ request, env }) {
 }
 
 export async function onRequestPatch({ request, env }) {
+  const json = createResponder(request, env);
   try {
-    const db = requireDatabase(env);
-    requireAdmin(request, env);
-    const { id, body } = await parseMessageId(request);
+    requireAllowedOrigin(request, env, json);
+    const db = requireDatabase(env, json);
+    requireAdmin(request, env, json);
+    const { id, body } = await parseMessageId(request, json);
     const status = normalize(body.status, 16);
     if (!allowedStatuses.has(status)) {
       return json({ error: "사용할 수 없는 상태입니다." }, { status: 400 });
@@ -248,10 +191,12 @@ export async function onRequestPatch({ request, env }) {
 }
 
 export async function onRequestDelete({ request, env }) {
+  const json = createResponder(request, env);
   try {
-    const db = requireDatabase(env);
-    requireAdmin(request, env);
-    const { id } = await parseMessageId(request);
+    requireAllowedOrigin(request, env, json);
+    const db = requireDatabase(env, json);
+    requireAdmin(request, env, json);
+    const { id } = await parseMessageId(request, json);
 
     const result = await db
       .prepare("DELETE FROM messages WHERE id = ?")

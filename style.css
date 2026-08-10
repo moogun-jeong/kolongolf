@@ -3761,3 +3761,40 @@
     }
   }
 }
+
+@layer components {
+  /* 확정된 다음 일정이 없을 때 보여주는 "다음 모임 준비 중" 카드입니다. */
+  .next-event.is-pending .event-date-lockup strong {
+    font-size: 28px;
+    letter-spacing: 0.06em;
+  }
+
+  .next-event.is-pending .event-date-lockup small {
+    font-size: 11px;
+  }
+
+  /* 상세 패널이 지난 기록인지 다음 일정인지 구분하는 라벨입니다. */
+  .event-detail-panel .section-kicker {
+    margin-bottom: 0;
+  }
+
+  /* API에 연결되지 않았거나 보안 확인 설정 전이면 입력 자체를 막습니다. */
+  .message-form.is-unavailable {
+    opacity: 0.72;
+  }
+
+  .message-form.is-unavailable input,
+  .message-form.is-unavailable textarea,
+  .message-form.is-unavailable button[disabled] {
+    cursor: not-allowed;
+  }
+
+  .message-form.is-unavailable .turnstile-slot {
+    display: none;
+  }
+
+  /* 회원 업로드를 받지 않는 동안에는 목록만 한 단으로 보여줍니다. */
+  .community-archive-board.is-readonly {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

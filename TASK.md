@@ -1,19 +1,32 @@
-# **TASK.md - Replit 실행 환경 복구 및 이미지 최적화**
+# **TASK.md - 홈페이지 우선 개선 범위 정리**
 
-Firebase Studio에서 Replit으로 옮겨오며 끊긴 실행 경로를 복구하고, 아카이브 사진이 원본 그대로 전송되던 문제를 파생본 체계로 정리합니다.
+현재의 소규모 콘텐츠 업데이트 운영 방식에 맞춰 방대한 최종 개선안에서 실제로 먼저 필요한 안전 조치만 분리해 실행 문서로 정리합니다.
 
 ## **1. 현재 진행 중인 작업 (Current Active Task)**
-*   [x] 작업 맥락 학습: `AGENTS.md`, `TASK.md`, `PROJECT_LOG.md` 확인
-*   [x] `.replit`에 `run` 명령 추가하고 `modules`를 `nodejs-22`로 승격
-*   [x] python3 의존 미리보기를 Node 기본 모듈 기반 `scripts/serve.js`로 교체
-*   [x] `scripts/optimize-images.sh`로 `-display`/`-thumb` 파생본 생성 체계 마련
-*   [x] `main.js`/`index.html`이 원본 대신 파생본을 참조하도록 수정
-*   [x] 라이트박스 썸네일이 `-thumb` 파생본을 쓰도록 `thumbSource()` 추가
-*   [x] 파생본으로 대체된 원본 이미지 정리
-*   [x] 캐시 버전과 문서 기록 갱신
-*   [x] 검증 후 커밋 및 GitHub 푸시
+*   [ ] 운영 Cloudflare Pages에 Turnstile sitekey/secret, `MESSAGE_SALT`, 16자 이상 `ADMIN_TOKEN` 설정 (설정 전까지 공개 글쓰기는 fail-closed로 막혀 있음)
+*   [ ] GitHub 저장소 Settings > Pages > Source를 **GitHub Actions**로 변경 (변경 전까지 GitHub Pages는 저장소 전체를 계속 노출)
+*   [ ] Cloudflare Pages 프로젝트 build output directory를 `dist`, build command를 `npm run build`로 변경
+*   [ ] 다음 DB 기능 변경 직전에 D1 migration chain 복구 (`PRIORITY_IMPROVEMENT_PLAN.md` 3장 순서 준수)
 
 ## **2. 완료된 작업 (Completed Tasks)**
+*   [x] **우선 개선 계획 P0/P1 구현**
+    *   `scripts/build.js` allowlist 빌드로 공개 배포 범위를 `dist/`로 제한하고, `firebase-debug.log`를 Git tree에서 제거
+    *   Replit Run을 `wrangler pages dev` full stack으로 전환해 로컬 D1만 쓰도록 분리하고, 프런트엔드는 같은 출처 `/api`를 호출하도록 변경
+    *   댓글 쓰기를 fail-closed로 강화 (Turnstile secret·`MESSAGE_SALT` 필수, Origin 검증, 속도 제한, 관리자 상수 시간 비교와 인증 실패 제한)
+    *   지난 7월 행사를 `다음 모임`으로 안내하지 않도록 `upcomingEvents` 기반으로 전환하고, 확정 일정이 없으면 하단 일정 공지를 표시하지 않음
+    *   사용하지 않는 회원 공개 사진 업로드를 화면·서버 양쪽에서 비활성화 (기존 데이터는 삭제하지 않고 읽기 전용 유지)
+*   [x] **홈페이지 우선 개선 계획 수립**
+    *   정상 운영 중인 화면과 댓글 흐름은 유지하고 공개 배포 경계, Replit 운영 API 오접속, 댓글 봇 방어, 지난 일정만 우선 개선 대상으로 선정
+    *   공개 사진 업로드를 사용하지 않으면 비활성화해 R2 작업을 생략하고, D1 migration은 다음 DB 변경 직전에 복구하도록 범위 축소
+    *   `PRIORITY_IMPROVEMENT_PLAN.md`에 권장 실행 순서, 제외 범위, 최소 완료 기준 기록
+*   [x] **마이그레이션 및 홈페이지 최종 개선안 수립**
+    *   두 리뷰의 핵심 진단을 현재 소스, local 재현, 운영 URL 읽기 응답, npm 보안 상태와 교차 검증
+    *   `#admin` 숨김, 미정 Event 날짜, 원격 preflight 없는 D1 migration 등 위험하거나 과장된 제안을 보정
+    *   `FINAL_IMPROVEMENT_PLAN.md`에 목표 구조, 7개 phase, PR 의존성, 파일별 변경, 롤백, CI 성능 budget, 전체 완료 기준을 문서화
+*   [x] **Firebase Studio → Replit 마이그레이션 종합 진단**
+    *   Replit Run, Cloudflare Pages, GitHub Pages, D1 migration, 프런트엔드 품질을 종합 점검
+    *   공개 파일 노출, 운영 API 오접속, 로컬 서버 종료, D1 schema 불일치 등 우선 조치 항목 재현
+    *   `REPLIT_MIGRATION_AUDIT.md`에 P0/P1/P2 개선안과 단계별 로드맵 기록
 *   [x] **아카이브 다중 사진 표시 강화**
     *   아카이브 대표 이미지 위에 사진 수 배지와 갤러리 안내 패널 추가
     *   모바일에서도 사진 수와 터치 유도가 잘 보이도록 스타일 조정
@@ -83,4 +96,4 @@ Firebase Studio에서 Replit으로 옮겨오며 끊긴 실행 경로를 복구�
 *   스크롤 깊이에 따른 배경 컬러 변이(Transition) 효과
 
 ---
-*마지막 업데이트: 2026-07-06*
+*마지막 업데이트: 2026-08-10*

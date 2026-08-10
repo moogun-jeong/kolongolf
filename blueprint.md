@@ -1,5 +1,50 @@
 # 프로젝트 개요 및 고도화 기록
 
+## **현재 우선 개선 계획 (2026-08-10)**
+
+현재처럼 관리자가 문구·회원·일정·사진을 직접 갱신하는 운영 방식에서는 전체 아키텍처를 즉시 바꾸지 않습니다. 당장 실행할 범위와 장기 참고 범위를 [`PRIORITY_IMPROVEMENT_PLAN.md`](./PRIORITY_IMPROVEMENT_PLAN.md)로 분리했습니다.
+
+1. **공개 경계**: 저장소 루트 대신 공개 파일 allowlist로 만든 `dist/`만 배포. — **적용 완료** (`scripts/build.js`, `wrangler.toml`, `.github/workflows/pages.yml`)
+2. **환경 분리**: Replit의 댓글 테스트가 운영 API와 D1을 변경하지 않도록 local full stack으로 전환. — **적용 완료** (`scripts/dev.js`, 같은 출처 `/api`)
+3. **댓글 안전화**: Turnstile fail-closed, Origin 검증, 속도 제한과 운영 secret 적용. — **코드 적용 완료** (`lib/api-security.mjs`), 운영 환경 변수 설정은 남은 작업
+4. **콘텐츠 정리**: 지난 7월 행사를 다음 일정처럼 표시하지 않고 확정 일정이 없으면 `다음 모임 준비 중`으로 안내. — **적용 완료** (`upcomingEvents` / `getNextEvent()`)
+5. **범위 축소**: 공개 회원 사진 업로드를 사용하지 않으면 비활성화하고 R2를 생략. D1 migration은 다음 DB 변경 전에 복구. — **업로드 비활성화 완료**, D1 migration은 예정대로 보류
+
+`FINAL_IMPROVEMENT_PLAN.md`의 프리렌더, 전면 모듈화, R2, 전체 CI는 필요 조건이 생길 때 해당 항목만 선택적으로 적용하는 장기 참고안으로 둡니다.
+
+### 남은 운영 조치
+
+코드로 처리할 수 없는 원격 설정입니다. 완료 전까지 공개 글쓰기는 fail-closed로 막혀 있고, GitHub Pages는 저장소 전체를 계속 노출합니다.
+
+*   Cloudflare Pages 환경 변수: `TURNSTILE_SECRET_KEY`, `MESSAGE_SALT`, 16자 이상 `ADMIN_TOKEN`
+*   `index.html`의 `cf-turnstile-sitekey` 메타 값 입력
+*   Cloudflare Pages build output directory를 `dist`, build command를 `npm run build`로 변경
+*   GitHub 저장소 Settings > Pages > Source를 **GitHub Actions**로 변경
+
+## **현재 최종 개선 실행 계획 (2026-08-10)**
+
+`HOMEPAGE_REVIEW.md`와 `REPLIT_MIGRATION_AUDIT.md`를 현재 코드·설정·배포 응답과 다시 대조해 [`FINAL_IMPROVEMENT_PLAN.md`](./FINAL_IMPROVEMENT_PLAN.md)로 통합했습니다. 이 문서는 장기 목표 구조와 상세 검증 기준으로 유지하며, 현재 작업 우선순위는 위의 축소 계획을 기준으로 합니다.
+
+1. **Phase 0 — 공개 경계**: `dist/` allowlist 배포, 루트 서비스 중단, Replit Run의 local D1 전체 스택 전환을 첫 Release Blocker로 처리.
+2. **Phase 1 — D1 재현성**: 운영 schema/journal/export preflight 후 forward migration을 작성하고 `migrations/`를 유일한 schema 정의로 통일.
+3. **Phase 2 — 보안/개인정보**: same-origin API, Turnstile fail-closed, Origin/rate limit, Cloudflare Access 관리 경계, 공개 회원 정보 최소화 적용.
+4. **Phase 3~4 — 콘텐츠/접근성**: 회원·행사 ID 기반 단일 데이터, 정적 프리렌더, ES Modules/Custom Elements, native dialog, 정지 가능 carousel로 재구성.
+5. **Phase 5~6 — 저장/품질**: private R2 + D1 metadata, 반응형 media, self-host font/emoji, batch API, SEO, Playwright/API/Lighthouse/secret scan CI 적용.
+
+최종 기본 운영 모델은 **Replit 개발 + GitHub 소스/CI + Cloudflare 단일 운영 + D1/R2**입니다. UI 톤은 유지하고 전면 리디자인은 범위에 포함하지 않습니다.
+
+## **현재 진단 및 개선 계획 (2026-08-09)**
+
+Firebase Studio에서 Replit으로 주 개발 환경을 옮기는 과정에서 실행·배포·데이터·보안·성능·접근성을 종합 점검했습니다. 상세 근거와 실행 로드맵은 `REPLIT_MIGRATION_AUDIT.md`에 기록했습니다.
+
+1.  **최우선 공개 경계 정리**: 저장소 루트 배포 때문에 Firebase 디버그 로그와 개발 설정이 현재 공개되는 문제를 확인. 공개 허용 파일만 담는 `dist/` 산출물로 전환 필요.
+2.  **Replit 로컬/운영 분리**: 기본 Run의 정적 서버가 운영 Cloudflare API를 호출하는 문제를 확인. Run 버튼을 local D1을 포함한 Wrangler 전체 스택으로 통일 필요.
+3.  **D1 재현성 복구**: `migrations/0001_messages.sql`과 `sql/local-schema.sql`의 id/status/date schema가 달라 빈 DB 재구축 시 현재 API INSERT가 실패함. 보정 migration과 단일 migration chain 필요.
+4.  **운영 안전성 개선**: Turnstile·Origin 정책·관리자 보호·R2 사진 저장·개인정보 보존 정책을 첫 안정화 범위로 제안.
+5.  **체감 품질 개선**: 모바일 Lighthouse Performance 58, 초기 API 10회, 모바일 전체 길이 약 17,640px를 기준으로 폰트 축소, 댓글 count batch, 회원/아카이브 더 보기, 모달 포커스 수정을 제안.
+
+권장 운영 형태는 **Replit 주 개발 환경 + GitHub 소스/CI + Cloudflare Pages 단일 운영 + D1/R2**입니다. GitHub Pages는 중단하거나 대표 도메인으로 연결해 공개 프런트엔드가 둘로 갈라지지 않도록 정리합니다.
+
 ## **프로젝트 목적**
 코오롱 스크린 골프 동호회의 정기 라운드 공지, 회원 소개, 지난 모임 기록을 관리하는 사내 동호회 홈페이지입니다. 현재 버전은 `home_redisign.md`의 프리미엄 동호회형 설계를 반영해 딥그린·아이보리·골드 기반의 클럽형 홈 경험을 제공하며, inline SVG 코스 장식과 회원별 동물 이모티콘으로 화면 밀도를 보강합니다.
 

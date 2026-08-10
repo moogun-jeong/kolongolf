@@ -1,53 +1,25 @@
-﻿const corsHeaders = {
-  "access-control-allow-origin": "*",
-  "access-control-allow-methods": "GET, POST, PATCH, DELETE, OPTIONS",
-  "access-control-allow-headers": "content-type, authorization"
-};
-
-const json = (body, init = {}) =>
-  new Response(JSON.stringify(body), {
-    ...init,
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      "cache-control": "no-store",
-      ...corsHeaders,
-      ...(init.headers || {})
-    }
-  });
+import {
+  createResponder,
+  getClientFingerprint,
+  normalize,
+  preflightResponse,
+  requireAdmin,
+  requireAllowedOrigin,
+  requireDatabase,
+  requireSalt,
+  requireTurnstile
+} from "../../lib/api-security.mjs";
 
 const allowedStatuses = new Set(["pending", "visible", "hidden"]);
+const imageStatuses = new Set(["visible", "hidden"]);
 const maxImages = 4;
 const maxImageLength = 380000;
 const maxTotalImageLength = 1200000;
 
-const normalize = (value, maxLength) =>
-  String(value || "")
-    .replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/g, "")
-    .trim()
-    .slice(0, maxLength);
-
-const hashValue = async (value) => {
-  const input = new TextEncoder().encode(value);
-  const digest = await crypto.subtle.digest("SHA-256", input);
-  return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
-};
-
-const requireDatabase = (env) => {
-  if (!env.DB) throw json({ error: "D1 DB binding(DB) is required." }, { status: 503 });
-  return env.DB;
-};
-
-const getAdminToken = (request) => {
-  const auth = request.headers.get("authorization") || "";
-  const match = auth.match(/^Bearer\s+(.+)$/i);
-  return normalize(match?.[1] || "", 2048);
-};
-
-const requireAdmin = (request, env) => {
-  const configured = normalize(env.ADMIN_TOKEN, 2048);
-  if (!configured) throw json({ error: "관리자 비밀번호가 아직 설정되지 않았습니다." }, { status: 503 });
-  if (getAdminToken(request) !== configured) throw json({ error: "관리자 비밀번호가 올바르지 않습니다." }, { status: 401 });
-};
+// 회원 공개 사진 업로드는 기본으로 꺼져 있습니다.
+// 관리자가 사진을 직접 추가·배포하는 현재 운영 방식이 기본값입니다.
+// 다시 열려면 Pages 환경 변수에 ENABLE_ARCHIVE_UPLOADS = "true"를 설정합니다.
+const isUploadEnabled = (env) => String(env?.ENABLE_ARCHIVE_UPLOADS || "").toLowerCase() === "true";
 
 const ensureTables = async (db) => {
   await db.batch([
@@ -81,12 +53,9 @@ const ensureTables = async (db) => {
   ]);
 };
 
-const checkRateLimit = async (request, env, db) => {
-  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
-  const userAgent = request.headers.get("user-agent") || "unknown";
-  const salt = env.MESSAGE_SALT || "kolongolf";
-  const ipHash = await hashValue(`${salt}:archive:${ip}`);
-  const userAgentHash = await hashValue(`${salt}:${userAgent}`);
+const checkRateLimit = async (request, env, db, json) => {
+  const salt = requireSalt(env, json);
+  const { ipHash, userAgentHash } = await getClientFingerprint(request, salt, "archive");
   const recent = await db
     .prepare("SELECT COUNT(*) AS count FROM archive_posts WHERE ip_hash = ? AND created_at > datetime('now', '-10 minutes')")
     .bind(ipHash)
@@ -99,7 +68,7 @@ const checkRateLimit = async (request, env, db) => {
   return { ipHash, userAgentHash };
 };
 
-const validateImages = (images) => {
+const validateImages = (images, json) => {
   if (!Array.isArray(images) || images.length < 1) {
     throw json({ error: "사진을 1장 이상 올려주세요." }, { status: 400 });
   }
@@ -125,8 +94,8 @@ const validateImages = (images) => {
   });
 };
 
-const loadImagesForPosts = async (db, posts, includeHidden = false) => {
-  const items = await Promise.all(posts.map(async (post) => {
+const loadImagesForPosts = async (db, posts, includeHidden = false) =>
+  Promise.all(posts.map(async (post) => {
     const images = await db
       .prepare(`SELECT id, image_data_url AS dataUrl, alt, sort_order AS sortOrder, status
                 FROM archive_post_images
@@ -136,22 +105,21 @@ const loadImagesForPosts = async (db, posts, includeHidden = false) => {
       .all();
     return { ...post, images: images.results || [] };
   }));
-  return items;
-};
 
-export async function onRequestOptions() {
-  return new Response(null, { status: 204, headers: corsHeaders });
+export async function onRequestOptions({ request, env }) {
+  return preflightResponse(request, env);
 }
 
 export async function onRequestGet({ request, env }) {
+  const json = createResponder(request, env);
   try {
-    const db = requireDatabase(env);
+    const db = requireDatabase(env, json);
     await ensureTables(db);
     const url = new URL(request.url);
     const isAdmin = url.searchParams.get("admin") === "1";
     const limit = Math.min(Math.max(Number(url.searchParams.get("limit")) || 12, 1), isAdmin ? 200 : 24);
 
-    if (isAdmin) requireAdmin(request, env);
+    if (isAdmin) requireAdmin(request, env, json);
 
     const result = isAdmin
       ? await db
@@ -171,7 +139,7 @@ export async function onRequestGet({ request, env }) {
           .all();
 
     const items = await loadImagesForPosts(db, result.results || [], isAdmin);
-    return json({ items });
+    return json({ items, uploadEnabled: isUploadEnabled(env) });
   } catch (error) {
     if (error instanceof Response) return error;
     return json({ error: "아카이브를 불러오지 못했습니다." }, { status: 500 });
@@ -179,8 +147,17 @@ export async function onRequestGet({ request, env }) {
 }
 
 export async function onRequestPost({ request, env }) {
+  const json = createResponder(request, env);
   try {
-    const db = requireDatabase(env);
+    if (!isUploadEnabled(env)) {
+      return json(
+        { error: "회원 사진 업로드는 현재 받지 않습니다. 사진은 운영진에게 전달해주세요." },
+        { status: 403 }
+      );
+    }
+
+    requireAllowedOrigin(request, env, json);
+    const db = requireDatabase(env, json);
     await ensureTables(db);
     const payload = await request.json().catch(() => ({}));
     const title = normalize(payload.title, 80);
@@ -190,13 +167,16 @@ export async function onRequestPost({ request, env }) {
     const people = normalize(payload.people, 40);
     const summary = normalize(payload.summary, 500);
     const authorName = normalize(payload.authorName, 24);
-    const images = validateImages(payload.images);
+    const turnstileToken = normalize(payload.turnstileToken, 2048);
 
     if (!title || !date || !location || !summary || !authorName) {
       return json({ error: "이름, 날짜, 제목, 장소, 내용을 모두 입력해주세요." }, { status: 400 });
     }
 
-    const { ipHash, userAgentHash } = await checkRateLimit(request, env, db);
+    const images = validateImages(payload.images, json);
+    await requireTurnstile(request, env, json, turnstileToken);
+    const { ipHash, userAgentHash } = await checkRateLimit(request, env, db, json);
+
     const postResult = await db
       .prepare(`INSERT INTO archive_posts (
         title, date, label, location, people, summary, author_name, status, ip_hash, user_agent_hash, created_at, updated_at
@@ -222,18 +202,21 @@ export async function onRequestPost({ request, env }) {
 }
 
 export async function onRequestPatch({ request, env }) {
+  const json = createResponder(request, env);
   try {
-    const db = requireDatabase(env);
+    requireAllowedOrigin(request, env, json);
+    const db = requireDatabase(env, json);
     await ensureTables(db);
-    requireAdmin(request, env);
+    requireAdmin(request, env, json);
     const payload = await request.json().catch(() => ({}));
     const imageId = Number(payload.imageId);
     const id = Number(payload.id);
     const status = normalize(payload.status, 16);
-    if (!allowedStatuses.has(status) && status !== "visible" && status !== "hidden") return json({ error: "사용할 수 없는 상태입니다." }, { status: 400 });
 
     if (Number.isInteger(imageId) && imageId > 0) {
-      if (!new Set(["visible", "hidden"]).has(status)) return json({ error: "사진 상태는 공개 또는 숨김만 가능합니다." }, { status: 400 });
+      if (!imageStatuses.has(status)) {
+        return json({ error: "사진 상태는 공개 또는 숨김만 가능합니다." }, { status: 400 });
+      }
       const result = await db
         .prepare("UPDATE archive_post_images SET status = ? WHERE id = ?")
         .bind(status, imageId)
@@ -241,6 +224,7 @@ export async function onRequestPatch({ request, env }) {
       return json({ ok: true, changed: result.meta?.changes || 0 });
     }
 
+    if (!allowedStatuses.has(status)) return json({ error: "사용할 수 없는 상태입니다." }, { status: 400 });
     if (!Number.isInteger(id) || id < 1) return json({ error: "아카이브를 찾을 수 없습니다." }, { status: 400 });
     const result = await db
       .prepare("UPDATE archive_posts SET status = ?, updated_at = datetime('now') WHERE id = ?")
@@ -254,10 +238,12 @@ export async function onRequestPatch({ request, env }) {
 }
 
 export async function onRequestDelete({ request, env }) {
+  const json = createResponder(request, env);
   try {
-    const db = requireDatabase(env);
+    requireAllowedOrigin(request, env, json);
+    const db = requireDatabase(env, json);
     await ensureTables(db);
-    requireAdmin(request, env);
+    requireAdmin(request, env, json);
     const payload = await request.json().catch(() => ({}));
     const imageId = Number(payload.imageId);
     if (Number.isInteger(imageId) && imageId > 0) {
@@ -281,4 +267,3 @@ export async function onRequestDelete({ request, env }) {
     return json({ error: "아카이브를 삭제하지 못했습니다." }, { status: 500 });
   }
 }
-

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://moogun-jeong.github.io/kolongolf/sitemap.xml
