@@ -6,10 +6,14 @@
 
 > 2026-08-10 기준. GitHub Pages 쪽은 끝났고 **Cloudflare Pages만 남았습니다.**
 > 아래 1-A → 1-B 순서대로 하면 됩니다. 1-A가 보안상 급한 항목입니다.
+> 사용자 승인에 따라 오늘 1-A/1-B의 운영 반영과 검증, 회원 이름 표기 확인,
+> Wrangler 보안 업데이트까지 연속 수행합니다. 운영 비밀값은 저장소나 로그에 남기지 않습니다.
 
 *   [ ] **1-A. Cloudflare Pages를 `dist/` 전용 배포로 전환** (급함 — 현재 저장소 전체 노출 중)
 *   [ ] **1-B. Cloudflare Pages 환경 변수 설정** (`MESSAGE_SALT`, `ADMIN_TOKEN`, Turnstile) — 설정 전까지 공개 글쓰기 차단 상태
 *   [ ] 1-C. 다음 DB 기능 변경 **직전에** D1 migration chain 복구 (`PRIORITY_IMPROVEMENT_PLAN.md` 3장 순서 준수. 지금 당장 할 필요 없음)
+*   [x] **1-D. `하선재`/`허선재` 표기를 회원명부·이전 행사 기록 기준인 `하선재`로 통일**
+*   [x] **1-E. Wrangler 4.120.0 갱신, `npm audit` 0건, 로컬 full-stack·브라우저 재검증 완료**
 
 ---
 
