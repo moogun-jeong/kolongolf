@@ -297,6 +297,15 @@ const archives = [
 // 라이트박스 썸네일은 68x48로만 보이므로 -display 대신 짝이 되는 -thumb 파생본을 씁니다.
 const thumbSource = (source) => source.replace(/-display\.(jpe?g|png)$/i, "-thumb.$1");
 
+// 카드 썸네일에 1800px 원본(-display)을 그대로 내려주고 있었습니다.
+// 짝이 되는 -thumb(400px)이 이미 있으므로 srcset으로 연결해 브라우저가
+// 표시 크기에 맞는 쪽을 고르게 합니다. 두 자산 합계가 6MB 대 440KB입니다.
+const responsivePhotoAttrs = (source, sizes) => {
+  const thumb = thumbSource(source);
+  if (thumb === source) return "";
+  return ` srcset="${thumb} 400w, ${source} 1800w" sizes="${sizes}"`;
+};
+
 const heroSlides = [
   {
     image: "images/archive-2026-04-2-display.jpg",
@@ -517,7 +526,7 @@ class KolonHero extends HTMLElement {
           </div>
           <figure class="hero-media" data-reveal>
             <span class="hero-photo-tag" aria-hidden="true">Club Round</span>
-            <img id="heroImage" src="${heroSlides[0].image}" alt="코오롱 골프 동호회 대표 라운딩 사진" fetchpriority="high" decoding="async" />
+            <img id="heroImage" src="${heroSlides[0].image}" alt="코오롱 골프 동호회 대표 라운딩 사진" width="620" height="470" fetchpriority="high" decoding="async" />
             <figcaption>
               <span id="heroDate">${heroSlides[0].date}</span>
               <strong id="heroCaption">${heroSlides[0].caption}</strong>
@@ -595,7 +604,7 @@ class KolonImageStatement extends HTMLElement {
     this.dataset.ready = "true";
     this.innerHTML = `
       <section class="image-statement" aria-label="동호회 활동 사진">
-        <img src="images/archive-2026-04-1-display.jpg" alt="코오롱 스크린 골프 동호회 4월 필드 행사 중식 모임 사진" loading="lazy" decoding="async" />
+        <img src="images/archive-2026-04-1-display.jpg" alt="코오롱 스크린 골프 동호회 4월 필드 행사 중식 모임 사진" width="1800" height="1350" loading="lazy" decoding="async" />
         <div class="statement-copy" data-reveal>
           <p class="section-kicker">Round Memory</p>
           <h2>필드에서 시작한 라운드는 함께 모인 자리까지 오래 이어집니다.</h2>
@@ -827,7 +836,7 @@ class KolonArchive extends HTMLElement {
         return `
           <article class="archive-card" data-reveal>
             <button class="archive-photo ${photoCount > 1 ? "is-multi-gallery" : ""}" type="button" data-archive-index="${archiveIndex}" aria-label="${archive.title} 사진 ${photoCount}장 보기">
-              <img src="${archive.images[0]}" alt="${archive.title} 대표 사진" loading="lazy" decoding="async" />
+              <img src="${archive.images[0]}"${responsivePhotoAttrs(archive.images[0], "(max-width: 760px) 92vw, (max-width: 1100px) 46vw, 360px")} alt="${archive.title} 대표 사진" width="360" height="202" loading="lazy" decoding="async" />
               ${renderPhotoCue(archive)}
             </button>
             <div class="archive-body">
@@ -856,7 +865,7 @@ class KolonArchive extends HTMLElement {
           </div>
           <article class="featured-round" data-reveal>
             <button class="featured-photo ${featured.images?.length > 1 ? "is-multi-gallery" : ""}" type="button" data-archive-index="0" aria-label="${featured.title} 사진 ${featured.images?.length || 1}장 보기">
-              <img src="${featured.images[0]}" alt="${featured.title} 대표 사진" loading="lazy" decoding="async" />
+              <img src="${featured.images[0]}"${responsivePhotoAttrs(featured.images[0], "(max-width: 760px) 92vw, 1120px")} alt="${featured.title} 대표 사진" width="1120" height="430" loading="lazy" decoding="async" />
               ${renderPhotoCue(featured)}
             </button>
             <div class="featured-body">
@@ -936,7 +945,7 @@ class KolonModalStack extends HTMLElement {
     if (this.dataset.ready) return;
     this.dataset.ready = "true";
     this.innerHTML = `
-      <div class="modal" id="rsvpModal" aria-hidden="true">
+      <dialog class="modal" id="rsvpModal">
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="rsvpTitle">
           <div class="modal-head">
             <div>
@@ -955,9 +964,9 @@ class KolonModalStack extends HTMLElement {
             <p>퍼팅 가이드와 퍼팅 방향키는 사용할 수 없는 조건으로 진행되었습니다.</p>
           </div>
         </div>
-      </div>
+      </dialog>
 
-      <div class="modal" id="joinModal" aria-hidden="true">
+      <dialog class="modal" id="joinModal">
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="joinModalTitle">
           <div class="modal-head">
             <div>
@@ -972,9 +981,9 @@ class KolonModalStack extends HTMLElement {
             <p>${contactLine("총무")}</p>
           </div>
         </div>
-      </div>
+      </dialog>
 
-      <div class="modal" id="locationModal" aria-hidden="true">
+      <dialog class="modal" id="locationModal">
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="locationTitle">
           <div class="modal-head">
             <div>
@@ -989,9 +998,9 @@ class KolonModalStack extends HTMLElement {
             <p>참가: 코오롱인더스트리 A팀(301호), B팀(302호)</p>
           </div>
         </div>
-      </div>
+      </dialog>
 
-      <div class="modal lightbox" id="photoLightbox" aria-hidden="true">
+      <dialog class="modal lightbox" id="photoLightbox">
         <div class="modal-card lightbox-card" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
           <div class="modal-head">
             <div>
@@ -1019,7 +1028,7 @@ class KolonModalStack extends HTMLElement {
             ${messageFormTemplate("archive_comment", "이 라운드의 기억을 남겨주세요.", "댓글 남기기")}
           </div>
         </div>
-      </div>
+      </dialog>
     `;
   }
 }
@@ -1179,7 +1188,16 @@ const initSmoothScroll = () => {
   });
 };
 
+// 스크롤 기반 애니메이션을 지원하면 리빌과 진행바를 CSS가 전부 처리합니다.
+// Firefox처럼 미지원인 브라우저에서만 아래 JS 경로가 동작합니다.
+const supportsScrollDrivenAnimation = () =>
+  typeof CSS !== "undefined" &&
+  typeof CSS.supports === "function" &&
+  CSS.supports("animation-timeline", "view()");
+
 const initReveal = () => {
+  if (supportsScrollDrivenAnimation()) return;
+
   const revealTargets = Array.from(document.querySelectorAll("[data-reveal]"));
   revealTargets.forEach((target, index) => {
     target.classList.add("reveal-ready");
@@ -1209,15 +1227,29 @@ const initScrollProgress = () => {
   const progress = document.getElementById("scrollProgress");
   if (!progress) return;
 
+  // 지원 브라우저에서는 animation-timeline: scroll()이 처리하므로
+  // 스크롤 리스너를 아예 붙이지 않습니다. 예전에는 스크롤마다
+  // scrollHeight를 읽어 강제 리플로우가 발생했습니다.
+  if (supportsScrollDrivenAnimation()) return;
+
+  let ticking = false;
   const update = () => {
+    ticking = false;
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     const value = maxScroll > 0 ? window.scrollY / maxScroll : 0;
     progress.style.setProperty("--progress", value.toFixed(4));
   };
 
+  // 폴백 경로에서도 레이아웃 읽기를 프레임당 한 번으로 묶습니다.
+  const schedule = () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(update);
+  };
+
   update();
-  window.addEventListener("scroll", update, { passive: true });
-  window.addEventListener("resize", update);
+  window.addEventListener("scroll", schedule, { passive: true });
+  window.addEventListener("resize", schedule);
 };
 
 const initMemberSearch = () => {
@@ -1251,22 +1283,42 @@ const initHeroSlider = () => {
   let index = 0;
   let timer = null;
 
+  const apply = (slide) => {
+    if (image) image.src = slide.image;
+    if (date) date.textContent = slide.date;
+    if (caption) caption.textContent = slide.caption;
+  };
+
   const render = (nextIndex) => {
     index = (nextIndex + heroSlides.length) % heroSlides.length;
     const slide = heroSlides[index];
-    if (image) {
-      if (prefersReducedMotion) {
-        image.src = slide.image;
-      } else {
-        image.classList.add("is-switching");
-        window.setTimeout(() => {
-          image.src = slide.image;
-          window.requestAnimationFrame(() => image.classList.remove("is-switching"));
-        }, 120);
-      }
+
+    if (prefersReducedMotion || !image) {
+      apply(slide);
+      return;
     }
-    if (date) date.textContent = slide.date;
-    if (caption) caption.textContent = slide.caption;
+
+    // 뷰 트랜지션을 지원하면 브라우저가 교체 시점을 맞춰줍니다.
+    // 예전에는 120ms 타이머로 투명도를 껐다 켰는데, 타이머와 실제
+    // 디코딩 시점이 어긋나면 느린 회선에서 빈 프레임이 보였습니다.
+    if (typeof document.startViewTransition === "function") {
+      image.style.viewTransitionName = "hero-photo";
+      const transition = document.startViewTransition(() => apply(slide));
+      transition.finished.finally(() => {
+        image.style.viewTransitionName = "";
+      });
+      return;
+    }
+
+    // 폴백: 새 이미지를 먼저 디코딩한 뒤 교체해 빈 프레임을 없앱니다.
+    image.classList.add("is-switching");
+    const preload = new Image();
+    preload.src = slide.image;
+    const swap = () => {
+      apply(slide);
+      window.requestAnimationFrame(() => image.classList.remove("is-switching"));
+    };
+    (preload.decode ? preload.decode().catch(() => {}) : Promise.resolve()).then(swap);
   };
 
   const restart = () => {
@@ -1285,31 +1337,40 @@ const initHeroSlider = () => {
   restart();
 };
 
+// 모달은 네이티브 <dialog>로 열고 닫습니다. showModal()을 쓰면
+// 포커스 트랩, 배경 비활성화(inert), ESC 닫기, 최상위 레이어를
+// 브라우저가 전부 처리합니다. 예전에는 div에 클래스만 토글해서
+// 포커스가 배경으로 새어 나가고 배경이 계속 조작 가능했습니다.
 const initModals = () => {
-  const modals = Array.from(document.querySelectorAll(".modal"));
-  let lastFocusedElement = null;
+  const modals = Array.from(document.querySelectorAll("dialog.modal"));
 
   const syncBody = () => {
-    document.body.classList.toggle("modal-open", modals.some((modal) => modal.classList.contains("open")));
+    document.body.classList.toggle("modal-open", modals.some((modal) => modal.open));
   };
 
   const closeModal = (modal) => {
-    if (!modal) return;
-    modal.classList.remove("open");
-    modal.setAttribute("aria-hidden", "true");
-    syncBody();
-    if (lastFocusedElement instanceof HTMLElement) lastFocusedElement.focus();
+    if (!(modal instanceof HTMLDialogElement) || !modal.open) return;
+    modal.close();
   };
 
   const openModal = (modalId) => {
     const modal = document.getElementById(modalId);
-    if (!modal) return;
-    lastFocusedElement = document.activeElement;
-    modal.classList.add("open");
-    modal.setAttribute("aria-hidden", "false");
+    if (!(modal instanceof HTMLDialogElement) || modal.open) return;
+    modal.showModal();
     syncBody();
-    modal.querySelector("button, a, input, [tabindex]:not([tabindex='-1'])")?.focus();
   };
+
+  // dialog는 ESC로 닫힐 때도 close 이벤트를 내므로 스크롤 잠금 해제를
+  // 여기 한곳에서만 처리하면 됩니다.
+  modals.forEach((modal) => {
+    modal.addEventListener("close", syncBody);
+
+    // 배경(::backdrop) 클릭으로 닫기. dialog 자신이 클릭 대상이면
+    // 카드 바깥을 누른 것입니다.
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) closeModal(modal);
+    });
+  });
 
   document.addEventListener("click", (event) => {
     const target = event.target;
@@ -1325,16 +1386,8 @@ const initModals = () => {
     const closeTrigger = target.closest("[data-close-modal]");
     if (closeTrigger) {
       event.preventDefault();
-      closeModal(closeTrigger.closest(".modal"));
-      return;
+      closeModal(closeTrigger.closest("dialog.modal"));
     }
-
-    if (target.classList.contains("modal")) closeModal(target);
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape") return;
-    modals.forEach(closeModal);
   });
 
   return { openModal, closeModal };
@@ -1384,10 +1437,35 @@ const initLightbox = () => {
 
     render(0);
     document.dispatchEvent(new CustomEvent("archive-comment-scope", { detail: { archive: currentArchive } }));
-    lightbox.classList.add("open");
-    lightbox.setAttribute("aria-hidden", "false");
+    if (!lightbox.open) lightbox.showModal();
     document.body.classList.add("modal-open");
-    lightbox.querySelector("[data-close-modal]")?.focus();
+  };
+
+  // 카드 썸네일이 라이트박스 자리로 이어지며 확대되게 합니다.
+  // view-transition-name은 문서 안에서 유일해야 하므로 전환 직전에만
+  // 붙였다가 끝나면 바로 떼어냅니다.
+  const openWithTransition = (archiveIndex, trigger) => {
+    const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+    const thumb = trigger?.querySelector("img");
+
+    if (prefersReducedMotion || !thumb || typeof document.startViewTransition !== "function") {
+      open(archiveIndex);
+      return;
+    }
+
+    // 이름은 옛 스냅숏에서는 썸네일에만, 새 스냅숏에서는 라이트박스
+    // 이미지에만 붙어야 합니다. 교체 콜백 안에서 넘겨줍니다.
+    thumb.style.viewTransitionName = "archive-photo";
+    const transition = document.startViewTransition(() => {
+      thumb.style.viewTransitionName = "";
+      open(archiveIndex);
+      if (image) image.style.viewTransitionName = "archive-photo";
+    });
+
+    transition.finished.finally(() => {
+      thumb.style.viewTransitionName = "";
+      if (image) image.style.viewTransitionName = "";
+    });
   };
 
   document.addEventListener("click", (event) => {
@@ -1396,16 +1474,24 @@ const initLightbox = () => {
     const trigger = target.closest("[data-archive-index]");
     if (!trigger) return;
     event.preventDefault();
-    open(Number(trigger.getAttribute("data-archive-index")));
+    openWithTransition(Number(trigger.getAttribute("data-archive-index")), trigger);
   });
 
   prev?.addEventListener("click", () => render(index - 1));
   next?.addEventListener("click", () => render(index + 1));
 
   document.addEventListener("keydown", (event) => {
-    if (!lightbox?.classList.contains("open")) return;
+    if (!lightbox?.open) return;
+    // 댓글을 입력하는 중에는 좌우 방향키가 사진을 넘기지 않아야 합니다.
+    const active = document.activeElement;
+    if (active instanceof HTMLInputElement || active instanceof HTMLTextAreaElement) return;
     if (event.key === "ArrowLeft") render(index - 1);
     if (event.key === "ArrowRight") render(index + 1);
+  });
+
+  // ESC로 닫힐 때도 스크롤 잠금이 풀려야 합니다.
+  lightbox?.addEventListener("close", () => {
+    document.body.classList.remove("modal-open");
   });
 };
 
@@ -1800,7 +1886,7 @@ const initMessageAdmin = () => {
 
   document.body.insertAdjacentHTML(
     "beforeend",
-    `<div class="modal admin-panel-modal" id="messageAdminPanel" aria-hidden="true">
+    `<dialog class="modal admin-panel-modal" id="messageAdminPanel">
       <section class="modal-card admin-panel-card" role="dialog" aria-modal="true" aria-labelledby="adminPanelTitle">
         <div class="modal-head">
           <div>
@@ -1833,7 +1919,7 @@ const initMessageAdmin = () => {
           <div class="admin-message-list" data-admin-list></div>
         </div>
       </section>
-    </div>`
+    </dialog>`
   );
 
   const modal = document.getElementById("messageAdminPanel");
@@ -1853,8 +1939,7 @@ const initMessageAdmin = () => {
   };
 
   const open = () => {
-    modal?.classList.add("open");
-    modal?.setAttribute("aria-hidden", "false");
+    if (modal instanceof HTMLDialogElement && !modal.open) modal.showModal();
     document.body.classList.add("modal-open");
     if (tokenInput instanceof HTMLInputElement) {
       tokenInput.value = window.sessionStorage.getItem(storageKey) || "";
@@ -1863,10 +1948,14 @@ const initMessageAdmin = () => {
   };
 
   const close = () => {
-    modal?.classList.remove("open");
-    modal?.setAttribute("aria-hidden", "true");
+    if (modal instanceof HTMLDialogElement && modal.open) modal.close();
     document.body.classList.remove("modal-open");
   };
+
+  // ESC로 닫는 경로에서도 스크롤 잠금이 풀리게 합니다.
+  modal?.addEventListener("close", () => {
+    document.body.classList.remove("modal-open");
+  });
 
   const getToken = () => tokenInput instanceof HTMLInputElement ? tokenInput.value.trim() : "";
 

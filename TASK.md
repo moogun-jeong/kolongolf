@@ -2,6 +2,34 @@
 
 현재의 소규모 콘텐츠 업데이트 운영 방식에 맞춰 방대한 최종 개선안에서 실제로 먼저 필요한 안전 조치와 완료 결과를 분리해 기록합니다.
 
+## **0. 디자인 현대화 (Design Modernization) — Phase 0~3 완료 (2026-08-10)**
+
+`DESIGN_MODERNIZATION_PLAN.md`의 진단과 로드맵을 그대로 실행했습니다. **다크 모드는 사용자 요청으로 제외**했습니다.
+
+*   [x] **Phase 0. 토큰 시스템 재구축** — 유동 타이포 스케일 8단계, 4pt 간격 램프 8단계, 이징 4종, 2단 그림자 3단계, 반경 3단계, 포커스 링 1종 신설
+*   [x] **Phase 0. `font-weight: 900` 버그 수정** — Inter가 900 페이스를 로드하지 않아 가짜 볼드가 합성되던 30곳을 `--weight-label`(650)로 교체
+*   [x] **Phase 0. 이미지 대역폭·CLS** — 아카이브 카드 8장에 `srcset` 연결(display 6MB ↔ thumb 440KB), 이미지 31개에 `width`/`height` 부여
+*   [x] **Phase 1. 값 이관** — `font-size` 108개 → 토큰, `oklch()` 리터럴 159→74, 간격 61종 → `--sp-*`, 반경 12종 → 3종, `text-wrap: balance/pretty` 적용
+*   [x] **Phase 2. 모션 레이어 신설** — 커스텀 이징 도입(기존엔 전부 기본 `ease`), 스크롤 기반 리빌·패럴랙스, View Transitions(히어로 슬라이드·라이트박스)
+*   [x] **Phase 2. 강제 리플로우 제거** — `initScrollProgress()`의 스크롤마다 `scrollHeight` 읽기를 `animation-timeline: scroll()`로 대체 (`HOMEPAGE_REVIEW.md` H-18 해소)
+*   [x] **Phase 3. 가로 넘침 근본 수정** — `body { overflow-x: hidden }` 제거, 넘침 유발 요소를 섹션별 `overflow: clip`으로 지역화
+*   [x] **Phase 3. 레이아웃 리듬** — 읽기 섹션 폭 축소(760px), 섹션 여백 3단계 위계, 원칙 카드 계단식 오프셋
+*   [x] **Phase 3. 컨테이너 쿼리 실사용** — 격자를 `auto-fit`으로 전환해 미디어 쿼리 단계 지정 제거 (D-07)
+*   [x] **Phase 3. 모달 → 네이티브 `<dialog>`** — 포커스 트랩·배경 inert·ESC를 브라우저에 위임 (`HOMEPAGE_REVIEW.md` H-08 해소)
+
+**계획 대비 변경한 것 (판단 근거 포함)**
+
+*   **`main` 명명 그리드 대신 `--section` 오버라이드 사용** — 이 프로젝트는 이미 `--section` 변수로 폭을 제어하고 있어, 같은 결과를 훨씬 적은 회귀 위험으로 얻을 수 있었습니다.
+*   **`image-statement` 스티키 스크롤 미적용** — 해당 섹션의 카피가 키커+제목+뱃지뿐이라 스크롤될 내용이 없습니다. 스티키를 넣어도 시각적으로 아무 일도 일어나지 않아 패럴랙스만 적용했습니다.
+*   **히어로 이미지 패럴랙스 미적용** — `.hero-course-card`가 히어로 경계 밖에 배치되어 있어 `overflow: clip`을 걸 수 없습니다. 패럴랙스는 클립이 가능한 `image-statement`에만 적용했습니다.
+*   **모바일 메뉴 Popover 미적용** — 헤더 안에 인라인으로 펼쳐지는 내비게이션이라 최상위 레이어로 올리면 배치가 깨집니다. 포커스 트랩이 실제로 필요한 모달 쪽에만 `<dialog>`를 적용했습니다.
+
+**검증**
+*   jsdom 렌더 검증: 지원 브라우저 경로(리빌 CSS 위임)와 미지원 폴백 경로(IntersectionObserver) 양쪽에서 콘솔 오류 0건, 모달 열기/닫기 정상
+*   `esbuild` CSS 파싱, `node --check` JS 문법, 로컬 wrangler 서버 200 확인
+
+---
+
 ## **1. 현재 진행 중인 작업 (Current Active Task)**
 
 > 2026-08-10 기준. GitHub Pages와 Cloudflare Pages의 공개 경계 및 운영 보안 설정을 모두 반영했습니다.
