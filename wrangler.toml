@@ -8,9 +8,6 @@ pages_build_output_dir = "dist"
 # 생략해 build image의 npm 오류가 배포를 막지 않게 합니다.
 [vars]
 SKIP_DEPENDENCY_INSTALL = "1"
-# 이전 루트 배포의 Tiered Cache를 무해한 13-byte 응답으로 한 번 교체합니다.
-# 캐시 교체 확인 직후 이 임시 flag를 제거하고 재배포합니다.
-CLOUDFLARE_CACHE_TOMBSTONES = "1"
 
 [[d1_databases]]
 binding = "DB"
