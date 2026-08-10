@@ -3,13 +3,16 @@
 현재의 소규모 콘텐츠 업데이트 운영 방식에 맞춰 방대한 최종 개선안에서 실제로 먼저 필요한 안전 조치만 분리해 실행 문서로 정리합니다.
 
 ## **1. 현재 진행 중인 작업 (Current Active Task)**
+*   [ ] **Cloudflare Pages 프로젝트 build command를 `npm run build`, build output directory를 `dist`로 변경** (변경 전까지 `kolongolf.pages.dev`는 저장소 전체를 계속 노출. 2026-08-10 확인 시 `/wrangler.toml`, `/PROJECT_LOG.md` 200 응답)
 *   [ ] 운영 Cloudflare Pages에 Turnstile sitekey/secret, `MESSAGE_SALT`, 16자 이상 `ADMIN_TOKEN` 설정 (설정 전까지 공개 글쓰기는 fail-closed로 막혀 있음)
-*   [ ] `.github/workflows/pages.yml` 커밋 (로컬에는 있으나 OAuth 토큰에 `workflow` scope가 없어 push되지 않음. `gh auth refresh -s workflow` 후 커밋하거나 GitHub 웹에서 직접 추가)
-*   [ ] GitHub 저장소 Settings > Pages > Source를 **GitHub Actions**로 변경 (변경 전까지 GitHub Pages는 저장소 전체를 계속 노출)
-*   [ ] Cloudflare Pages 프로젝트 build output directory를 `dist`, build command를 `npm run build`로 변경
 *   [ ] 다음 DB 기능 변경 직전에 D1 migration chain 복구 (`PRIORITY_IMPROVEMENT_PLAN.md` 3장 순서 준수)
 
 ## **2. 완료된 작업 (Completed Tasks)**
+*   [x] **GitHub Pages `dist/` 전용 배포 적용 완료**
+    *   `.github/workflows/pages.yml`을 `0dd09ee`로 커밋·푸시 (`gh auth login --scopes workflow`로 OAuth `workflow` scope 확보 후 해결)
+    *   저장소 Settings > Pages > Source를 **GitHub Actions**로 변경하고 workflow run `31363627933` build/deploy 성공 확인
+    *   운영 검증: `/`, `/main.js`, `/style.css`, `/robots.txt`, `/sitemap.xml`, `/404.html` 200 / `wrangler.toml`, `package.json`, `PROJECT_LOG.md`, `AGENTS.md`, `blueprint.md`, `lib/api-security.mjs`, `migrations/*.sql`, `home1.png` 전부 404
+    *   `dist/images` 48장 전량 200 응답, `index.html`·`main.js`·`style.css`가 참조하는 이미지 중 누락 0건 확인
 *   [x] **우선 개선 계획 P0/P1 구현**
     *   `scripts/build.js` allowlist 빌드로 공개 배포 범위를 `dist/`로 제한하고, `firebase-debug.log`를 Git tree에서 제거
     *   Replit Run을 `wrangler pages dev` full stack으로 전환해 로컬 D1만 쓰도록 분리하고, 프런트엔드는 같은 출처 `/api`를 호출하도록 변경

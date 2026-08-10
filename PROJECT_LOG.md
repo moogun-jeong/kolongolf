@@ -4,6 +4,29 @@
 
 ---
 
+### **[2026-08-10] GitHub Pages `dist/` 전용 배포 적용 및 최종 배포 점검**
+
+#### **배포 전 검증**
+*   `node scripts/build.js` 재실행: 루트 allowlist 9개 파일 + 이미지 48장 복사 성공.
+*   `main.js`, `scripts/build.js`, `scripts/dev.js`, `scripts/serve.js`, `lib/api-security.mjs`, `functions/api/*.js` 총 7개 파일 구문 검사 통과.
+*   `npm run preview:static` 로컬 검증: `/`, `/style.css`, `/robots.txt`, `/sitemap.xml` 200 / `wrangler.toml`, `package.json`, `PROJECT_LOG.md`, `.git/config`, `firebase-debug.log` 404 / 존재하지 않는 경로 404(index fallback 아님) / `/%E0%A4%A` 400 후 서버 정상 유지.
+
+#### **workflow 푸시 차단 해소**
+*   `.github/workflows/pages.yml` 푸시가 `refusing to allow an OAuth App to create or update workflow ... without workflow scope`로 거부됨. Replit 관리 OAuth 토큰에 `workflow` scope가 없고 SSH key도 없어 기존 자격증명으로는 우회 불가.
+*   `gh auth login --hostname github.com --git-protocol https --web --scopes workflow` device flow로 재인증(scope: `gist`, `read:org`, `repo`, `workflow`) 후 `gh auth setup-git`으로 git 자격증명을 전환해 `15f613c..0dd09ee` 푸시 성공.
+*   `gh`가 토큰을 작업 트리 내부 `.config/gh/hosts.yml`에 평문 저장하므로 저장소 `.gitignore`에 `.config/`를 추가(시스템 ignore에만 의존하지 않도록).
+
+#### **배포 결과**
+*   저장소 Settings > Pages > Source를 GitHub Actions로 변경한 뒤 workflow run `31363627933`의 build(14s)/deploy(10s) 모두 성공.
+*   `moogun-jeong.github.io/kolongolf` 재검사: 공개 대상 6종 200, `wrangler.toml`·`package.json`·`PROJECT_LOG.md`·`AGENTS.md`·`blueprint.md`·`lib/api-security.mjs`·`migrations/0001_messages.sql`·`home1.png`·`images/waacky.png` 전부 404로 전환.
+*   `dist/images` 48장 전량 200 응답, `index.html`/`main.js`/`style.css` 참조 이미지 중 dist 누락 0건.
+*   Actions annotation으로 `actions/checkout@v4`, `setup-node@v4`, `configure-pages@v5`, `upload-artifact@v4`의 Node.js 20 deprecation 경고 발생(강제 Node 24 실행으로 동작에는 영향 없음).
+
+#### **남은 노출 (미해결)**
+*   `kolongolf.pages.dev`는 build command/output directory가 아직 예전 설정이라 `/wrangler.toml`, `/PROJECT_LOG.md`가 계속 200. 실행 환경에 Cloudflare 자격증명이 없어 CLI 배포 불가하며, 대시보드에서 `npm run build` / `dist` 설정 후 재배포 필요.
+
+---
+
 ### **[2026-08-10] 우선 개선 계획 P0/P1 구현**
 
 #### **P0-1 공개 배포 범위 제한**
