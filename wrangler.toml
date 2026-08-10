@@ -4,6 +4,11 @@ compatibility_date = "2026-05-09"
 # 저장소 루트가 아니라 allowlist 빌드 결과(`npm run build`)만 배포합니다.
 pages_build_output_dir = "dist"
 
+# 빌드는 Node 표준 라이브러리만 사용합니다. Pages의 자동 `npm clean-install`을
+# 생략해 build image의 npm 오류가 배포를 막지 않게 합니다.
+[vars]
+SKIP_DEPENDENCY_INSTALL = "1"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "kolongolf-messages"
