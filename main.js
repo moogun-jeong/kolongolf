@@ -1,19 +1,19 @@
 const members = [
-  { handle: "덕충안길", name: "권순노", role: "정회원", note: "페이드 장인" },
-  { handle: "살려줘제바알", name: "김경수", role: "정회원", note: "벙커 탈출 1위" },
-  { handle: "오!건이", name: "김무건", role: "정회원", note: "파 세이브 감각" },
+  { handle: "덕충안길", name: "권순노", handicap: 21, role: "정회원", note: "페이드 장인" },
+  { handle: "살려줘제바알", name: "김경수", handicap: 27, role: "정회원", note: "벙커 탈출 1위" },
+  { handle: "오!건이", name: "김무건", handicap: 20, role: "정회원", note: "파 세이브 감각" },
   { handle: "인생무생", name: "김무생", role: "정회원", note: "후반 집중력" },
   { handle: "울산땡주", name: "김영주", role: "정회원", note: "파3 스페셜" },
   { handle: "원조가가멜", name: "김정훈", role: "정회원", note: "백스핀 컨트롤" },
   { handle: "백돌이깬다", name: "김태연", role: "정회원", note: "정확한 어프로치" },
-  { handle: "준빵", name: "김효준", role: "정회원", note: "스윙 템포" },
-  { handle: "빽스윙쫌만더", name: "서무환", role: "회장", note: "클럽 리딩", email: "pleaselove@kolon.com" },
-  { handle: "날아라호", name: "심재호", role: "정회원", note: "탄도 조절" },
+  { handle: "준빵", name: "김효준", handicap: 26, role: "정회원", note: "스윙 템포" },
+  { handle: "빽스윙쫌만더", name: "서무환", handicap: 15, role: "회장", note: "클럽 리딩", email: "pleaselove@kolon.com" },
+  { handle: "날아라호", name: "심재호", handicap: 20, role: "정회원", note: "탄도 조절" },
   { handle: "오프로672", name: "오상택", role: "정회원", note: "코스 매니지먼트" },
   { handle: "필드난폭자", name: "윤석현", role: "정회원", note: "공격적 플레이" },
   { handle: "타키온", name: "이동수", role: "정회원", note: "퍼팅 스트로크" },
-  { handle: "무근정", name: "정무근", role: "총무", note: "운영 관리", email: "moogunjeong@kolon.com" },
-  { handle: "울산정쁘로", name: "정성원", role: "정회원", note: "아이언 정밀도" },
+  { handle: "무근정", name: "정무근", handicap: 24, role: "총무", note: "운영 관리", email: "moogunjeong@kolon.com" },
+  { handle: "울산정쁘로", name: "정성원", handicap: 29, role: "정회원", note: "아이언 정밀도" },
   { handle: "원펀쓰리강냉", name: "천기준", role: "정회원", note: "파워 스윙" },
   { handle: "무적부대", name: "추정술", role: "정회원", note: "위기 탈출" },
   { handle: "장금이에이스", name: "하선재", role: "정회원", note: "정교한 퍼터" },
@@ -21,6 +21,10 @@ const members = [
   { handle: "안상욱", name: "안상욱", role: "신입회원", note: "강한 임팩트" },
   { handle: "박동성", name: "박동성", role: "신입회원", note: "클러치 퍼팅" }
 ];
+
+// 핸디는 직전 라운드 단체 스코어카드의 SCORE(파 대비 타수)를 그대로 씁니다.
+// 기록이 없는 회원은 handicap을 비워 두면 카드에 표시하지 않습니다.
+const handicapSource = "직전 라운드 단체 스코어카드 기준";
 
 const rolePriority = {
   회장: 1,
@@ -659,6 +663,7 @@ class KolonMembers extends HTMLElement {
           <div class="member-identity">
             <h3>${member.handle}</h3>
             <p>${member.name}${variant ? ` · ${member.note}` : ""}</p>
+            ${Number.isFinite(member.handicap) ? `<p class="member-handicap"><span>핸디</span><strong>${member.handicap}</strong></p>` : ""}
           </div>
           <span class="member-role" data-role="${member.role}">${member.role}</span>
         </article>
@@ -700,6 +705,7 @@ class KolonMembers extends HTMLElement {
         <div class="member-grid" id="memberGrid" aria-label="회원" data-reveal>
           ${memberItems}
         </div>
+        <p class="member-handicap-note">핸디: ${handicapSource} · 기록이 없는 회원은 비워 두었습니다.</p>
         <div class="collection-footer"><p id="memberResult" role="status">함께하는 회원 ${members.length}명</p><button class="line-button" type="button" id="memberMore" aria-expanded="false" aria-controls="memberGrid">회원 모두 보기 ＋</button></div>
       </section>
     `;
