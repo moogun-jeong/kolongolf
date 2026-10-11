@@ -1,4 +1,4 @@
-﻿const members = [
+const members = [
   { handle: "덕충안길", name: "권순노", role: "정회원", note: "페이드 장인" },
   { handle: "살려줘제바알", name: "김경수", role: "정회원", note: "벙커 탈출 1위" },
   { handle: "오!건이", name: "김무건", role: "정회원", note: "파 세이브 감각" },
@@ -458,8 +458,8 @@ class KolonSiteHeader extends HTMLElement {
         <div class="desktop-bar">
           <a class="brand" href="#top" aria-label="홈으로 이동">
             <span class="brand-mark" aria-hidden="true"></span>
-            <strong>Kolon Golf Society</strong>
-            <span>screen golf society</span>
+            <strong>Kolon Golf</strong>
+            <span class="brand-subtitle">SCREEN & FIELD SOCIETY</span>
           </a>
           <nav class="main-nav" aria-label="메인 메뉴">
             <a href="#features">동호회</a>
@@ -469,7 +469,6 @@ class KolonSiteHeader extends HTMLElement {
             <a href="#guestbook">방명록</a>
           </nav>
           <div class="account-links">
-            <button type="button" data-open-modal="rsvpModal">공지</button>
             <button type="button" data-open-modal="joinModal">가입 문의</button>
           </div>
         </div>
@@ -493,73 +492,52 @@ class KolonHero extends HTMLElement {
     this.dataset.ready = "true";
     this.innerHTML = `
       <section class="hero-band" aria-labelledby="heroTitle">
-        ${svgOrnaments.heroCourse}
-        <button class="hero-arrow hero-arrow-prev" type="button" data-hero-slide="prev" aria-label="이전 대표 사진">
-          <span aria-hidden="true">‹</span>
-        </button>
         <div class="hero-inner">
           <div class="hero-copy" data-reveal>
-            <p class="section-kicker">Kolon Golf Society</p>
-            <h1 id="heroTitle">코오롱 스크린<br />골프 동호회</h1>
-            <p>
-              정기 스크린 라운드와 필드 행사를 함께 즐기는 코오롱 골프 동호회입니다.
-              좋은 샷, 아쉬운 퍼트, 라운드 뒤 웃음까지 오래 남기는 모임입니다.
-            </p>
-            <div class="hero-meta-strip" aria-label="동호회 주요 정보">
-              <span><strong>Latest</strong>제8회 석노협 대회</span>
-              <span><strong>Course</strong>용원 GC 백로·무학</span>
-              <span><strong>Members</strong>21명</span>
-            </div>
+            <p class="section-kicker"><span class="kicker-line" aria-hidden="true"></span> 코오롱 스크린 골프 동호회</p>
+            <h1 id="heroTitle">함께 치는 골프,<br />오래 남는 <em>순간.</em></h1>
+            <p class="hero-description">스크린에서 필드까지.<br />좋은 샷도, 아쉬운 퍼트도 함께라서 즐겁습니다.</p>
             <div class="button-row">
-              <a class="solid-button" href="#archive">대회 사진 보기</a>
-              <a class="line-button" href="#archive">행사 사진 보기</a>
+              <a class="solid-button" href="#archive">우리의 라운드 보기 <span aria-hidden="true">↗</span></a>
+              <a class="text-button" href="#schedule">다음 모임 <span aria-hidden="true">→</span></a>
             </div>
+            <p class="hero-signature" aria-hidden="true">Good rounds.<br /><em>Great company.</em></p>
           </div>
           <figure class="hero-media" data-reveal>
-            <span class="hero-photo-tag" aria-hidden="true">Club Round</span>
-            <img id="heroImage" src="${heroSlides[0].image}" alt="코오롱 골프 동호회 대표 라운딩 사진" fetchpriority="high" decoding="async" />
-            <figcaption>
-              <span id="heroDate">${heroSlides[0].date}</span>
-              <strong id="heroCaption">${heroSlides[0].caption}</strong>
-            </figcaption>
-            <div class="hero-course-card" aria-label="최근 주요 기록">
-              <span>Featured</span>
-              <strong>Hole-in-one</strong>
-              <small>STARS 8번 홀 · 이동수 팀장</small>
+            <div class="hero-image-wrap">
+              <img id="heroImage" src="${heroSlides[0].image}" alt="${heroSlides[0].caption}" width="1000" height="750" fetchpriority="high" decoding="async" />
+              <span class="hero-photo-tag">ON & OFF THE FAIRWAY</span>
             </div>
+            <figcaption>
+              <div class="hero-caption-copy"><span id="heroDate">${heroSlides[0].date}</span><strong id="heroCaption">${heroSlides[0].caption}</strong></div>
+              <div class="hero-photo-controls" aria-label="대표 사진 선택">
+                <span class="hero-slide-count" id="heroSlideCount">01 / ${String(heroSlides.length).padStart(2, "0")}</span>
+                <button class="hero-arrow hero-arrow-prev" type="button" data-hero-slide="prev" aria-label="이전 대표 사진">←</button>
+                <button class="hero-arrow hero-arrow-next" type="button" data-hero-slide="next" aria-label="다음 대표 사진">→</button>
+              </div>
+            </figcaption>
           </figure>
         </div>
-        <button class="hero-arrow hero-arrow-next" type="button" data-hero-slide="next" aria-label="다음 대표 사진">
-          <span aria-hidden="true">›</span>
-        </button>
-      </section>
-    `;
+        <div class="hero-summary">
+          <div><strong>${members.length}<span>명</span></strong><span>함께하는 골퍼</span></div>
+          <div><strong>${archives.length}<span>개의</span></strong><span>라운드 이야기</span></div>
+          <div class="hero-summary-note"><span>SCREEN & FIELD</span><p>같은 취미, 더 좋은 시간.</p></div>
+          <a href="#archive">함께한 순간들 <span aria-hidden="true">↓</span></a>
+        </div>
+      </section>`;
   }
 }
-
 class KolonIntro extends HTMLElement {
   connectedCallback() {
     if (this.dataset.ready) return;
     this.dataset.ready = "true";
     this.innerHTML = `
       <section class="intro-section site-section" aria-labelledby="introTitle">
-        ${svgOrnaments.introMap}
-        <div class="intro-title" data-reveal>
-          <p class="section-kicker">Club Philosophy</p>
-          <h2 id="introTitle">좋은 샷보다 오래 남는 것은 함께한 라운드의 온도입니다.</h2>
-        </div>
-        <div class="intro-copy" data-reveal>
-          <p>
-            코오롱 골프 동호회는 정기 라운드와 친선 경기로 함께 실력을 겨루고 친목을 쌓습니다.
-            실력 차이는 있어도 편하게 합류하고, 함께한 순간은 사진과 이야기로 오래 남깁니다.
-          </p>
-          <a class="text-button" href="#schedule">${getNextEvent() ? "다음 모임 보기" : "모임 일정 보기"}</a>
-        </div>
-      </section>
-    `;
+        <div class="intro-title" data-reveal><p class="section-kicker">OUR SOCIETY</p><h2 id="introTitle">스코어보다 오래 남는 건,<br />함께한 사람들.</h2></div>
+        <div class="intro-copy" data-reveal><p>코오롱 골프 동호회는 스크린 라운드와 필드에서 만나 골프를 즐깁니다. 실력은 달라도 서로 응원하는 마음은 같습니다.</p><a class="text-button" href="#members">함께하는 회원들 <span aria-hidden="true">→</span></a></div>
+      </section>`;
   }
 }
-
 class KolonPrinciples extends HTMLElement {
   connectedCallback() {
     if (this.dataset.ready) return;
@@ -614,110 +592,22 @@ class KolonSchedule extends HTMLElement {
   connectedCallback() {
     if (this.dataset.ready) return;
     this.dataset.ready = "true";
-    const nextEvent = getNextEvent();
-    const panelEvent = nextEvent || latestRecordEvent;
-
-    const headingCopy = nextEvent
-      ? nextEvent.summary || nextEvent.body
-      : "확정된 다음 모임이 정해지면 이 자리에서 가장 먼저 안내합니다. 지난 대회 기록은 아래에서 계속 볼 수 있습니다.";
-
-    const eventCard = nextEvent
-      ? `
-          <article class="next-event">
-            ${svgOrnaments.scheduleMap}
-            <div class="event-date-lockup" aria-hidden="true">
-              <span>${nextEvent.dateLockup.month}</span>
-              <strong>${nextEvent.dateLockup.day}</strong>
-              <small>${nextEvent.dateLockup.year}</small>
-            </div>
-            <div class="event-content">
-              <div class="event-topline">
-                <p class="event-state">${nextEvent.state}</p>
-                <span>${nextEvent.eyebrow}</span>
-              </div>
-              <h3>${nextEvent.title}</h3>
-              <p>${nextEvent.body}</p>
-            </div>
-          </article>
-        `
-      : `
-          <article class="next-event is-pending">
-            ${svgOrnaments.scheduleMap}
-            <div class="event-date-lockup" aria-hidden="true">
-              <span>Next</span>
-              <strong>TBD</strong>
-              <small>준비 중</small>
-            </div>
-            <div class="event-content">
-              <div class="event-topline">
-                <p class="event-state">일정 조율 중</p>
-                <span>Next Round</span>
-              </div>
-              <h3>다음 모임 준비 중</h3>
-              <p>일정은 확정되는 대로 이 자리에 안내합니다.</p>
-            </div>
-          </article>
-        `;
-
-    const detailRows = panelEvent.details
-      .map(([term, description]) => `
-              <div>
-                <dt>${term}</dt>
-                <dd>${description}</dd>
-              </div>`)
-      .join("");
-
+    const next = getNextEvent();
     this.innerHTML = `
       <section class="schedule-section site-section" aria-labelledby="scheduleTitle">
-        <div class="section-heading split" data-reveal>
-          <div>
-            <p class="section-kicker">Schedule</p>
-            <h2 id="scheduleTitle">Screen Event Board</h2>
-          </div>
-          <p>${headingCopy}</p>
-        </div>
-
+        <div class="section-heading split" data-reveal><div><p class="section-kicker">01 / NEXT ROUND</p><h2 id="scheduleTitle">다음에 만나요.</h2></div><p>우리의 다음 라운드.</p></div>
         <div class="schedule-board" data-reveal>
-          ${eventCard}
-
-          <div class="event-detail-panel" aria-label="${panelEvent.title} 상세 정보">
-            <p class="section-kicker">${nextEvent ? "다음 모임 상세" : "지난 행사 기록"}</p>
-            <dl>${detailRows}
-            </dl>
-            <div class="button-row">
-              <button class="solid-button" type="button" data-open-modal="rsvpModal">대회 상세 기록</button>
-              <button class="line-button" type="button" data-open-modal="locationModal">장소 안내</button>
+          <article class="next-event ${next ? "" : "is-pending"}">
+            <div class="event-date-lockup" aria-hidden="true"><span>${next ? next.dateLockup.month : "NEXT"}</span><strong>${next ? next.dateLockup.day : "—"}</strong><small>${next ? next.dateLockup.year : "ROUND"}</small></div>
+            <div class="event-content"><p class="event-state">${next ? next.state : "일정 조율 중"}</p><h3>${next ? next.title : "다음 라운드를 준비하고 있어요."}</h3><p>${next ? next.body : "일시와 장소가 정해지면 알려드릴게요."}</p>
+              ${next ? `<dl class="upcoming-details">${next.details.map(([term, description]) => `<div><dt>${term}</dt><dd>${description}</dd></div>`).join("")}</dl>` : `<button class="text-button" type="button" data-open-modal="joinModal">모임 문의 <span aria-hidden="true">→</span></button>`}
             </div>
-          </div>
-        </div>
-
-        <div class="section-heading compact" data-reveal>
-          <p class="section-kicker">Schedule</p>
-          <h3>최근 모임 이야기</h3>
-        </div>
-
-        <div class="schedule-notes">
-          <article data-reveal>
-            <span>01</span>
-            <h3>석노협 의장배 대회 기록</h3>
-            <p>7월 4일 오전 8시, 삼산한국골프점에서 코오롱인더스트리 A/B팀이 참가했습니다.</p>
           </article>
-          <article data-reveal>
-            <span>02</span>
-            <h3>핵심 경기 조건</h3>
-            <p>투비전 NX, 용원 GC 백로·무학, 투어모드 G투어 난이도, 컨시드 1.5m와 멀리건 없음 조건으로 진행했습니다.</p>
-          </article>
-          <article data-reveal>
-            <span>03</span>
-            <h3>대회 사진 아카이브</h3>
-            <p>경기 장면과 대회 후 시상·식사 사진을 아카이브에서 확인할 수 있습니다.</p>
-          </article>
+          <aside class="schedule-last-round"><p class="section-kicker">LAST ROUND / ${archives[0].date}</p><h3>${archives[0].title}</h3><p>${archives[0].people} · ${archives[0].location}</p><a class="text-button" href="#archive">그날의 사진 보기 <span aria-hidden="true">↗</span></a></aside>
         </div>
-      </section>
-    `;
+      </section>`;
   }
 }
-
 class KolonMembers extends HTMLElement {
   connectedCallback() {
     if (this.dataset.ready) return;
@@ -733,7 +623,7 @@ class KolonMembers extends HTMLElement {
             ${renderMemberAnimal(animal, member.name)}
             <div>
               <h3>${member.handle}</h3>
-              <p><strong>${member.name}</strong> · ${member.note}</p>
+              <p><strong>${member.name}</strong></p>
             </div>
           </div>
         </article>
@@ -758,13 +648,13 @@ class KolonMembers extends HTMLElement {
       <section class="members-section site-section" aria-labelledby="membersTitle">
         <div class="section-heading split" data-reveal>
           <div>
-            <p class="section-kicker">Members</p>
-            <h2 id="membersTitle">Club Members</h2>
+            <p class="section-kicker">03 / OUR MEMBERS</p>
+            <h2 id="membersTitle">함께하는 골퍼.</h2>
           </div>
           <div class="member-tools">
             <label class="search-field">
               <span>회원 검색</span>
-              <input id="memberSearch" type="search" placeholder="이름 또는 역할" autocomplete="off" />
+              <input id="memberSearch" type="search" placeholder="이름, 닉네임 또는 역할" autocomplete="off" />
             </label>
             <button class="line-button small" id="memberReset" type="button">초기화</button>
           </div>
@@ -772,9 +662,10 @@ class KolonMembers extends HTMLElement {
         <div class="staff-grid" aria-label="운영진">
           ${staffItems}
         </div>
-        <div class="member-grid" id="memberGrid" aria-label="정회원">
+        <div class="member-grid" id="memberGrid" aria-label="회원">
           ${memberItems}
         </div>
+        <div class="collection-footer"><p id="memberResult" role="status">함께하는 회원 ${members.length}명</p><button class="line-button" type="button" id="memberMore" aria-expanded="false" aria-controls="memberGrid">회원 모두 보기 ＋</button></div>
       </section>
     `;
   }
@@ -784,104 +675,30 @@ class KolonArchive extends HTMLElement {
   connectedCallback() {
     if (this.dataset.ready) return;
     this.dataset.ready = "true";
-    const renderDetails = (archive) =>
-      archive.details?.length
-        ? `
-            <ul class="archive-details" aria-label="${archive.title} 상세 기록">
-              ${archive.details.map((detail) => `<li>${detail}</li>`).join("")}
-            </ul>
-          `
-        : "";
-
-    const renderPhotoCue = (archive) => {
-      const photoCount = archive.images?.length || 1;
-      const isMulti = photoCount > 1;
-      return `
-        <span class="photo-count-badge" aria-hidden="true">
-          <strong>${photoCount}</strong>
-          <small>사진</small>
-        </span>
-        <span class="photo-gallery-cue" aria-hidden="true">
-          <span class="photo-stack-icon">
-            <i></i><i></i><i></i>
-          </span>
-          <span>
-            <strong>${isMulti ? `${photoCount}장 갤러리` : "사진 1장"}</strong>
-            <small>${isMulti ? "터치해서 모두 보기" : "터치해서 크게 보기"}</small>
-          </span>
-        </span>
-        <span class="photo-open-label">${isMulti ? `사진 ${photoCount}장 모두 보기` : "사진 보기"}</span>
-      `;
-    };
-
+    const renderDetails = (archive) => archive.details?.length ? `<details class="archive-detail-disclosure"><summary>경기 상세 정보</summary><ul class="archive-details">${archive.details.map((detail) => `<li>${detail}</li>`).join("")}</ul></details>` : "";
+    const photoCue = (archive) => `<span class="photo-open-label">${archive.images.length} PHOTOS <span aria-hidden="true">↗</span></span>`;
     const featured = archives[0];
-    const featuredBadges = featured.highlights?.length
-      ? featured.highlights.map((item) => `<span>${item}</span>`).join("")
-      : "";
-
-    const archiveItems = archives
-      .slice(1)
-      .map((archive, index) => {
-        const archiveIndex = index + 1;
-        const photoCount = archive.images?.length || 1;
-        return `
-          <article class="archive-card" data-reveal>
-            <button class="archive-photo ${photoCount > 1 ? "is-multi-gallery" : ""}" type="button" data-archive-index="${archiveIndex}" aria-label="${archive.title} 사진 ${photoCount}장 보기">
-              <img src="${archive.images[0]}" alt="${archive.title} 대표 사진" loading="lazy" decoding="async" />
-              ${renderPhotoCue(archive)}
-            </button>
-            <div class="archive-body">
-              <p class="archive-meta">${archive.date} · ${archive.label}</p>
-              <h3>${archive.title}</h3>
-              <p>${archive.summary}</p>
-              ${renderDetails(archive)}
-              <div class="archive-foot">
-                <span>${archive.location}</span>
-                <span>${archive.people}</span>
-              </div>
-            </div>
-          </article>
-        `;
-      })
-      .join("");
-
+    const archiveItems = archives.slice(1).map((archive, index) => `
+      <article class="archive-card" data-archive-year="${archive.date.slice(0, 4)}" data-reveal>
+        <button class="archive-photo" type="button" data-archive-index="${index + 1}" aria-label="${archive.title} 사진 ${archive.images.length}장 보기"><img src="${archive.images[0]}" alt="${archive.title} 대표 사진" width="800" height="560" loading="lazy" decoding="async" />${photoCue(archive)}</button>
+        <div class="archive-body"><p class="archive-meta">${archive.date} <span>· ${archive.label}</span></p><h3>${archive.title}</h3><p>${archive.summary}</p>${renderDetails(archive)}<div class="archive-foot"><span>${archive.location}</span><span>${archive.people}</span></div></div>
+      </article>`).join("");
+    const years = [...new Set(archives.map((archive) => archive.date.slice(0, 4)))];
     this.innerHTML = `
       <section class="archive-section" aria-labelledby="archiveTitle">
-        ${svgOrnaments.archiveMap}
         <div class="site-section">
-          <div class="section-heading centered" data-reveal>
-            <p class="section-kicker">Archive</p>
-            <h2 id="archiveTitle">지난 라운드 이야기</h2>
-            <p>함께 웃고 겨뤘던 라운드의 순간들을 모았습니다.</p>
-          </div>
-          <article class="featured-round" data-reveal>
-            <button class="featured-photo ${featured.images?.length > 1 ? "is-multi-gallery" : ""}" type="button" data-archive-index="0" aria-label="${featured.title} 사진 ${featured.images?.length || 1}장 보기">
-              <img src="${featured.images[0]}" alt="${featured.title} 대표 사진" loading="lazy" decoding="async" />
-              ${renderPhotoCue(featured)}
-            </button>
-            <div class="featured-body">
-              <p class="archive-meta">${featured.date} · ${featured.label}</p>
-              <h3>${featured.title}</h3>
-              <p>${featured.summary}</p>
-              <div class="featured-badges" aria-label="${featured.title} 주요 기록">
-                ${featuredBadges}
-              </div>
-              ${renderDetails(featured)}
-              <div class="archive-foot">
-                <span>${featured.location}</span>
-                <span>${featured.people}</span>
-              </div>
-            </div>
+          <div class="section-heading split" data-reveal><div><p class="section-kicker">02 / ROUND STORIES</p><h2 id="archiveTitle">우리의 라운드.</h2></div><p>함께 웃고, 겨루고, 기억한 순간들.</p></div>
+          <div class="archive-toolbar" data-reveal><div class="archive-filters" role="group" aria-label="라운드 연도 필터"><button type="button" data-archive-filter="all" aria-pressed="true">전체</button>${years.map((year) => `<button type="button" data-archive-filter="${year}" aria-pressed="false">${year}</button>`).join("")}</div><p id="archiveResult" role="status">총 ${archives.length}개의 라운드</p></div>
+          <article class="featured-round" data-archive-year="${featured.date.slice(0, 4)}" data-reveal>
+            <button class="featured-photo" type="button" data-archive-index="0" aria-label="${featured.title} 사진 ${featured.images.length}장 보기"><img src="${featured.images[0]}" alt="${featured.title} 대표 사진" width="1000" height="750" loading="lazy" decoding="async" />${photoCue(featured)}</button>
+            <div class="featured-body"><p class="section-kicker">LATEST STORY</p><p class="archive-meta">${featured.date} · ${featured.label}</p><h3>${featured.title}</h3><p>${featured.summary}</p>${renderDetails(featured)}<div class="archive-foot"><span>${featured.location}</span><span>${featured.people}</span></div></div>
           </article>
-          <div class="archive-grid">
-            ${archiveItems}
-          </div>
+          <div class="archive-grid">${archiveItems}</div>
+          <div class="collection-footer"><p>사진을 누르면 갤러리와 댓글을 볼 수 있어요.</p><button class="line-button" type="button" id="archiveMore" aria-expanded="false">이전 라운드 더 보기 ＋</button></div>
         </div>
-      </section>
-    `;
+      </section>`;
   }
 }
-
 class KolonGuestbook extends HTMLElement {
   connectedCallback() {
     if (this.dataset.ready) return;
@@ -890,10 +707,10 @@ class KolonGuestbook extends HTMLElement {
       <section class="guestbook-section site-section" aria-labelledby="guestbookTitle">
         <div class="section-heading split" data-reveal>
           <div>
-            <p class="section-kicker">Guestbook</p>
-            <h2 id="guestbookTitle">방명록</h2>
+            <p class="section-kicker">04 / SAY HELLO</p>
+            <h2 id="guestbookTitle">반가운 한마디.</h2>
           </div>
-          <p>함께한 라운드의 한마디, 다음 모임을 기다리는 마음을 편하게 남겨주세요.</p>
+          <p>오늘의 인사, 그날의 추억. 편하게 남겨주세요.</p>
         </div>
         <div class="guestbook-board" data-reveal>
           <div class="guestbook-form-card">
@@ -918,10 +735,10 @@ class KolonJoin extends HTMLElement {
     this.dataset.ready = "true";
     this.innerHTML = `
       <section class="join-section site-section" aria-labelledby="joinTitle" data-reveal>
-        ${svgOrnaments.joinFlag}
+        
         <p class="section-kicker">Join Us</p>
-        <h2 id="joinTitle">함께 스윙하고, 기록하고, 다음 라운드를 기다립니다.</h2>
-        <p>정기 라운드와 친선 매치를 함께할 코오롱 골프 동호회 멤버를 기다립니다.</p>
+        <h2 id="joinTitle">다음 라운드, 함께해요.</h2>
+        <p>골프를 좋아하는 코오롱인이라면, 반갑습니다.</p>
         <div class="button-row center">
           <button class="solid-button" type="button" data-open-modal="joinModal">가입 문의</button>
           <a class="line-button" href="#top">맨 위로</a>
@@ -1068,7 +885,7 @@ class KolonFooter extends HTMLElement {
         <div class="footer-inner">
           <a class="brand footer-brand" href="#top">
             <span class="brand-mark" aria-hidden="true"></span>
-            <strong>Kolon Golf Society</strong>
+            <strong>Kolon Golf</strong>
           </a>
           <nav aria-label="푸터 메뉴">
             <a href="#features">동호회</a>
@@ -1116,6 +933,8 @@ const initHeader = () => {
   const closeMenu = () => {
     header?.classList.remove("menu-open");
     menuToggle?.setAttribute("aria-expanded", "false");
+    menuToggle?.setAttribute("aria-label", "메뉴 열기");
+    if (mobilePanel) mobilePanel.inert = true;
   };
 
   const syncHeaderState = () => {
@@ -1136,6 +955,8 @@ const initHeader = () => {
   menuToggle?.addEventListener("click", () => {
     const nextState = menuToggle.getAttribute("aria-expanded") !== "true";
     menuToggle.setAttribute("aria-expanded", String(nextState));
+    menuToggle.setAttribute("aria-label", nextState ? "메뉴 닫기" : "메뉴 열기");
+    if (mobilePanel) mobilePanel.inert = !nextState;
     header?.classList.toggle("menu-open", nextState);
   });
 
@@ -1148,6 +969,10 @@ const initHeader = () => {
     if (window.innerWidth > 760) closeMenu();
   });
 
+  closeMenu();
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && header?.classList.contains("menu-open")) { closeMenu(); menuToggle?.focus(); }
+  });
   syncHeaderState();
   window.addEventListener("scroll", syncHeaderState, { passive: true });
 
@@ -1223,68 +1048,51 @@ const initScrollProgress = () => {
 const initMemberSearch = () => {
   const input = document.getElementById("memberSearch");
   const reset = document.getElementById("memberReset");
+  const more = document.getElementById("memberMore");
+  const status = document.getElementById("memberResult");
   const cards = Array.from(document.querySelectorAll("[data-member-card]"));
-
+  let expanded = false;
   const applyFilter = () => {
     const query = input?.value.trim().toLowerCase() || "";
+    let regularCount = 0, matches = 0, shown = 0;
     cards.forEach((card) => {
-      const isMatch = card.textContent.toLowerCase().includes(query);
-      card.classList.toggle("is-hidden", !isMatch);
+      const match = card.textContent.toLowerCase().includes(query);
+      if (match) matches += 1;
+      const regular = !card.classList.contains("staff-card");
+      if (match && regular) regularCount += 1;
+      card.hidden = !match || (!query && !expanded && regular && regularCount > 6);
+      card.classList.remove("is-hidden");
+      if (!card.hidden) shown += 1;
     });
+    if (status) status.textContent = query ? (matches ? `검색 결과 ${matches}명` : "일치하는 회원이 없습니다.") : `${members.length}명 중 ${shown}명`;
+    if (more) {
+      more.hidden = Boolean(query) || regularCount <= 6;
+      more.setAttribute("aria-expanded", String(expanded));
+      more.textContent = expanded ? "간략히 보기 −" : `회원 ${members.length}명 모두 보기 ＋`;
+    }
   };
-
   input?.addEventListener("input", applyFilter);
-  reset?.addEventListener("click", () => {
-    if (!input) return;
-    input.value = "";
-    applyFilter();
-    input.focus();
-  });
+  reset?.addEventListener("click", () => { if (input) { input.value = ""; applyFilter(); input.focus(); } });
+  more?.addEventListener("click", () => { expanded = !expanded; applyFilter(); });
+  applyFilter();
 };
-
 const initHeroSlider = () => {
   const image = document.getElementById("heroImage");
   const date = document.getElementById("heroDate");
   const caption = document.getElementById("heroCaption");
-  const controls = document.querySelectorAll("[data-hero-slide]");
-  const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false;
+  const count = document.getElementById("heroSlideCount");
   let index = 0;
-  let timer = null;
-
-  const render = (nextIndex) => {
-    index = (nextIndex + heroSlides.length) % heroSlides.length;
-    const slide = heroSlides[index];
-    if (image) {
-      if (prefersReducedMotion) {
-        image.src = slide.image;
-      } else {
-        image.classList.add("is-switching");
-        window.setTimeout(() => {
-          image.src = slide.image;
-          window.requestAnimationFrame(() => image.classList.remove("is-switching"));
-        }, 120);
-      }
-    }
-    if (date) date.textContent = slide.date;
-    if (caption) caption.textContent = slide.caption;
-  };
-
-  const restart = () => {
-    if (prefersReducedMotion) return;
-    window.clearInterval(timer);
-    timer = window.setInterval(() => render(index + 1), 6400);
-  };
-
-  controls.forEach((control) => {
+  document.querySelectorAll("[data-hero-slide]").forEach((control) => {
     control.addEventListener("click", () => {
-      render(control.getAttribute("data-hero-slide") === "next" ? index + 1 : index - 1);
-      restart();
+      index = (index + (control.dataset.heroSlide === "next" ? 1 : -1) + heroSlides.length) % heroSlides.length;
+      const slide = heroSlides[index];
+      if (image) { image.src = slide.image; image.alt = slide.caption; }
+      if (date) date.textContent = slide.date;
+      if (caption) caption.textContent = slide.caption;
+      if (count) count.textContent = `${String(index + 1).padStart(2, "0")} / ${String(heroSlides.length).padStart(2, "0")}`;
     });
   });
-
-  restart();
 };
-
 const initModals = () => {
   const modals = Array.from(document.querySelectorAll(".modal"));
   let lastFocusedElement = null;
@@ -1667,124 +1475,48 @@ const initMessages = () => {
 };
 
 const initMemberExperienceEnhancements = () => {
-  const nextEvent = getNextEvent();
-  const apiBase = () =>
-    (typeof getMessageApiBase === "function"
-      ? getMessageApiBase()
-      : document.querySelector('meta[name="message-api-base"]')?.content || "/api").replace(/\/$/, "");
-
-  const makeLink = (href, text, className, action) => {
-    const link = document.createElement("a");
-    link.href = href;
-    link.className = className;
-    link.textContent = text;
-    link.dataset.memberAction = action;
-    return link;
+  const cards = Array.from(document.querySelectorAll("[data-archive-year]"));
+  const filters = Array.from(document.querySelectorAll("[data-archive-filter]"));
+  const more = document.getElementById("archiveMore");
+  const status = document.getElementById("archiveResult");
+  let year = "all", expanded = false;
+  const applyFilter = () => {
+    const matching = cards.filter((card) => year === "all" || card.dataset.archiveYear === year);
+    cards.forEach((card) => { const position = matching.indexOf(card); card.hidden = position < 0 || (!expanded && position >= 4); });
+    filters.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.archiveFilter === year)));
+    if (status) status.textContent = `${year === "all" ? "전체" : year} · ${matching.length}개의 라운드`;
+    if (more) { more.hidden = matching.length <= 4; more.setAttribute("aria-expanded", String(expanded)); more.textContent = expanded ? "최근 라운드만 보기 −" : `이전 라운드 ${matching.length - 4}개 더 보기 ＋`; }
   };
-
-  const heroButtons = document.querySelector(".hero-copy .button-row");
-  if (heroButtons && !heroButtons.querySelector('[data-member-action="guestbook"]')) {
-    heroButtons.append(makeLink("#guestbook", "방명록 남기기", "line-button", "guestbook"));
-  }
-
-  const heroCopy = document.querySelector(".hero-copy");
-  const heroMeta = document.querySelector(".hero-meta-strip");
-  if (heroCopy && heroMeta && !heroCopy.querySelector(".member-quick-panel")) {
-    heroMeta.insertAdjacentHTML(
-      "afterend",
-      `<nav class="member-quick-panel" aria-label="회원 빠른 이동">
-        <a href="#schedule"><strong>다음 모임</strong><span>${nextEvent ? "언제 어디서 만나는지" : "확정되면 여기서 안내"}</span></a>
-        <a href="#archive"><strong>지난 사진</strong><span>함께한 순간 다시 보기</span></a>
-        <a href="#guestbook"><strong>한마디</strong><span>오늘의 인사 남기기</span></a>
-      </nav>`
-    );
-  }
-
-  document.querySelectorAll(".search-link").forEach((link) => {
-    link.setAttribute("href", "#archive");
-    link.setAttribute("aria-label", "지난 라운드와 사진 보기");
-    link.setAttribute("title", "지난 라운드 보기");
+  filters.forEach((button) => button.addEventListener("click", () => { year = button.dataset.archiveFilter; expanded = false; applyFilter(); }));
+  more?.addEventListener("click", () => { expanded = !expanded; applyFilter(); });
+  applyFilter();
+  // Load previews only for cards entering view; production database remains read-only.
+  const loadCount = async (target) => {
+    const count = target.querySelector("[data-comment-count]");
+    try {
+      const response = await fetch(`${getMessageApiBase().replace(/\/$/, "")}/messages?type=archive_comment&archiveId=${encodeURIComponent(target.dataset.archiveActions)}`, { headers: { Accept: "application/json" } });
+      if (!response.ok) throw new Error("Messages unavailable");
+      const data = await response.json();
+      if (!Array.isArray(data.items)) throw new Error("Invalid messages");
+      count.textContent = data.items.length ? `댓글 ${data.items.length}${data.items.length >= 20 ? "+" : ""}개` : "댓글 남기기";
+    } catch { count.textContent = "사진과 댓글"; }
+  };
+  const observer = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
+    entries.forEach((entry) => { if (entry.isIntersecting) { observer.unobserve(entry.target); loadCount(entry.target); } });
+  }, { rootMargin: "100px" }) : null;
+  cards.forEach((card) => {
+    const trigger = card.querySelector("[data-archive-index]");
+    const archive = archives[Number(trigger?.dataset.archiveIndex)];
+    const body = card.querySelector(".archive-body, .featured-body");
+    if (!archive || !body) return;
+    body.insertAdjacentHTML("beforeend", `<div class="archive-card-actions" data-archive-actions="${archive.id}"><button class="archive-card-comment" type="button" data-archive-index="${trigger.dataset.archiveIndex}" aria-label="${archive.title} 사진과 댓글 보기"><span data-comment-count>사진과 댓글</span><span aria-hidden="true">↗</span></button></div>`);
+    const actions = body.querySelector("[data-archive-actions]");
+    if (observer) observer.observe(actions); else loadCount(actions);
   });
-
-  const scheduleSection = document.getElementById("schedule");
-  if (scheduleSection && !scheduleSection.querySelector(".next-round-brief")) {
-    const briefRows = (nextEvent ? nextEvent.details : latestRecordEvent.details)
-      .slice(0, 3)
-      .map(([term, description]) => `<li><strong>${term}</strong><span>${description}</span></li>`)
-      .join("");
-    scheduleSection.insertAdjacentHTML(
-      "afterbegin",
-      `<aside class="next-round-brief" data-reveal>
-        <p class="section-kicker">${nextEvent ? "다음 모임 안내" : "지난 대회 기록"}</p>
-        <h3>${nextEvent ? nextEvent.title : "제8회 석노협 스크린골프대회 사진을 확인하세요."}</h3>
-        <ul>${briefRows}</ul>
-      </aside>`
-    );
-  }
-
-  const archiveSection = document.getElementById("archive");
-  if (archiveSection && !archiveSection.querySelector(".archive-invite-panel")) {
-    archiveSection.insertAdjacentHTML(
-      "afterbegin",
-      `<aside class="archive-invite-panel" data-reveal>
-        <div>
-          <p class="section-kicker">지난 라운드</p>
-          <h3>함께했던 사진과 그날의 이야기를 둘러보세요.</h3>
-        </div>
-        <a class="line-button small" href="#archive">사진과 댓글 보기</a>
-      </aside>`
-    );
-  }
-
-  const decorateArchiveCards = () => {
-    document.querySelectorAll("[data-archive-index]").forEach((trigger) => {
-      const index = Number(trigger.getAttribute("data-archive-index"));
-      const archive = Array.isArray(archives) ? archives[index] : null;
-      const card = trigger.closest(".archive-card") || trigger.closest(".featured-round");
-      const target = card?.classList.contains("featured-round") ? card.querySelector(".featured-body") : card;
-      if (!archive || !target || target.querySelector(".archive-card-actions")) return;
-      target.insertAdjacentHTML(
-        "beforeend",
-        `<div class="archive-card-actions" data-archive-actions="${archive.id}">
-          <span class="archive-card-chip">사진 ${archive.images?.length || 1}장</span>
-          <span class="archive-card-chip" data-comment-count>댓글 확인 중</span>
-          <button class="archive-card-comment" type="button" data-archive-index="${index}">댓글 남기기</button>
-        </div>`
-      );
-    });
-  };
-
-  const loadArchiveCommentCounts = async () => {
-    if (!Array.isArray(archives)) return;
-    const targets = Array.from(document.querySelectorAll("[data-archive-actions]"));
-    await Promise.all(targets.map(async (target) => {
-      const archiveId = target.getAttribute("data-archive-actions");
-      const countNode = target.querySelector("[data-comment-count]");
-      if (!archiveId || !countNode) return;
-      try {
-        const url = `${apiBase()}/messages?type=archive_comment&archiveId=${encodeURIComponent(archiveId)}`;
-        const response = await fetch(url, { headers: { "Accept": "application/json" } });
-        const data = await response.json();
-        const count = Array.isArray(data.items) ? data.items.length : 0;
-        countNode.textContent = count ? `댓글 ${count}개` : "첫 댓글 기다리는 중";
-      } catch {
-        countNode.textContent = "댓글 준비 중";
-      }
-    }));
-  };
-
-  decorateArchiveCards();
-  loadArchiveCommentCounts();
-
-
-
   document.querySelectorAll("img").forEach((image) => {
-    const syncRatio = () => {
-      if (!image.naturalWidth || !image.naturalHeight) return;
-      image.classList.toggle("is-portrait-photo", image.naturalHeight > image.naturalWidth * 1.08);
-    };
+    const syncRatio = () => { if (image.naturalWidth && image.naturalHeight) image.classList.toggle("is-portrait-photo", image.naturalHeight > image.naturalWidth * 1.08); };
     if (image.complete) syncRatio();
-    image.addEventListener("load", syncRatio, { once: true });
+    image.addEventListener("load", syncRatio);
   });
 };
 const initMessageAdmin = () => {
