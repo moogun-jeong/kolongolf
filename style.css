@@ -517,6 +517,16 @@
   .member-identity p { overflow: hidden; color: var(--muted); font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
   .staff-card .member-identity h3 { color: var(--on-dark); font-size: 21px; }
   .staff-card .member-identity p { color: var(--on-dark-muted); }
+  .member-handicap {
+    display: inline-flex; align-items: baseline; gap: 5px; margin-top: 6px;
+    padding: 2px 10px 2px 9px; border-radius: var(--radius-pill);
+    background: var(--forest-100); color: var(--forest-700);
+  }
+  .member-handicap span { font-size: 11px; font-weight: 700; }
+  .member-handicap strong { font-family: var(--font-display); font-size: 17px; font-weight: 700; line-height: 1.2; color: var(--forest-800); }
+  .staff-card .member-handicap { background: oklch(100% 0 0 / .1); color: var(--on-dark-muted); }
+  .staff-card .member-handicap strong { color: var(--lime); }
+  .member-handicap-note { margin-top: 14px; color: var(--muted); font-size: 13px; }
   .member-role {
     flex-shrink: 0; align-self: flex-start;
     padding: 2px 9px; border-radius: var(--radius-pill);
