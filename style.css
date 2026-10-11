@@ -607,8 +607,14 @@
 
   .lightbox { padding: 12px; }
   .lightbox-card { width: min(1080px, 100%); padding: 24px; }
-  .lightbox-stage { position: relative; display: grid; place-items: center; height: min(62vh, 640px); border-radius: var(--radius-m); background: var(--forest-950); overflow: hidden; }
-  .lightbox-stage img { width: 100%; height: 100%; object-fit: contain; }
+  /* 사진 비율과 관계없이 한 화면에 전체가 보이도록: 무대 높이를 뷰포트 기준으로 잡고
+     이미지는 무대 안에 절대 배치해 contain으로 맞춥니다. (grid auto 행은 원본 높이를 따라가 잘림) */
+  .lightbox-stage {
+    position: relative; overflow: hidden;
+    height: clamp(260px, calc(100dvh - 300px), 760px);
+    border-radius: var(--radius-m); background: var(--forest-950);
+  }
+  .lightbox-stage img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
   .lightbox-nav {
     position: absolute; top: 50%; translate: 0 -50%; z-index: 1;
     display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%;
@@ -789,7 +795,7 @@
     .footer-copy { text-align: left; padding-top: 0; border-top: 0; }
 
     .lightbox-card { padding: 16px; }
-    .lightbox-stage { height: 52vh; }
+    .lightbox-stage { height: clamp(240px, calc(100dvh - 290px), 640px); }
     .lightbox-nav { width: 40px; height: 40px; font-size: 24px; }
     .form-grid.two { grid-template-columns: 1fr; }
     .admin-archive-card { grid-template-columns: 1fr; }
