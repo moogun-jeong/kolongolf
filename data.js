@@ -188,28 +188,37 @@ export const archives = [
   }
 ];
 
+// 메인 대표 사진: 4명 이상 함께 나온 단체 사진이 6초마다 돌아가며 나옵니다.
+// archiveId로 아래 지난 기록과 연결되어, 사진을 누르면 그 기록의 갤러리에서 원본 전체 크기로 열립니다.
+// 날짜와 설명은 연결된 기록에서 자동으로 가져옵니다(caption을 적으면 그 문구를 대신 씁니다).
 export const heroSlides = [
-  {
-    image: "images/archive-2026-04-2-display.jpg",
-    date: "2026.04.10",
-    caption: "4월 베이스타즈CC 필드 행사"
-  },
-  {
-    image: "images/archive-2026-04-3-display.jpg",
-    date: "2026.04.10",
-    caption: "필드 라운드 코스 스냅"
-  },
-  {
-    image: "images/archive-2026-03-1-display.jpg",
-    date: "2026.03.04",
-    caption: "3월 정기 스크린 라운드"
-  },
-  {
-    image: "images/archive-2025-05-display.jpg",
-    date: "2025.05.01",
-    caption: "상반기 필드 라운딩"
-  }
+  { image: "images/archive-2026-08-3-display.jpg", archiveId: "2026-08-mauna-ocean", caption: "8월 마우나오션 라운드 뒤 단체 사진" },
+  { image: "images/archive-2026-08-1-display.jpg", archiveId: "2026-08-mauna-ocean", caption: "8월 마우나오션 티잉 그라운드" },
+  { image: "images/archive-2026-08-2-display.jpg", archiveId: "2026-08-mauna-ocean", caption: "8월 마우나오션 필드 라운드" },
+  { image: "images/archive-2026-07-11-display.jpg", archiveId: "2026-07-seoknohyup", caption: "7월 석노협 대회 뒤 시상·식사 자리" },
+  { image: "images/archive-2026-03-1-display.jpg", archiveId: "2026-03-regular", caption: "3월 정기전 단체 사진" },
+  { image: "images/archive-2025-12-display.jpg", archiveId: "2025-12-year-end", caption: "2025 송년 라운드" },
+  { image: "images/archive-2025-09-display.jpg", archiveId: "2025-09-regular", caption: "2025년 9월 정기전" },
+  { image: "images/archive-2025-02-display.jpg", archiveId: "2025-02-regular", caption: "2025년 2월 정기전" }
 ];
+
+// 사진을 작은 칸(메인·카드)에 채울 때 인물이 잘리지 않도록 잡는 중심점입니다.
+//   x, y  : 인물이 모인 곳의 위치(%) — 0은 왼쪽/위, 100은 오른쪽/아래
+//   zoom  : 확대 배율(1 = 그대로). 하늘이 넓은 사진처럼 인물이 작게 나온 경우에만 키웁니다.
+// 여기에 없는 사진은 가운데(세로 사진은 위쪽 40%)를 기준으로 채웁니다. 크게 보기(라이트박스)는 항상 원본 전체를 보여줍니다.
+export const photoFocus = {
+  "images/archive-2026-08-3-display.jpg": { x: 50, y: 70 },
+  "images/archive-2026-08-1-display.jpg": { x: 48, y: 50 },
+  "images/archive-2026-08-2-display.jpg": { x: 48, y: 76, zoom: 2.2 },
+  "images/archive-2026-07-11-display.jpg": { x: 50, y: 36 },
+  "images/archive-2026-06-1-display.jpg": { x: 55, y: 50 },
+  "images/archive-2026-04-2-display.jpg": { x: 50, y: 60 },
+  "images/archive-2026-03-1-display.jpg": { x: 50, y: 50 },
+  "images/archive-2025-12-display.jpg": { x: 50, y: 62 },
+  "images/archive-2025-09-display.jpg": { x: 50, y: 70 },
+  "images/archive-2025-05-display.jpg": { x: 50, y: 64 },
+  "images/archive-2025-02-display.jpg": { x: 45, y: 60 }
+};
 
 // 확정된 "미래" 일정만 넣습니다. 지난 행사는 여기에 두지 않습니다.
 // 비어 있으면 일정 영역은 "다음 모임 준비 중"으로 안내하고 하단 일정 공지는 표시하지 않습니다.
@@ -224,6 +233,9 @@ export const heroSlides = [
 //   title: "9월 정기 스크린 라운드",
 //   summary: "9월 정기 라운드 일정입니다.",
 //   body: "골프존파크에서 진행하는 정기 스크린 라운드입니다.",
+//   location: "골프존파크 삼산한국골프점",  // 캘린더에 들어갈 장소
+//   startTime: "08:00",                       // 선택. 없으면 캘린더에 '하루 종일' 일정으로 들어갑니다
+//   durationHours: 5,                         // 선택. startTime이 있을 때 일정 길이(기본 5시간)
 //   details: [["일시", "2026.09.05(토) 08:00"], ["장소", "골프존파크 삼산한국골프점"]]
 // }
 export const upcomingEvents = [
@@ -235,6 +247,7 @@ export const upcomingEvents = [
     state: "예정",
     title: "11월 경주 보문CC 필드 라운드",
     body: "11월 1일 경주 보문CC에서 필드 라운드를 함께합니다. 티오프 시간과 조 편성은 정해지면 이곳에 안내할게요.",
+    location: "경주 보문CC",
     details: [["일시", "2026.11.01(일)"], ["장소", "경주 보문CC"]]
   }
 ];
