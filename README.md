@@ -10,7 +10,7 @@
 - 배포 URL: https://moogun-jeong.github.io/kolongolf/ (방명록·댓글 API는 https://kolongolf.pages.dev)
 - 구조: `index.html`, `data.js`(내용), `main.js`(화면·동작, ES Module), `style.css`, `images/`
 - 빌드: `npm run build`가 공개 파일만 `dist/`로 모으고, 배포는 `dist/`만 사용합니다
-- 주요 수정 지점: 회원·핸디/다음 일정/지난 기록/대표 사진은 **`data.js`만** 고치면 됩니다. 화면 톤과 반응형은 `style.css`
+- 주요 수정 지점: 회원·핸디/다음 일정/지난 기록/대표 사진은 **`data.js`만** 고치면 됩니다. 사진이 작은 칸에서 잘리면 `photoFocus`에 인물 중심점(x, y)과 확대(zoom)를 적습니다. 화면 톤과 반응형은 `style.css`
 - 배포 전 점검: `npm run check` (문법, 날짜·핸디 형식, 사진 파일 존재). `npm run build`가 항상 먼저 실행하며 실패하면 배포가 멈춥니다.
 
 ## 배포 범위

@@ -1,4 +1,4 @@
-import { members, handicapSource, archives, heroSlides, upcomingEvents } from "./data.js";
+import { members, handicapSource, archives, heroSlides, photoFocus, upcomingEvents } from "./data.js";
 
 const rolePriority = {
   회장: 1,
@@ -95,14 +95,46 @@ const thumbSource = (source) => source.replace(/-display\.(jpe?g|png)$/i, "-thum
 // 카드처럼 작은 칸에는 긴 변 1800px 원본 대신 가로 900px `-card` 파생본을 먼저 고르게 합니다.
 // 라이트박스(크게 보기)는 계속 -display 원본을 씁니다.
 const cardSource = (source) => source.replace(/-display\.(jpe?g|png)$/i, "-card.$1");
-const responsiveImageAttrs = (source, sizes) =>
-  `src="${cardSource(source)}" srcset="${cardSource(source)} 900w, ${source} 1800w" sizes="${sizes}"`;
+// sizes는 [미디어 조건, 칸 너비] 목록입니다. 확대(zoom)한 사진은 그만큼 더 큰 파일이 필요하므로 너비에 배율을 곱합니다.
 const imageSizes = {
-  hero: "(max-width: 960px) calc(100vw - 32px), 620px",
-  featured: "(max-width: 960px) calc(100vw - 32px), 680px",
-  card: "(max-width: 760px) calc(100vw - 32px), (max-width: 1080px) 46vw, 380px",
-  lastRound: "(max-width: 760px) calc(100vw - 32px), (max-width: 960px) 54vw, 520px"
+  hero: [["(max-width: 960px)", "(100vw - 32px)"], ["", "620px"]],
+  featured: [["(max-width: 960px)", "(100vw - 32px)"], ["", "680px"]],
+  card: [["(max-width: 760px)", "(100vw - 32px)"], ["(max-width: 1080px)", "46vw"], ["", "380px"]],
+  lastRound: [["(max-width: 760px)", "(100vw - 32px)"], ["(max-width: 960px)", "54vw"], ["", "520px"]],
+  full: [["", "100vw"]]
 };
+const sizesAttribute = (rules, zoom = 1) => rules
+  .map(([media, width]) => `${media ? `${media} ` : ""}${zoom === 1 ? width.replace(/^\((.*)\)$/, "calc($1)") : `calc(${width} * ${zoom})`}`)
+  .join(", ");
+
+// data.js의 photoFocus로 인물이 모인 곳을 기준으로 채우고, 필요하면 그 지점을 중심으로 확대합니다.
+const focusFor = (source) => photoFocus[source] || null;
+const focusStyle = (source) => {
+  const focus = focusFor(source);
+  if (!focus) return "";
+  const zoom = Number(focus.zoom) > 1 ? Number(focus.zoom) : 1;
+  return ` style="--focus: ${focus.x ?? 50}% ${focus.y ?? 50}%; --zoom: ${zoom};"`;
+};
+const responsiveImageAttrs = (source, sizeKey) => {
+  const zoom = Number(focusFor(source)?.zoom) > 1 ? Number(focusFor(source).zoom) : 1;
+  return `src="${cardSource(source)}" srcset="${cardSource(source)} 900w, ${source} 1800w" sizes="${sizesAttribute(imageSizes[sizeKey], zoom)}"${focusStyle(source)}`;
+};
+
+const archiveIndexById = (id) => archives.findIndex((archive) => archive.id === id);
+
+// 대표 사진 슬라이드에 연결된 기록에서 날짜·설명·갤러리 위치를 찾습니다.
+const heroSlideInfo = (slide) => {
+  const archiveIndex = archiveIndexById(slide.archiveId);
+  const archive = archives[archiveIndex];
+  return {
+    ...slide,
+    archiveIndex,
+    imageIndex: Math.max(0, archive ? archive.images.indexOf(slide.image) : 0),
+    date: slide.date || archive?.date || "",
+    caption: slide.caption || archive?.title || ""
+  };
+};
+const heroSlideData = heroSlides.map(heroSlideInfo);
 
 const startOfToday = () => {
   const today = new Date();
@@ -122,6 +154,104 @@ const getNextEvent = () => {
       .sort((left, right) => left.date.localeCompare(right.date))[0] || null
   );
 };
+
+// 오늘 기준 남은 날짜("D-20", 당일은 "D-DAY")
+const ddayLabel = (event) => {
+  const eventDate = new Date(`${event.date}T00:00:00`);
+  const days = Math.round((eventDate - startOfToday()) / 86400000);
+  if (Number.isNaN(days) || days < 0) return "";
+  return days === 0 ? "D-DAY" : `D-${days}`;
+};
+
+// 캘린더 등록용 날짜 문자열입니다. 시간이 없으면 하루 종일 일정으로 넣습니다.
+const calendarDates = (event) => {
+  const compact = event.date.replaceAll("-", "");
+  if (!event.startTime) {
+    const next = new Date(`${event.date}T00:00:00`);
+    next.setDate(next.getDate() + 1);
+    const end = `${next.getFullYear()}${String(next.getMonth() + 1).padStart(2, "0")}${String(next.getDate()).padStart(2, "0")}`;
+    return { allDay: true, start: compact, end };
+  }
+  const [hour, minute] = event.startTime.split(":").map(Number);
+  const startMinutes = hour * 60 + minute;
+  const endMinutes = Math.min(startMinutes + Math.round((Number(event.durationHours) || 5) * 60), 23 * 60 + 59);
+  const time = (total) => `${String(Math.floor(total / 60)).padStart(2, "0")}${String(total % 60).padStart(2, "0")}00`;
+  return { allDay: false, start: `${compact}T${time(startMinutes)}`, end: `${compact}T${time(endMinutes)}` };
+};
+
+const siteUrl = () => document.querySelector('link[rel="canonical"]')?.href || window.location.href.split("#")[0];
+const eventLocation = (event) => event.location || event.details?.find(([term]) => term === "장소")?.[1] || "";
+
+const googleCalendarUrl = (event) => {
+  const { start, end } = calendarDates(event);
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: `[코오롱 골프] ${event.title}`,
+    dates: `${start}/${end}`,
+    details: `${event.body}\n\n${siteUrl()}`,
+    location: eventLocation(event),
+    ctz: "Asia/Seoul"
+  });
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+};
+
+// iPhone·갤럭시 기본 캘린더와 Outlook이 읽는 .ics 파일을 브라우저에서 바로 만듭니다.
+// RFC 5545: 한 줄은 75바이트를 넘지 않게 접고, 이어지는 줄은 공백으로 시작합니다(한글은 글자 단위로 끊어 깨지지 않게).
+const foldIcsLine = (line) => {
+  const encoder = new TextEncoder();
+  const parts = [];
+  let current = "", bytes = 0;
+  for (const char of line) {
+    const size = encoder.encode(char).length;
+    if (bytes + size > (parts.length ? 74 : 75)) {
+      parts.push(current);
+      current = "";
+      bytes = 0;
+    }
+    current += char;
+    bytes += size;
+  }
+  parts.push(current);
+  return parts.join("\r\n ");
+};
+
+const icsText = (event) => {
+  const { allDay, start, end } = calendarDates(event);
+  const escape = (value) => String(value).replace(/[\\;,]/g, (char) => `\\${char}`).replace(/\n/g, "\\n");
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+  const when = allDay
+    ? [`DTSTART;VALUE=DATE:${start}`, `DTEND;VALUE=DATE:${end}`]
+    : [`DTSTART;TZID=Asia/Seoul:${start}`, `DTEND;TZID=Asia/Seoul:${end}`];
+  return [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Kolon Golf Society//KO", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
+    "BEGIN:VEVENT",
+    `UID:${event.id}@kolongolf`,
+    `DTSTAMP:${stamp}`,
+    ...when,
+    `SUMMARY:${escape(`[코오롱 골프] ${event.title}`)}`,
+    `LOCATION:${escape(eventLocation(event))}`,
+    `DESCRIPTION:${escape(`${event.body}\n${siteUrl()}`)}`,
+    "BEGIN:VALARM", "TRIGGER:-P1D", "ACTION:DISPLAY", `DESCRIPTION:${escape(`내일 ${event.title}`)}`, "END:VALARM",
+    "END:VEVENT", "END:VCALENDAR"
+  ].map(foldIcsLine).join("\r\n");
+};
+
+const downloadIcs = (event) => {
+  const url = URL.createObjectURL(new Blob([icsText(event)], { type: "text/calendar;charset=utf-8" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `${event.id}.ics`;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+
+const calendarButtons = (event, variant = "") => `
+  <div class="calendar-actions${variant ? ` ${variant}` : ""}" role="group" aria-label="${event.title} 캘린더에 추가">
+    <button class="solid-button accent" type="button" data-add-calendar="${event.id}"><span class="calendar-icon" aria-hidden="true"></span>내 캘린더에 추가</button>
+    <a class="line-button on-dark" href="${googleCalendarUrl(event)}" target="_blank" rel="noopener">Google 캘린더</a>
+  </div>`;
 
 const messageCopy = {
   unavailable: "방명록 저장소를 연결하는 중입니다. Cloudflare Pages 배포에서 곧 글을 남길 수 있습니다.",
@@ -243,8 +373,12 @@ class KolonHero extends HTMLElement {
     this.dataset.ready = "true";
     const total = String(heroSlides.length).padStart(2, "0");
     const lastRound = archives[0];
-    const slides = heroSlides.map((slide, index) => `
-      <img class="hero-slide${index === 0 ? " is-active" : ""}" ${responsiveImageAttrs(slide.image, imageSizes.hero)} alt="${index === 0 ? slide.caption : ""}" width="1000" height="750" decoding="async" ${index === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} />`).join("");
+    const first = heroSlideData[0];
+    // 첫 장만 바로 불러오고, 나머지는 차례가 오기 직전에 data-* 값을 src로 옮겨 불러옵니다.
+    const slides = heroSlideData.map((slide, index) => {
+      const attrs = responsiveImageAttrs(slide.image, "hero");
+      return `<img class="hero-slide${index === 0 ? " is-active" : ""}" ${index === 0 ? attrs : attrs.replace(/\b(src|srcset|sizes)="/g, "data-$1=\"")} alt="${index === 0 ? slide.caption : ""}" width="1000" height="750" decoding="async"${index === 0 ? ' fetchpriority="high"' : ""} />`;
+    }).join("");
     this.innerHTML = `
       <section class="hero" aria-labelledby="heroTitle">
         <div class="hero-glow" aria-hidden="true"></div>
@@ -264,12 +398,13 @@ class KolonHero extends HTMLElement {
             </dl>
           </div>
           <figure class="hero-media" data-reveal>
-            <div class="hero-frame" id="heroFrame">
+            <button class="hero-frame" id="heroFrame" type="button" data-archive-index="${first.archiveIndex}" data-image-index="${first.imageIndex}" aria-label="${first.caption} 사진 크게 보기">
               ${slides}
               <span class="hero-badge" aria-hidden="true">On &amp; Off the Fairway</span>
-            </div>
+              <span class="hero-zoom-hint" aria-hidden="true">크게 보기</span>
+            </button>
             <figcaption>
-              <div class="hero-caption-copy"><span id="heroDate">${heroSlides[0].date}</span><strong id="heroCaption">${heroSlides[0].caption}</strong></div>
+              <div class="hero-caption-copy"><span id="heroDate">${first.date}</span><strong id="heroCaption">${first.caption}</strong></div>
               <div class="hero-photo-controls" role="group" aria-label="대표 사진 선택">
                 <span class="hero-slide-count" id="heroSlideCount" aria-live="polite">01 / ${total}</span>
                 <button class="round-button" type="button" data-hero-slide="prev" aria-label="이전 대표 사진">←</button>
@@ -325,17 +460,17 @@ class KolonSchedule extends HTMLElement {
           <article class="next-event${next ? "" : " is-pending"}">
             <div class="event-date-lockup" aria-hidden="true"><span>${next ? next.dateLockup.month : "Next"}</span><strong>${next ? next.dateLockup.day : "TBD"}</strong><small>${next ? next.dateLockup.year : "Round"}</small></div>
             <div class="event-content">
-              <p class="event-state"><span class="status-dot" aria-hidden="true"></span>${next ? next.state : "일정 조율 중"}</p>
+              <p class="event-state"><span class="status-dot" aria-hidden="true"></span>${next ? next.state : "일정 조율 중"}${next && ddayLabel(next) ? `<span class="dday-chip" aria-label="${ddayLabel(next) === "D-DAY" ? "오늘" : `${ddayLabel(next).slice(2)}일 남음`}">${ddayLabel(next)}</span>` : ""}</p>
               <h3>${next ? next.title : "다음 라운드를 준비하고 있어요."}</h3>
               <p>${next ? next.body : "일시와 장소가 정해지면 바로 알려드릴게요. 함께하고 싶다면 언제든 문의해주세요."}</p>
               ${next
-                ? `<dl class="upcoming-details">${next.details.map(([term, description]) => `<div><dt>${term}</dt><dd>${description}</dd></div>`).join("")}</dl>`
+                ? `<dl class="upcoming-details">${next.details.map(([term, description]) => `<div><dt>${term}</dt><dd>${description}</dd></div>`).join("")}</dl>${calendarButtons(next)}`
                 : `<button class="solid-button accent" type="button" data-open-modal="joinModal">모임 문의하기 <span aria-hidden="true">→</span></button>`}
             </div>
           </article>
           <article class="last-round">
             <button class="last-round-photo" type="button" data-archive-index="0" aria-label="${last.title} 사진 ${last.images.length}장 보기">
-              <img ${responsiveImageAttrs(last.images[0], imageSizes.lastRound)} alt="" width="800" height="600" loading="lazy" decoding="async" />
+              <img ${responsiveImageAttrs(last.images[0], "lastRound")} alt="" width="800" height="600" loading="lazy" decoding="async" />
             </button>
             <div class="last-round-body">
               <p class="eyebrow">Last Round · ${last.date}</p>
@@ -420,7 +555,7 @@ class KolonArchive extends HTMLElement {
     const featured = archives[0];
     const archiveItems = archives.slice(1).map((archive, index) => `
       <article class="archive-card" data-archive-year="${archive.date.slice(0, 4)}" data-reveal>
-        <button class="archive-photo" type="button" data-archive-index="${index + 1}" aria-label="${archive.title} 사진 ${archive.images.length}장 보기"><img ${responsiveImageAttrs(archive.images[0], imageSizes.card)} alt="${archive.title} 대표 사진" width="800" height="600" loading="lazy" decoding="async" /><span class="archive-chip">${archive.label}</span>${photoCue(archive)}</button>
+        <button class="archive-photo" type="button" data-archive-index="${index + 1}" aria-label="${archive.title} 사진 ${archive.images.length}장 보기"><img ${responsiveImageAttrs(archive.images[0], "card")} alt="${archive.title} 대표 사진" width="800" height="600" loading="lazy" decoding="async" /><span class="archive-chip">${archive.label}</span>${photoCue(archive)}</button>
         <div class="archive-body"><p class="archive-meta"><time>${archive.date}</time></p><h3>${archive.title}</h3><p class="archive-summary">${archive.summary}</p>${renderDetails(archive)}<div class="archive-foot"><span>${archive.location}</span><span>${archive.people}</span></div></div>
       </article>`).join("");
     const years = [...new Set(archives.map((archive) => archive.date.slice(0, 4)))];
@@ -430,7 +565,7 @@ class KolonArchive extends HTMLElement {
           <div class="section-heading" data-reveal><div><p class="eyebrow">Round Stories</p><h2 id="archiveTitle">우리의 라운드.</h2></div><p>함께 웃고, 겨루고, 기억한 순간들. 사진을 누르면 갤러리와 댓글을 볼 수 있어요.</p></div>
           <div class="archive-toolbar" data-reveal><div class="archive-filters" role="group" aria-label="라운드 연도 필터"><button type="button" data-archive-filter="all" aria-pressed="true">전체</button>${years.map((year) => `<button type="button" data-archive-filter="${year}" aria-pressed="false">${year}</button>`).join("")}</div><p id="archiveResult" role="status">총 ${archives.length}개의 라운드</p></div>
           <article class="featured-round" data-archive-year="${featured.date.slice(0, 4)}" data-reveal>
-            <button class="featured-photo" type="button" data-archive-index="0" aria-label="${featured.title} 사진 ${featured.images.length}장 보기"><img ${responsiveImageAttrs(featured.images[0], imageSizes.featured)} alt="${featured.title} 대표 사진" width="1000" height="750" loading="lazy" decoding="async" /><span class="archive-chip accent">Latest</span>${photoCue(featured)}</button>
+            <button class="featured-photo" type="button" data-archive-index="0" aria-label="${featured.title} 사진 ${featured.images.length}장 보기"><img ${responsiveImageAttrs(featured.images[0], "featured")} alt="${featured.title} 대표 사진" width="1000" height="750" loading="lazy" decoding="async" /><span class="archive-chip accent">Latest</span>${photoCue(featured)}</button>
             <div class="featured-body"><p class="archive-meta"><time>${featured.date}</time> · ${featured.label}</p><h3>${featured.title}</h3><p class="archive-summary">${featured.summary}</p>${featured.highlights?.length ? `<ul class="archive-tags" aria-label="주요 기록">${featured.highlights.map((tag) => `<li>${tag}</li>`).join("")}</ul>` : ""}${renderDetails(featured)}<div class="archive-foot"><span>${featured.location}</span><span>${featured.people}</span></div></div>
           </article>
           <div class="archive-grid">${archiveItems}</div>
@@ -476,7 +611,7 @@ class KolonJoin extends HTMLElement {
     this.dataset.ready = "true";
     this.innerHTML = `
       <section class="join-section" aria-labelledby="joinTitle">
-        <img class="join-backdrop" ${responsiveImageAttrs("images/archive-2026-03-1-display.jpg", "100vw")} alt="" width="1800" height="1350" loading="lazy" decoding="async" />
+        <img class="join-backdrop" ${responsiveImageAttrs("images/archive-2026-03-1-display.jpg", "full")} alt="" width="1800" height="1350" loading="lazy" decoding="async" />
         <div class="join-inner" data-reveal>
           <p class="eyebrow on-dark"><span class="eyebrow-dot" aria-hidden="true"></span>Join Us</p>
           <h2 id="joinTitle">다음 라운드, <em>함께해요.</em></h2>
@@ -563,7 +698,7 @@ class KolonBottomNotice extends HTMLElement {
       <section class="bottom-notice" data-bottom-notice role="region" aria-labelledby="bottomNoticeTitle" aria-live="polite">
         <span class="notice-mark" aria-hidden="true"></span>
         <div class="notice-copy">
-          <p>${nextEvent.eyebrow}</p>
+          <p>${nextEvent.eyebrow}${ddayLabel(nextEvent) ? ` · <strong>${ddayLabel(nextEvent)}</strong>` : ""}</p>
           <h2 id="bottomNoticeTitle">${nextEvent.title}</h2>
           <span>${nextEvent.details?.[0]?.[1] || nextEvent.date}</span>
           <small>${nextEvent.body}</small>
@@ -793,18 +928,32 @@ const initHeroSlider = () => {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let index = 0, timer = 0, paused = false;
 
+  // 보이지 않는 슬라이드까지 한꺼번에 받지 않도록, 필요한 장만 data-* 값을 실제 속성으로 옮깁니다.
+  const ensureLoaded = (slideIndex) => {
+    const image = slides[(slideIndex + slides.length) % slides.length];
+    if (!image?.dataset.src) return;
+    image.sizes = image.dataset.sizes;
+    image.srcset = image.dataset.srcset;
+    image.src = image.dataset.src;
+    delete image.dataset.src;
+  };
+
   const show = (nextIndex) => {
-    index = (nextIndex + heroSlides.length) % heroSlides.length;
-    const slide = heroSlides[index];
+    index = (nextIndex + heroSlideData.length) % heroSlideData.length;
+    const slide = heroSlideData[index];
+    ensureLoaded(index);
+    ensureLoaded(index + 1);
     slides.forEach((image, imageIndex) => {
       const active = imageIndex === index;
       image.classList.toggle("is-active", active);
       image.alt = active ? slide.caption : "";
-      if (active) image.loading = "eager";
     });
+    frame.dataset.archiveIndex = String(slide.archiveIndex);
+    frame.dataset.imageIndex = String(slide.imageIndex);
+    frame.setAttribute("aria-label", `${slide.caption} 사진 크게 보기`);
     if (date) date.textContent = slide.date;
     if (caption) caption.textContent = slide.caption;
-    if (count) count.textContent = `${String(index + 1).padStart(2, "0")} / ${String(heroSlides.length).padStart(2, "0")}`;
+    if (count) count.textContent = `${String(index + 1).padStart(2, "0")} / ${String(heroSlideData.length).padStart(2, "0")}`;
   };
 
   // 자동 넘김은 움직임 최소화 설정을 존중하고, 사용자가 사진을 보는 동안에는 멈춥니다.
@@ -826,7 +975,20 @@ const initHeroSlider = () => {
   media?.addEventListener("focusin", () => { paused = true; schedule(); });
   media?.addEventListener("focusout", () => { paused = false; schedule(); });
   document.addEventListener("visibilitychange", () => { paused = document.hidden; schedule(); });
+  // 첫 화면이 다 뜬 뒤 다음 장을 미리 받아 둡니다.
+  window.addEventListener("load", () => ensureLoaded(1), { once: true });
   schedule();
+};
+
+const initCalendarButtons = () => {
+  document.addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const button = target.closest("[data-add-calendar]");
+    if (!button) return;
+    const calendarEvent = upcomingEvents.find((item) => item.id === button.getAttribute("data-add-calendar"));
+    if (calendarEvent) downloadIcs(calendarEvent);
+  });
 };
 const initModals = () => {
   const modals = Array.from(document.querySelectorAll(".modal"));
@@ -910,7 +1072,7 @@ const initLightbox = () => {
     });
   };
 
-  const open = (archiveIndex) => {
+  const open = (archiveIndex, startIndex = 0) => {
     currentArchive = archives[archiveIndex];
     if (!currentArchive || !lightbox) return;
     currentGallery = currentArchive.images;
@@ -925,7 +1087,7 @@ const initLightbox = () => {
       thumbs.append(button);
     });
 
-    render(0);
+    render(Math.min(Math.max(0, startIndex), currentGallery.length - 1));
     document.dispatchEvent(new CustomEvent("archive-comment-scope", { detail: { archive: currentArchive } }));
     lightbox.classList.add("open");
     lightbox.setAttribute("aria-hidden", "false");
@@ -939,7 +1101,7 @@ const initLightbox = () => {
     const trigger = target.closest("[data-archive-index]");
     if (!trigger) return;
     event.preventDefault();
-    open(Number(trigger.getAttribute("data-archive-index")));
+    open(Number(trigger.getAttribute("data-archive-index")), Number(trigger.getAttribute("data-image-index")) || 0);
   });
 
   prev?.addEventListener("click", () => render(index - 1));
@@ -1756,6 +1918,7 @@ const initPage = () => {
   initScrollProgress();
   initMemberSearch();
   initHeroSlider();
+  initCalendarButtons();
   initModals();
   initLightbox();
   initMessages();

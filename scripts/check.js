@@ -68,7 +68,7 @@ const checkImage = (reference, where, errors) => {
   }
 };
 
-const checkData = ({ members, archives, heroSlides, upcomingEvents }, errors) => {
+const checkData = ({ members, archives, heroSlides, photoFocus = {}, upcomingEvents }, errors) => {
   const handles = new Set();
   members.forEach((member, index) => {
     const where = `members[${index}] ${member.name || ""}`;
@@ -102,7 +102,28 @@ const checkData = ({ members, archives, heroSlides, upcomingEvents }, errors) =>
     else archive.images.forEach((image, imageIndex) => checkImage(image, `${where} 사진 ${imageIndex + 1}`, errors));
   });
 
-  heroSlides.forEach((slide, index) => checkImage(slide.image, `heroSlides[${index}]`, errors));
+  heroSlides.forEach((slide, index) => {
+    const where = `heroSlides[${index}]`;
+    checkImage(slide.image, where, errors);
+    const archive = archives.find((item) => item.id === slide.archiveId);
+    if (!archive) errors.push(`${where}: archiveId가 지난 기록에 없습니다 (${slide.archiveId})`);
+    else if (!archive.images.includes(slide.image)) {
+      errors.push(`${where}: 사진이 연결된 기록(${slide.archiveId})의 images에 없습니다 — 크게 보기에서 열 수 없습니다`);
+    }
+  });
+
+  Object.entries(photoFocus).forEach(([image, focus]) => {
+    const where = `photoFocus ${image}`;
+    checkImage(image, where, errors);
+    for (const axis of ["x", "y"]) {
+      if (focus[axis] !== undefined && !(Number.isFinite(focus[axis]) && focus[axis] >= 0 && focus[axis] <= 100)) {
+        errors.push(`${where}: ${axis}는 0~100 사이 숫자여야 합니다 (${focus[axis]})`);
+      }
+    }
+    if (focus.zoom !== undefined && !(Number.isFinite(focus.zoom) && focus.zoom >= 1 && focus.zoom <= 3)) {
+      errors.push(`${where}: zoom은 1~3 사이 숫자여야 합니다 (${focus.zoom})`);
+    }
+  });
 
   upcomingEvents.forEach((event, index) => {
     const where = `upcomingEvents[${index}] ${event.title || ""}`;
@@ -118,6 +139,9 @@ const checkData = ({ members, archives, heroSlides, upcomingEvents }, errors) =>
     const lockup = event.dateLockup || {};
     if (lockup.year !== String(year) || lockup.month !== monthNames[month - 1] || lockup.day !== String(day).padStart(2, "0")) {
       errors.push(`${where}: dateLockup이 날짜와 다릅니다 (기대값 ${monthNames[month - 1]} ${String(day).padStart(2, "0")} ${year})`);
+    }
+    if (event.startTime !== undefined && !/^([01]\d|2[0-3]):[0-5]\d$/.test(event.startTime)) {
+      errors.push(`${where}: startTime은 HH:MM 형식이어야 합니다 (${event.startTime})`);
     }
     if (!Array.isArray(event.details)) errors.push(`${where}: details는 [["일시", "..."], ...] 형식이어야 합니다`);
   });
