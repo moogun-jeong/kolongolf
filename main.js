@@ -167,6 +167,27 @@ const principleIcons = {
 
 const archives = [
   {
+    id: "2026-08-mauna-ocean",
+    date: "2026.08.15",
+    label: "필드 행사",
+    title: "2026년 8월 마우나오션 필드 행사",
+    location: "마우나오션CC",
+    people: "12명 참가",
+    summary: "광복절에 마우나오션CC에서 필드 라운드를 함께했습니다. 조별로 티오프해 18홀을 돌고, 라운드 뒤에는 다 함께 모여 시상과 식사 자리를 가졌습니다.",
+    highlights: ["마우나오션CC", "18홀 필드", "12명 참가"],
+    details: [
+      "일시: 2026년 8월 15일(토)",
+      "장소: 마우나오션CC",
+      "참가: 김정훈, 김태연, 윤석현, 이동수, 김효준, 서무환, 전형준, 김경수, 정무근, 김무건, 서승규, 정성원",
+      "단체 스코어카드 상위: 1위 김정훈(+8), 2위 김태연(+17), 3위 윤석현(+18)"
+    ],
+    images: [
+      "images/archive-2026-08-1-display.jpg",
+      "images/archive-2026-08-2-display.jpg",
+      "images/archive-2026-08-3-display.jpg"
+    ]
+  },
+  {
     id: "2026-07-seoknohyup",
     date: "2026.07.04",
     label: "스크린 대회",
