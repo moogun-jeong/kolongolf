@@ -171,10 +171,11 @@
   .line-button.small { min-height: 38px; padding: 7px 16px; font-size: 13px; }
   .line-button.danger { color: var(--danger); border-color: oklch(55% .19 27 / .4); }
   .line-button.danger:hover { background: oklch(55% .19 27 / .08); border-color: var(--danger); }
+  /* 누르기 영역은 44px 이상(WCAG 2.5.5 권장). 밑줄은 border 대신 text-decoration으로 그려 높이와 분리합니다. */
   .text-button {
-    display: inline-flex; align-items: center; gap: 8px;
+    display: inline-flex; align-items: center; gap: 8px; min-height: 44px;
     color: var(--forest-700); font-size: 15px; font-weight: 700;
-    border-bottom: 2px solid var(--lime); padding-bottom: 2px;
+    text-decoration: underline 2px var(--lime); text-underline-offset: 6px;
   }
   .text-button:hover { color: var(--ink); }
   .round-button {
@@ -383,7 +384,7 @@
   .archive-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
   .archive-filters { display: inline-flex; gap: 4px; padding: 4px; border-radius: var(--radius-pill); background: var(--surface); border: 1px solid var(--line); }
   .archive-filters button {
-    min-height: 40px; padding: 6px 20px; border-radius: var(--radius-pill);
+    min-height: 44px; padding: 6px 20px; border-radius: var(--radius-pill);
     color: var(--muted); font-size: 14px; font-weight: 700;
     transition: background .2s, color .2s;
   }
@@ -475,8 +476,6 @@
   .community-archive-board .archive-grid { margin-top: 20px; }
   .community-archive-card .archive-photo { aspect-ratio: 4 / 3; }
   .community-archive-card .archive-photo > span:not(.photo-open-label) { position: absolute; right: 14px; bottom: 14px; padding: 5px 12px; border-radius: var(--radius-pill); background: oklch(19% .035 160 / .72); color: var(--on-dark); font-size: 13px; }
-  .community-archive-form { display: grid; gap: 16px; }
-  .form-grid.two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
   /* ---------- 회원 ---------- */
   .member-tools { display: flex; align-items: center; gap: 8px; width: min(100%, 400px); }
@@ -547,7 +546,7 @@
   .guestbook-form-card .card-title { margin-bottom: 20px; }
   .message-form { display: grid; gap: 16px; }
   .message-form label { display: grid; gap: 6px; }
-  .message-form label > span, .community-archive-form label > span, .admin-auth-form label > span, .admin-toolbar label > span { color: var(--ink); font-size: 14px; font-weight: 700; }
+  .message-form label > span, .admin-auth-form label > span, .admin-toolbar label > span { color: var(--ink); font-size: 14px; font-weight: 700; }
   .message-honeypot { position: absolute !important; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
   .turnstile-slot:empty { display: none; }
   .message-form-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
@@ -586,8 +585,8 @@
   }
   .footer-brand-block p { margin-top: 14px; font-size: 14px; }
   .footer-brand { color: var(--on-dark); }
-  .site-footer nav { display: flex; flex-wrap: wrap; align-content: flex-start; justify-content: flex-end; gap: 4px 22px; font-size: 14px; }
-  .site-footer nav a, .site-footer nav button { color: var(--on-dark-muted); transition: color .2s; }
+  .site-footer nav { display: flex; flex-wrap: wrap; align-content: flex-start; justify-content: flex-end; gap: 0 22px; font-size: 14px; }
+  .site-footer nav a, .site-footer nav button { display: inline-flex; align-items: center; min-height: 44px; color: var(--on-dark-muted); transition: color .2s; }
   .site-footer nav a:hover, .site-footer nav button:hover { color: var(--lime); }
   .site-footer address { padding-top: 24px; border-top: 1px solid var(--on-dark-line); font-size: 13px; line-height: 1.9; }
   .footer-copy { padding-top: 24px; border-top: 1px solid var(--on-dark-line); color: oklch(62% .02 155); font-family: var(--font-display); font-size: 14px; letter-spacing: .08em; text-align: right; }
@@ -703,7 +702,7 @@
   .notice-copy > span { font-size: 13px; }
   .notice-copy small { display: none; }
   .notice-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-  .notice-check { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer; }
+  .notice-check { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: 12px; cursor: pointer; }
   .notice-check input { width: 16px; height: 16px; padding: 0; accent-color: var(--lime); }
   .bottom-notice .line-button { background: transparent; color: var(--on-dark); border-color: var(--on-dark-line); }
   .bottom-notice .notice-close { background: oklch(100% 0 0 / .1); }
@@ -810,7 +809,6 @@
     .lightbox-card { padding: 16px; }
     .lightbox-stage { height: clamp(240px, calc(100dvh - 290px), 640px); }
     .lightbox-nav { width: 40px; height: 40px; font-size: 24px; }
-    .form-grid.two { grid-template-columns: 1fr; }
     .admin-archive-card { grid-template-columns: 1fr; }
 
     .bottom-notice { flex-wrap: wrap; gap: 12px; padding: 14px 14px 14px 16px; bottom: 12px; }

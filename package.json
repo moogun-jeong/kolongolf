@@ -7,6 +7,7 @@
     "start": "node scripts/dev.js",
     "dev": "node scripts/dev.js",
     "build": "node scripts/build.js",
+    "check": "node scripts/check.js",
     "preview:static": "node scripts/build.js && node scripts/serve.js",
     "images": "./scripts/optimize-images.sh",
     "db:local:init": "wrangler d1 execute kolongolf-messages --local --file=./sql/local-schema.sql"

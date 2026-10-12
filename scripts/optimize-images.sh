@@ -2,7 +2,8 @@
 # 아카이브 사진을 웹용 파생본으로 변환합니다.
 #
 #   <이름>-display.jpg  긴 변 1800px, 화면/라이트박스용
-#   <이름>-thumb.jpg    긴 변 400px, 라이트박스 썸네일과 카드 미리보기용
+#   <이름>-card.jpg     가로 900px, 홈 화면 카드·대표 사진용(srcset 기본값)
+#   <이름>-thumb.jpg    긴 변 400px, 라이트박스 썸네일용
 #
 # 사용법:
 #   ./scripts/optimize-images.sh            images/ 전체를 훑어 빠진 파생본만 생성
@@ -17,6 +18,8 @@ set -euo pipefail
 IMAGE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/images"
 DISPLAY_EDGE=1800
 DISPLAY_QUALITY=82
+CARD_WIDTH=900
+CARD_QUALITY=78
 THUMB_EDGE=400
 THUMB_QUALITY=72
 
@@ -36,37 +39,39 @@ target_extension() {
 # 원본보다 큰 이미지를 만들지 않도록 '>' 플래그로 축소만 수행합니다.
 # PNG는 축소하면서 생긴 중간색 때문에 오히려 커지므로 팔레트로 양자화합니다.
 render() {
-  local source="$1" output="$2" edge="$3" quality="$4"
+  local source="$1" output="$2" geometry="$3" quality="$4"
   local -a encode=()
   case "$output" in
     *.png) encode=(-colors 256 -define png:compression-level=9) ;;
     *) encode=(-quality "$quality") ;;
   esac
-  magick "$source" -auto-orient -resize "${edge}x${edge}>" -strip "${encode[@]}" "$output"
+  magick "$source" -auto-orient -resize "$geometry" -strip "${encode[@]}" "$output"
   printf "  %-42s %s\n" "$(basename "$output")" "$(du -h "$output" | cut -f1)"
 }
 
 process() {
   local source="$1"
-  local base extension display thumb
+  local base extension display card thumb
   base="$(basename "$source")"
   base="${base%.*}"
   extension="$(target_extension "$base")"
   display="$IMAGE_DIR/${base}-display.${extension}"
+  card="$IMAGE_DIR/${base}-card.${extension}"
   thumb="$IMAGE_DIR/${base}-thumb.${extension}"
 
   echo "$base"
-  [ -f "$display" ] || render "$source" "$display" "$DISPLAY_EDGE" "$DISPLAY_QUALITY"
-  [ -f "$thumb" ] || render "$display" "$thumb" "$THUMB_EDGE" "$THUMB_QUALITY"
+  [ -f "$display" ] || render "$source" "$display" "${DISPLAY_EDGE}x${DISPLAY_EDGE}>" "$DISPLAY_QUALITY"
+  [ -f "$card" ] || render "$display" "$card" "${CARD_WIDTH}x>" "$CARD_QUALITY"
+  [ -f "$thumb" ] || render "$display" "$thumb" "${THUMB_EDGE}x${THUMB_EDGE}>" "$THUMB_QUALITY"
 }
 
-# 파생본이 이미 있는 -display 파일에는 짝이 되는 썸네일만 채웁니다.
-backfill_thumb() {
+# 파생본이 이미 있는 -display 파일에는 빠진 카드/썸네일만 채웁니다.
+backfill_derived() {
   local display="$1"
+  local card="${display/-display./-card.}"
   local thumb="${display/-display./-thumb.}"
-  [ -f "$thumb" ] && return 0
-  echo "$(basename "${display%-display.*}")"
-  render "$display" "$thumb" "$THUMB_EDGE" "$THUMB_QUALITY"
+  [ -f "$card" ] || render "$display" "$card" "${CARD_WIDTH}x>" "$CARD_QUALITY"
+  [ -f "$thumb" ] || render "$display" "$thumb" "${THUMB_EDGE}x${THUMB_EDGE}>" "$THUMB_QUALITY"
 }
 
 if [ "$#" -gt 0 ]; then
@@ -79,11 +84,11 @@ fi
 shopt -s nullglob nocaseglob
 for source in "$IMAGE_DIR"/*.jpg "$IMAGE_DIR"/*.jpeg "$IMAGE_DIR"/*.png; do
   case "$source" in
-    *-display.*|*-thumb.*) continue ;;
+    *-display.*|*-card.*|*-thumb.*) continue ;;
   esac
   process "$source"
 done
 
 for display in "$IMAGE_DIR"/*-display.*; do
-  backfill_thumb "$display"
+  backfill_derived "$display"
 done
