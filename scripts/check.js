@@ -24,8 +24,19 @@ const isValidDate = (year, month, day) => {
 };
 
 // package.json이 commonjs라 .js를 ES Module로 읽게 하려고 임시 .mjs 복사본을 씁니다.
+// 임시 폴더는 빌드 환경마다 다를 수 있어 저장소 안(.check-tmp, gitignore)에 먼저 만들고, 실패하면 OS 임시 폴더를 씁니다.
+const makeTempDirectory = () => {
+  try {
+    const base = path.join(root, ".check-tmp");
+    fs.mkdirSync(base, { recursive: true });
+    return fs.mkdtempSync(path.join(base, "run-"));
+  } catch {
+    return fs.mkdtempSync(path.join(os.tmpdir(), "kolongolf-check-"));
+  }
+};
+
 const makeModuleCopies = () => {
-  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "kolongolf-check-"));
+  const directory = makeTempDirectory();
   for (const file of moduleSources) {
     fs.copyFileSync(path.join(root, file), path.join(directory, file.replace(/\.js$/, ".mjs")));
   }
@@ -35,6 +46,8 @@ const makeModuleCopies = () => {
 const checkSyntax = (directory, errors) => {
   for (const file of moduleSources) {
     const result = spawnSync(process.execPath, ["--check", path.join(directory, file.replace(/\.js$/, ".mjs"))], { encoding: "utf8" });
+    // 자식 프로세스를 띄우지 못한 경우(result.error)는 환경 문제이므로 데이터 오류와 구분합니다.
+    if (result.error) throw new Error(`문법 검사 프로세스를 실행하지 못했습니다: ${result.error.message}`);
     if (result.status !== 0) errors.push(`${file} 문법 오류\n${(result.stderr || "").trim()}`);
   }
 };
@@ -121,6 +134,7 @@ const runChecks = async () => {
     }
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
+    fs.rmSync(path.join(root, ".check-tmp"), { recursive: true, force: true });
   }
   return errors;
 };

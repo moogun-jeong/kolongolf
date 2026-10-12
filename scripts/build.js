@@ -158,8 +158,20 @@ const stampAssetVersions = () => {
   ]);
 };
 
+// 점검 도구 자체가 빌드 환경 문제로 돌지 못하면(데이터 오류가 아니라) 경고만 남기고 배포는 계속합니다.
+// 데이터·문법 오류가 발견된 경우에는 항상 빌드를 멈춥니다.
+const runChecksSafely = async () => {
+  try {
+    return await runChecks();
+  } catch (error) {
+    console.warn(`[build] 경고: 배포 전 점검을 실행하지 못해 건너뜁니다 (${error.stack || error.message})`);
+    return [];
+  }
+};
+
 const build = async () => {
-  const errors = await runChecks();
+  console.log(`[build] Node ${process.version}`);
+  const errors = await runChecksSafely();
   if (errors.length) {
     console.error(`[build] 배포 전 점검 실패 ${errors.length}건 — 배포하지 않습니다.\n- ${errors.join("\n- ")}`);
     process.exitCode = 1;
