@@ -1,30 +1,4 @@
-const members = [
-  { handle: "덕충안길", name: "권순노", handicap: 21, role: "정회원", note: "페이드 장인" },
-  { handle: "살려줘제바알", name: "김경수", handicap: 27, role: "정회원", note: "벙커 탈출 1위" },
-  { handle: "오!건이", name: "김무건", handicap: 20, role: "정회원", note: "파 세이브 감각" },
-  { handle: "인생무생", name: "김무생", role: "정회원", note: "후반 집중력" },
-  { handle: "울산땡주", name: "김영주", role: "정회원", note: "파3 스페셜" },
-  { handle: "원조가가멜", name: "김정훈", handicap: 8, role: "정회원", note: "백스핀 컨트롤" },
-  { handle: "백돌이깬다", name: "김태연", handicap: 17, role: "정회원", note: "정확한 어프로치" },
-  { handle: "준빵", name: "김효준", handicap: 26, role: "정회원", note: "스윙 템포" },
-  { handle: "빽스윙쫌만더", name: "서무환", handicap: 15, role: "회장", note: "클럽 리딩", email: "pleaselove@kolon.com" },
-  { handle: "날아라호", name: "심재호", handicap: 20, role: "정회원", note: "탄도 조절" },
-  { handle: "오프로672", name: "오상택", role: "정회원", note: "코스 매니지먼트" },
-  { handle: "필드난폭자", name: "윤석현", handicap: 18, role: "정회원", note: "공격적 플레이" },
-  { handle: "타키온", name: "이동수", handicap: 19, role: "정회원", note: "퍼팅 스트로크" },
-  { handle: "무근정", name: "정무근", handicap: 24, role: "총무", note: "운영 관리", email: "moogunjeong@kolon.com" },
-  { handle: "울산정쁘로", name: "정성원", handicap: 29, role: "정회원", note: "아이언 정밀도" },
-  { handle: "원펀쓰리강냉", name: "천기준", role: "정회원", note: "파워 스윙" },
-  { handle: "무적부대", name: "추정술", role: "정회원", note: "위기 탈출" },
-  { handle: "장금이에이스", name: "하선재", role: "정회원", note: "정교한 퍼터" },
-  { handle: "서승규", name: "서승규", handicap: 35, role: "신입회원", note: "침착한 코스 리딩" },
-  { handle: "안상욱", name: "안상욱", role: "신입회원", note: "강한 임팩트" },
-  { handle: "박동성", name: "박동성", role: "신입회원", note: "클러치 퍼팅" }
-];
-
-// 핸디는 직전 라운드 단체 스코어카드의 SCORE(파 대비 타수)를 그대로 씁니다.
-// 기록이 없는 회원은 handicap을 비워 두면 숫자 없이 빈 핸디 칸만 표시합니다.
-const handicapSource = "최근 라운드 단체 스코어카드 기준";
+import { members, handicapSource, archives, heroSlides, upcomingEvents } from "./data.js";
 
 const rolePriority = {
   회장: 1,
@@ -88,56 +62,6 @@ const renderMemberAnimal = (animal, name) => `
   </span>
 `;
 
-const svgOrnaments = {
-  heroCourse: `
-    <svg class="hero-course-svg" viewBox="0 0 560 420" aria-hidden="true" focusable="false">
-      <path class="svg-fairway" d="M63 346C102 212 197 130 318 114c74-10 133-39 177-88" />
-      <path class="svg-fairway soft" d="M42 278c88-12 154-52 198-121 44-69 107-104 188-108" />
-      <path class="svg-fairway soft" d="M126 394c45-85 111-132 198-142 73-8 127-40 164-97" />
-      <circle cx="418" cy="102" r="38" class="svg-green" />
-      <circle cx="418" cy="102" r="7" class="svg-cup" />
-      <path class="svg-flagpole" d="M418 101V44" />
-      <path class="svg-flag" d="M421 45h47l-13 15 13 15h-47z" />
-      <path class="svg-ball-trail" d="M94 324c62-48 127-74 195-79" />
-      <circle cx="94" cy="324" r="6" class="svg-ball" />
-    </svg>
-  `,
-  introMap: `
-    <svg class="intro-course-svg" viewBox="0 0 360 210" aria-hidden="true" focusable="false">
-      <path d="M28 162c42-70 92-103 151-98 57 5 95-13 123-56" />
-      <path d="M56 190c36-42 76-62 121-59 64 5 107-21 131-76" />
-      <circle cx="287" cy="54" r="26" />
-      <path d="M287 54V18M287 18h34l-9 11 9 11h-34" />
-    </svg>
-  `,
-  scheduleMap: `
-    <svg class="schedule-course-svg" viewBox="0 0 320 240" aria-hidden="true" focusable="false">
-      <path d="M36 184c46-82 102-124 170-126 34-1 59-13 77-36" />
-      <path d="M72 216c22-32 51-53 87-62 47-12 83-40 107-84" />
-      <circle cx="238" cy="55" r="30" />
-      <path d="M238 55V21M238 21h31l-8 10 8 10h-31" />
-      <circle cx="76" cy="190" r="5" />
-    </svg>
-  `,
-  archiveMap: `
-    <svg class="archive-course-svg" viewBox="0 0 720 260" aria-hidden="true" focusable="false">
-      <path d="M34 204c92-110 191-161 297-153 108 8 199-11 273-57" />
-      <path d="M124 246c85-64 170-93 254-86 90 8 167-20 230-84" />
-      <circle cx="595" cy="64" r="38" />
-      <path d="M595 64V18M595 18h48l-13 15 13 15h-48" />
-    </svg>
-  `,
-  joinFlag: `
-    <svg class="join-flag-svg" viewBox="0 0 520 260" aria-hidden="true" focusable="false">
-      <path d="M52 219c63-91 144-134 244-129 82 4 139-20 172-73" />
-      <path d="M90 244c79-49 152-68 219-57 73 12 132-5 177-52" />
-      <circle cx="398" cy="82" r="34" />
-      <path d="M398 82V29M398 29h58l-16 18 16 18h-58" />
-      <circle cx="124" cy="211" r="7" />
-    </svg>
-  `
-};
-
 const principleIcons = {
   round: `
     <svg class="principle-svg-icon" viewBox="0 0 56 56" aria-hidden="true" focusable="false">
@@ -165,228 +89,19 @@ const principleIcons = {
   `
 };
 
-const archives = [
-  {
-    id: "2026-08-mauna-ocean",
-    date: "2026.08.15",
-    label: "필드 행사",
-    title: "2026년 8월 마우나오션 필드 행사",
-    location: "마우나오션CC",
-    people: "12명 참가 (초대손님 1명 포함)",
-    summary: "광복절에 마우나오션CC에서 필드 라운드를 함께했습니다. 조별로 티오프해 18홀을 돌고, 라운드 뒤에는 다 함께 모여 시상과 식사 자리를 가졌습니다.",
-    highlights: ["마우나오션CC", "18홀 필드", "12명 참가"],
-    details: [
-      "일시: 2026년 8월 15일(토)",
-      "장소: 마우나오션CC",
-      "참가: 김정훈, 김태연, 윤석현, 이동수, 김효준, 서무환, 김경수, 정무근, 김무건, 서승규, 정성원, 전형준(초대손님)",
-      "단체 스코어카드 상위: 1위 김정훈(+8), 2위 김태연(+17), 3위 윤석현(+18)"
-    ],
-    images: [
-      "images/archive-2026-08-1-display.jpg",
-      "images/archive-2026-08-2-display.jpg",
-      "images/archive-2026-08-3-display.jpg"
-    ]
-  },
-  {
-    id: "2026-07-seoknohyup",
-    date: "2026.07.04",
-    label: "스크린 대회",
-    title: "제8회 석노협 스크린골프대회",
-    location: "골프존파크 삼산한국골프점",
-    people: "A/B팀 8명 참가",
-    summary: "울산석유화학공업단지 노동조합 협의회가 주관한 제8회 의장배 대회에 코오롱인더스트리 A/B팀이 참가했습니다. 용원 GC 백로·무학 코스에서 진행된 경기 장면과 대회 후 함께한 시상·식사 자리를 사진으로 남겼습니다.",
-    highlights: ["석노협 의장배", "A/B팀 참가", "투비전 NX"],
-    details: [
-      "일시: 2026년 7월 4일(토) 08:00",
-      "장소: 골프존파크 삼산한국골프점",
-      "주관: 울산석유화학공업단지 노동조합 협의회",
-      "방식: 회사별 4인 1팀, 투비전 NX, 용원 GC 백로·무학",
-      "참가: 코오롱인더스트리 A팀(301호) 김효준, 서무환, 정무근, 하선재 / B팀(302호) 김경수, 박동성, 윤석현, 천기준",
-      "경기 설정: 투어모드/G투어 난이도, 블루 티, 컨시드 1.5m, 멀리건 없음"
-    ],
-    images: [
-      "images/archive-2026-07-11-display.jpg",
-      "images/archive-2026-07-1-display.jpg",
-      "images/archive-2026-07-2-display.jpg",
-      "images/archive-2026-07-3-display.jpg",
-      "images/archive-2026-07-4-display.jpg",
-      "images/archive-2026-07-5-display.jpg",
-      "images/archive-2026-07-6-display.jpg",
-      "images/archive-2026-07-7-display.jpg",
-      "images/archive-2026-07-8-display.jpg",
-      "images/archive-2026-07-9-display.jpg",
-      "images/archive-2026-07-10-display.jpg"
-    ]
-  },
-  {
-    id: "2026-06-screen",
-    date: "2026.06.23",
-    label: "스크린 행사",
-    title: "2026년 6월 스크린골프 동호회 행사",
-    location: "골프존파크 두왕테크노점",
-    people: "6명 참가",
-    summary: "골프존파크 두왕테크노점에서 동강시스타CC 코스로 18홀 스트로크 라운드를 진행했습니다. 서무환, 정무근, 김영주, 김효준, 김경수, 하선재 회원이 함께한 6월 스크린 행사입니다.",
-    highlights: ["동강시스타CC", "18홀 스트로크", "6명 참가"],
-    details: [
-      "일시: 2026년 6월 23일(화) 17:00",
-      "장소: 골프존파크 두왕테크노점(울산 남구 테크노산업로 78-11)",
-      "참석: 서무환, 정무근, 김영주, 김효준, 김경수, 하선재",
-      "경기 설정: 동강시스타CC, G투어모드/블루, 그린 스피드 약간 빠름",
-      "운영: 방 2개 운영, 1조 1·2·3번 / 2조 4·5·6번 조 편성",
-      "세부 규칙: 바람 강하게, 컨시드 1.5m, 멀리건 없음"
-    ],
-    images: [
-      "images/archive-2026-06-1-display.jpg",
-      "images/archive-2026-06-notice-display.png"
-    ]
-  },
-  {
-    id: "2026-04-baystars",
-    date: "2026.04.10",
-    label: "필드 행사",
-    title: "2026년 4월 베이스타즈CC 필드 행사",
-    location: "베이스타즈CC",
-    people: "12명 참가",
-    summary: "조별 티오프 후 라운딩을 진행하고 명촌 중식 장소에 모여 필드 행사를 함께했습니다. 이동수 팀장님의 홀인원과 전체 1위 시상까지 함께한 자리였습니다.",
-    highlights: ["Hole-in-one", "공동 1위", "12명 참가"],
-    details: [
-      "티오프: 07:20 BAY, 07:55 BAY, 08:09 STARS",
-      "운영: 그린피·캐디피 개인 부담, 카트비 동호회 지원",
-      "홀인원: 이동수 팀장(STARS 8번 홀)",
-      "필드 전체 1위: 권순노 팀장, 서무환 팀장 공동 1위",
-      "시상: 니어리스트 이동수, 다버디 심재호"
-    ],
-    images: [
-      "images/archive-2026-04-2-display.jpg",
-      "images/archive-2026-04-3-display.jpg",
-      "images/archive-2026-04-1-display.jpg"
-    ]
-  },
-  {
-    id: "2026-03-regular",
-    date: "2026.03.04",
-    label: "정기 스크린 라운드",
-    title: "2026년 3월 정기전",
-    location: "울산골프존",
-    people: "10명 참가",
-    summary: "새 시즌의 흐름을 만든 3월 정기전입니다. 수상 순간과 단체 사진을 함께 담았습니다.",
-    images: [
-      "images/archive-2026-03-1-display.jpg",
-      "images/archive-2026-03-2-display.jpg",
-      "images/archive-2026-03-3-display.jpg",
-      "images/archive-2026-03-4-display.jpg"
-    ]
-  },
-  {
-    id: "2025-12-year-end",
-    date: "2025.12.09",
-    label: "송년회",
-    title: "2025년 12월 송년 라운드",
-    location: "삼산동 울산골프존",
-    people: "9명 참가",
-    summary: "한 해의 마지막 스코어와 시상 순간을 남긴 송년 모임입니다.",
-    images: ["images/archive-2025-12-display.jpg"]
-  },
-  {
-    id: "2025-09-regular",
-    date: "2025.09.30",
-    label: "3분기 정기전",
-    title: "2025년 9월 정기전",
-    location: "골프존파크 선암 솔밭스크린",
-    people: "9명 참가",
-    summary: "가을 시즌 컨디션을 확인한 3분기 정기전입니다.",
-    images: ["images/archive-2025-09-display.jpg"]
-  },
-  {
-    id: "2025-05-field",
-    date: "2025.05.01",
-    label: "상반기 필드 라운딩",
-    title: "2025년 5월 필드 라운딩",
-    location: "힐스카이CC",
-    people: "8명 참가",
-    summary: "스크린을 벗어나 실제 코스에서 팀워크를 맞춘 상반기 필드 라운딩입니다.",
-    images: ["images/archive-2025-05-display.jpg"]
-  },
-  {
-    id: "2025-02-regular",
-    date: "2025.02.25",
-    label: "1분기 정기 모임",
-    title: "2025년 2월 정기전",
-    location: "골프존파크 두왕테크노골프점",
-    people: "13명 참가",
-    summary: "2025년 동호회 활동의 출발점이 된 1분기 정기 모임입니다.",
-    images: ["images/archive-2025-02-display.jpg"]
-  }
-];
-
 // 라이트박스 썸네일은 68x48로만 보이므로 -display 대신 짝이 되는 -thumb 파생본을 씁니다.
 const thumbSource = (source) => source.replace(/-display\.(jpe?g|png)$/i, "-thumb.$1");
 
-const heroSlides = [
-  {
-    image: "images/archive-2026-04-2-display.jpg",
-    date: "2026.04.10",
-    caption: "4월 베이스타즈CC 필드 행사"
-  },
-  {
-    image: "images/archive-2026-04-3-display.jpg",
-    date: "2026.04.10",
-    caption: "필드 라운드 코스 스냅"
-  },
-  {
-    image: "images/archive-2026-03-1-display.jpg",
-    date: "2026.03.04",
-    caption: "3월 정기 스크린 라운드"
-  },
-  {
-    image: "images/archive-2025-05-display.jpg",
-    date: "2025.05.01",
-    caption: "상반기 필드 라운딩"
-  }
-];
-
-// 확정된 "미래" 일정만 넣습니다. 지난 행사는 여기에 두지 않습니다.
-// 비어 있으면 일정 영역은 "다음 모임 준비 중"으로 안내하고 하단 일정 공지는 표시하지 않습니다.
-//
-// 예시:
-// {
-//   id: "2026-09-screen",
-//   date: "2026-09-05",
-//   dateLockup: { month: "SEP", day: "05", year: "2026" },
-//   eyebrow: "Regular Round",
-//   state: "참가 신청 중",
-//   title: "9월 정기 스크린 라운드",
-//   summary: "9월 정기 라운드 일정입니다.",
-//   body: "골프존파크에서 진행하는 정기 스크린 라운드입니다.",
-//   details: [["일시", "2026.09.05(토) 08:00"], ["장소", "골프존파크 삼산한국골프점"]]
-// }
-const upcomingEvents = [
-  {
-    id: "2026-11-bomun",
-    date: "2026-11-01",
-    dateLockup: { month: "NOV", day: "01", year: "2026" },
-    eyebrow: "Field Round",
-    state: "예정",
-    title: "11월 경주 보문CC 필드 라운드",
-    body: "11월 1일 경주 보문CC에서 필드 라운드를 함께합니다. 티오프 시간과 조 편성은 정해지면 이곳에 안내할게요.",
-    details: [["일시", "2026.11.01(일)"], ["장소", "경주 보문CC"]]
-  }
-];
-
-// 가장 최근 지난 행사입니다. 아카이브·모달과 함께 계속 열람할 수 있도록 남겨둡니다.
-const latestRecordEvent = {
-  date: "2026-07-04",
-  dateLockup: { month: "JUL", day: "04", year: "2026" },
-  eyebrow: "Chairman Cup",
-  state: "참가 완료",
-  title: "제8회 석노협 스크린골프대회 기록",
-  body: "울산석유화학공업단지 노동조합 협의회 주관 의장배 대회입니다. 코오롱인더스트리는 A팀과 B팀, 총 8명이 회사별 4인 1팀 방식으로 참가했습니다.",
-  details: [
-    ["일시", "2026.07.04(토) 08:00"],
-    ["장소", "골프존파크 삼산한국골프점"],
-    ["방식", "회사별 4인 1팀 · 투비전 NX · 용원 GC 백로·무학"],
-    ["선수", "A팀 김효준, 서무환, 정무근, 하선재 · B팀 김경수, 박동성, 윤석현, 천기준"]
-  ]
+// 카드처럼 작은 칸에는 긴 변 1800px 원본 대신 가로 900px `-card` 파생본을 먼저 고르게 합니다.
+// 라이트박스(크게 보기)는 계속 -display 원본을 씁니다.
+const cardSource = (source) => source.replace(/-display\.(jpe?g|png)$/i, "-card.$1");
+const responsiveImageAttrs = (source, sizes) =>
+  `src="${cardSource(source)}" srcset="${cardSource(source)} 900w, ${source} 1800w" sizes="${sizes}"`;
+const imageSizes = {
+  hero: "(max-width: 960px) calc(100vw - 32px), 620px",
+  featured: "(max-width: 960px) calc(100vw - 32px), 680px",
+  card: "(max-width: 760px) calc(100vw - 32px), (max-width: 1080px) 46vw, 380px",
+  lastRound: "(max-width: 760px) calc(100vw - 32px), (max-width: 960px) 54vw, 520px"
 };
 
 const startOfToday = () => {
@@ -529,7 +244,7 @@ class KolonHero extends HTMLElement {
     const total = String(heroSlides.length).padStart(2, "0");
     const lastRound = archives[0];
     const slides = heroSlides.map((slide, index) => `
-      <img class="hero-slide${index === 0 ? " is-active" : ""}" src="${slide.image}" alt="${index === 0 ? slide.caption : ""}" width="1000" height="750" decoding="async" ${index === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} />`).join("");
+      <img class="hero-slide${index === 0 ? " is-active" : ""}" ${responsiveImageAttrs(slide.image, imageSizes.hero)} alt="${index === 0 ? slide.caption : ""}" width="1000" height="750" decoding="async" ${index === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} />`).join("");
     this.innerHTML = `
       <section class="hero" aria-labelledby="heroTitle">
         <div class="hero-glow" aria-hidden="true"></div>
@@ -594,56 +309,6 @@ class KolonIntro extends HTMLElement {
       </section>`;
   }
 }
-class KolonPrinciples extends HTMLElement {
-  connectedCallback() {
-    if (this.dataset.ready) return;
-    this.dataset.ready = "true";
-    this.innerHTML = `
-      <section class="principles-section site-section" aria-label="동호회 분위기">
-        <article class="principle-item" data-reveal>
-          <span class="principle-index">01</span>
-          <span class="principle-icon" aria-hidden="true">${principleIcons.round}</span>
-          <h3>정기적으로 만나는 라운드</h3>
-          <p>바쁜 일상 사이에서도 다시 만날 약속을 만들며 모임을 이어갑니다.</p>
-        </article>
-        <article class="principle-item" data-reveal>
-          <span class="principle-index">02</span>
-          <span class="principle-icon" aria-hidden="true">${principleIcons.score}</span>
-          <h3>부담 없이 합류하는 경기</h3>
-          <p>스코어는 겨루되 분위기는 편하게, 서로 응원하며 한 라운드를 즐깁니다.</p>
-        </article>
-        <article class="principle-item" data-reveal>
-          <span class="principle-index">03</span>
-          <span class="principle-icon" aria-hidden="true">${principleIcons.memory}</span>
-          <h3>사진과 기록으로 남는 모임</h3>
-          <p>멋진 샷과 즐거웠던 자리를 사진과 이야기로 남겨 다음 만남을 기다립니다.</p>
-        </article>
-      </section>
-    `;
-  }
-}
-
-class KolonImageStatement extends HTMLElement {
-  connectedCallback() {
-    if (this.dataset.ready) return;
-    this.dataset.ready = "true";
-    this.innerHTML = `
-      <section class="image-statement" aria-label="동호회 활동 사진">
-        <img src="images/archive-2026-04-1-display.jpg" alt="코오롱 스크린 골프 동호회 4월 필드 행사 중식 모임 사진" loading="lazy" decoding="async" />
-        <div class="statement-copy" data-reveal>
-          <p class="section-kicker">Round Memory</p>
-          <h2>필드에서 시작한 라운드는 함께 모인 자리까지 오래 이어집니다.</h2>
-          <div class="statement-badges" aria-label="4월 필드 행사 주요 기록">
-            <span>2026.04.10</span>
-            <span>Baystars CC</span>
-            <span>Hole-in-one</span>
-          </div>
-        </div>
-      </section>
-    `;
-  }
-}
-
 class KolonSchedule extends HTMLElement {
   connectedCallback() {
     if (this.dataset.ready) return;
@@ -670,7 +335,7 @@ class KolonSchedule extends HTMLElement {
           </article>
           <article class="last-round">
             <button class="last-round-photo" type="button" data-archive-index="0" aria-label="${last.title} 사진 ${last.images.length}장 보기">
-              <img src="${last.images[0]}" alt="" width="800" height="600" loading="lazy" decoding="async" />
+              <img ${responsiveImageAttrs(last.images[0], imageSizes.lastRound)} alt="" width="800" height="600" loading="lazy" decoding="async" />
             </button>
             <div class="last-round-body">
               <p class="eyebrow">Last Round · ${last.date}</p>
@@ -755,7 +420,7 @@ class KolonArchive extends HTMLElement {
     const featured = archives[0];
     const archiveItems = archives.slice(1).map((archive, index) => `
       <article class="archive-card" data-archive-year="${archive.date.slice(0, 4)}" data-reveal>
-        <button class="archive-photo" type="button" data-archive-index="${index + 1}" aria-label="${archive.title} 사진 ${archive.images.length}장 보기"><img src="${archive.images[0]}" alt="${archive.title} 대표 사진" width="800" height="600" loading="lazy" decoding="async" /><span class="archive-chip">${archive.label}</span>${photoCue(archive)}</button>
+        <button class="archive-photo" type="button" data-archive-index="${index + 1}" aria-label="${archive.title} 사진 ${archive.images.length}장 보기"><img ${responsiveImageAttrs(archive.images[0], imageSizes.card)} alt="${archive.title} 대표 사진" width="800" height="600" loading="lazy" decoding="async" /><span class="archive-chip">${archive.label}</span>${photoCue(archive)}</button>
         <div class="archive-body"><p class="archive-meta"><time>${archive.date}</time></p><h3>${archive.title}</h3><p class="archive-summary">${archive.summary}</p>${renderDetails(archive)}<div class="archive-foot"><span>${archive.location}</span><span>${archive.people}</span></div></div>
       </article>`).join("");
     const years = [...new Set(archives.map((archive) => archive.date.slice(0, 4)))];
@@ -765,7 +430,7 @@ class KolonArchive extends HTMLElement {
           <div class="section-heading" data-reveal><div><p class="eyebrow">Round Stories</p><h2 id="archiveTitle">우리의 라운드.</h2></div><p>함께 웃고, 겨루고, 기억한 순간들. 사진을 누르면 갤러리와 댓글을 볼 수 있어요.</p></div>
           <div class="archive-toolbar" data-reveal><div class="archive-filters" role="group" aria-label="라운드 연도 필터"><button type="button" data-archive-filter="all" aria-pressed="true">전체</button>${years.map((year) => `<button type="button" data-archive-filter="${year}" aria-pressed="false">${year}</button>`).join("")}</div><p id="archiveResult" role="status">총 ${archives.length}개의 라운드</p></div>
           <article class="featured-round" data-archive-year="${featured.date.slice(0, 4)}" data-reveal>
-            <button class="featured-photo" type="button" data-archive-index="0" aria-label="${featured.title} 사진 ${featured.images.length}장 보기"><img src="${featured.images[0]}" alt="${featured.title} 대표 사진" width="1000" height="750" loading="lazy" decoding="async" /><span class="archive-chip accent">Latest</span>${photoCue(featured)}</button>
+            <button class="featured-photo" type="button" data-archive-index="0" aria-label="${featured.title} 사진 ${featured.images.length}장 보기"><img ${responsiveImageAttrs(featured.images[0], imageSizes.featured)} alt="${featured.title} 대표 사진" width="1000" height="750" loading="lazy" decoding="async" /><span class="archive-chip accent">Latest</span>${photoCue(featured)}</button>
             <div class="featured-body"><p class="archive-meta"><time>${featured.date}</time> · ${featured.label}</p><h3>${featured.title}</h3><p class="archive-summary">${featured.summary}</p>${featured.highlights?.length ? `<ul class="archive-tags" aria-label="주요 기록">${featured.highlights.map((tag) => `<li>${tag}</li>`).join("")}</ul>` : ""}${renderDetails(featured)}<div class="archive-foot"><span>${featured.location}</span><span>${featured.people}</span></div></div>
           </article>
           <div class="archive-grid">${archiveItems}</div>
@@ -811,7 +476,7 @@ class KolonJoin extends HTMLElement {
     this.dataset.ready = "true";
     this.innerHTML = `
       <section class="join-section" aria-labelledby="joinTitle">
-        <img class="join-backdrop" src="images/archive-2026-03-1-display.jpg" alt="" width="1800" height="1350" loading="lazy" decoding="async" />
+        <img class="join-backdrop" ${responsiveImageAttrs("images/archive-2026-03-1-display.jpg", "100vw")} alt="" width="1800" height="1350" loading="lazy" decoding="async" />
         <div class="join-inner" data-reveal>
           <p class="eyebrow on-dark"><span class="eyebrow-dot" aria-hidden="true"></span>Join Us</p>
           <h2 id="joinTitle">다음 라운드, <em>함께해요.</em></h2>
@@ -831,27 +496,6 @@ class KolonModalStack extends HTMLElement {
     if (this.dataset.ready) return;
     this.dataset.ready = "true";
     this.innerHTML = `
-      <div class="modal" id="rsvpModal" aria-hidden="true">
-        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="rsvpTitle">
-          <div class="modal-head">
-            <div>
-              <p class="section-kicker">Tournament</p>
-              <h3 id="rsvpTitle">제8회 석노협 스크린골프대회 기록</h3>
-            </div>
-            <button class="line-button small" type="button" data-close-modal>닫기</button>
-          </div>
-          <div class="modal-body">
-            <p>일시: 2026년 7월 4일(토) 08:00</p>
-            <p>장소: 골프존파크 삼산한국골프점</p>
-            <p>방식: 회사별 4인 1팀 · 투비전 NX · 용원 GC 백로·무학</p>
-            <p>A팀(301호): 김효준, 서무환, 정무근, 하선재</p>
-            <p>B팀(302호): 김경수, 박동성, 윤석현, 천기준</p>
-            <p>주요 설정: 투어모드/G투어 난이도, 블루 티, 컨시드 1.5m, 멀리건 없음, 매트룰 적용</p>
-            <p>퍼팅 가이드와 퍼팅 방향키는 사용할 수 없는 조건으로 진행되었습니다.</p>
-          </div>
-        </div>
-      </div>
-
       <div class="modal" id="joinModal" aria-hidden="true">
         <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="joinModalTitle">
           <div class="modal-head">
@@ -865,23 +509,6 @@ class KolonModalStack extends HTMLElement {
             <p>정기 라운드, 기록 공유, 친선 매치를 함께하는 코오롱 골프 동호회입니다.</p>
             <p>${contactLine("회장")}</p>
             <p>${contactLine("총무")}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="modal" id="locationModal" aria-hidden="true">
-        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="locationTitle">
-          <div class="modal-head">
-            <div>
-              <p class="section-kicker">Location</p>
-              <h3 id="locationTitle">석노협 대회 장소 안내</h3>
-            </div>
-            <button class="line-button small" type="button" data-close-modal>닫기</button>
-          </div>
-          <div class="modal-body">
-            <p>장소: 골프존파크 삼산한국골프점</p>
-            <p>일시: 2026년 7월 4일(토) 08:00</p>
-            <p>참가: 코오롱인더스트리 A팀(301호), B팀(302호)</p>
           </div>
         </div>
       </div>
@@ -989,8 +616,6 @@ class KolonFooter extends HTMLElement {
 defineElement("kolon-site-header", KolonSiteHeader);
 defineElement("kolon-hero", KolonHero);
 defineElement("kolon-intro", KolonIntro);
-defineElement("kolon-principles", KolonPrinciples);
-defineElement("kolon-image-statement", KolonImageStatement);
 defineElement("kolon-schedule", KolonSchedule);
 defineElement("kolon-members", KolonMembers);
 defineElement("kolon-archive", KolonArchive);
@@ -1850,10 +1475,10 @@ const initMessageAdmin = () => {
     }
   });
 };
-// 회원 공개 사진 업로드는 현재 사용하지 않습니다(관리자가 직접 사진을 추가·배포).
-// 서버(`functions/api/archives.js`)의 ENABLE_ARCHIVE_UPLOADS와 함께 켜야 동작합니다.
-const publicArchiveUploadEnabled = false;
-
+// 회원 공개 사진 업로드는 사용하지 않습니다(운영진이 직접 사진을 정리해 배포).
+// 예전에 올라온 회원 업로드는 읽기 전용으로 보여주고, 관리자 창에서 승인/숨김/삭제만 할 수 있습니다.
+// 업로드 폼과 브라우저 압축 코드는 2026-10-12에 제거했습니다. 다시 필요하면 git 기록의
+// `publicArchiveUploadEnabled` 구현을 참고하고, 서버의 ENABLE_ARCHIVE_UPLOADS도 함께 켜야 합니다.
 const initArchiveUploadsAndAdmin = () => {
   const apiBase = () => `${getMessageApiBase().replace(/\/$/, "")}/archives`;
   const archiveRoot = document.getElementById("archive");
@@ -1870,46 +1495,6 @@ const initArchiveUploadsAndAdmin = () => {
     ">": "&gt;",
     '"': "&quot;"
   }[char]));
-
-  const compressImage = (file) => new Promise((resolve, reject) => {
-    if (!file.type.startsWith("image/")) {
-      reject(new Error("이미지 파일만 올릴 수 있습니다."));
-      return;
-    }
-    if (file.size > 8 * 1024 * 1024) {
-      reject(new Error("사진 원본은 8MB 이하만 올릴 수 있습니다."));
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onerror = () => reject(new Error("사진을 읽지 못했습니다."));
-    reader.onload = () => {
-      const image = new Image();
-      image.onerror = () => reject(new Error("사진을 처리하지 못했습니다."));
-      image.onload = () => {
-        const maxSize = 1400;
-        const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
-        const width = Math.max(1, Math.round(image.width * scale));
-        const height = Math.max(1, Math.round(image.height * scale));
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-        const context = canvas.getContext("2d");
-        context.fillStyle = "#f8f4e8";
-        context.fillRect(0, 0, width, height);
-        context.drawImage(image, 0, 0, width, height);
-        let dataUrl = canvas.toDataURL("image/jpeg", 0.76);
-        if (dataUrl.length > 360000) dataUrl = canvas.toDataURL("image/jpeg", 0.62);
-        if (dataUrl.length > 380000) {
-          reject(new Error("압축 후에도 사진이 큽니다. 더 작은 사진을 선택해주세요."));
-          return;
-        }
-        resolve({ dataUrl, alt: file.name.replace(/\.[^.]+$/, "") });
-      };
-      image.src = String(reader.result || "");
-    };
-    reader.readAsDataURL(file);
-  });
 
   const renderPublicArchives = (list, items) => {
     if (!list) return;
@@ -1938,37 +1523,15 @@ const initArchiveUploadsAndAdmin = () => {
     }).join("");
   };
 
-  const uploadFormHtml = `
-          <form class="community-archive-form" data-archive-upload-form>
-            <div class="form-grid two">
-              <label><span>작성자</span><input name="authorName" maxlength="24" placeholder="이름 또는 별명" required /></label>
-              <label><span>날짜</span><input name="date" type="date" required /></label>
-            </div>
-            <label><span>제목</span><input name="title" maxlength="80" placeholder="예: 5월 정기전" required /></label>
-            <div class="form-grid two">
-              <label><span>장소</span><input name="location" maxlength="80" placeholder="예: 울산골프존" required /></label>
-              <label><span>참석 인원</span><input name="people" maxlength="40" placeholder="예: 8명 참가" /></label>
-            </div>
-            <label><span>한 줄 기록</span><textarea name="summary" maxlength="500" placeholder="그날의 분위기나 기억에 남는 장면을 적어주세요." required></textarea></label>
-            <label><span>사진</span><input name="images" type="file" accept="image/*" multiple required /><small>최대 4장, 업로드 전 자동으로 작게 압축됩니다.</small></label>
-            <div class="message-form-actions">
-              <button class="solid-button" type="submit">아카이브 신청하기</button>
-              <p class="message-status" data-archive-upload-status>승인 후 홈페이지에 표시됩니다.</p>
-            </div>
-          </form>`;
-
   const publicArchiveSectionHtml = () => `<section class="community-archive-section site-section" data-archive-upload-section>
-        <div class="section-heading split" data-reveal>
+        <div class="section-heading">
           <div>
-            <p class="section-kicker">회원 업로드</p>
-            <h2>${publicArchiveUploadEnabled ? "함께한 사진을 직접 올려주세요." : "회원이 올린 지난 기록"}</h2>
+            <p class="eyebrow">Member Uploads</p>
+            <h2>회원이 올린 지난 기록</h2>
           </div>
-          <p>${publicArchiveUploadEnabled
-            ? "올린 사진과 기록은 관리자 확인 후 아카이브에 공개됩니다."
-            : "새 사진은 운영진이 직접 정리해 올립니다. 공유하고 싶은 사진은 운영진에게 전달해주세요."}</p>
+          <p>새 사진은 운영진이 직접 정리해 올립니다. 공유하고 싶은 사진은 운영진에게 전달해주세요.</p>
         </div>
-        <div class="community-archive-board${publicArchiveUploadEnabled ? "" : " is-readonly"}">
-          ${publicArchiveUploadEnabled ? uploadFormHtml : ""}
+        <div class="community-archive-board is-readonly">
           <div class="community-archive-list-card">
             <div class="message-list-head">
               <div><p class="section-kicker">공개된 회원 업로드</p><h3>지금까지 올라온 기록</h3></div>
@@ -1983,7 +1546,6 @@ const initArchiveUploadsAndAdmin = () => {
     if (!archiveRoot) return null;
     if (!archiveRoot.querySelector("[data-archive-upload-section]")) {
       archiveRoot.insertAdjacentHTML("beforeend", publicArchiveSectionHtml());
-      if (publicArchiveUploadEnabled) bindUploadForm();
     }
     return archiveRoot.querySelector("[data-public-archive-list]");
   };
@@ -1995,65 +1557,16 @@ const initArchiveUploadsAndAdmin = () => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "회원 업로드를 불러오지 못했습니다.");
       const items = data.items || [];
-      // 업로드를 받지 않는 동안에는 남아 있는 기록이 있을 때만 섹션을 보여줍니다.
-      if (!publicArchiveUploadEnabled && !items.length) {
+      // 남아 있는 기록이 있을 때만 섹션을 보여줍니다.
+      if (!items.length) {
         archiveRoot.querySelector("[data-archive-upload-section]")?.remove();
         return;
       }
       renderPublicArchives(ensurePublicArchiveSection(), items);
-    } catch (error) {
-      if (!publicArchiveUploadEnabled) {
-        // 조회 실패는 관리자 화면에서 확인합니다. 공개 화면에 오류 문구를 남기지 않습니다.
-        return;
-      }
-      const list = ensurePublicArchiveSection();
-      if (list) {
-        list.innerHTML = `<p class="message-empty is-error">${escapeText(error.message || "회원 업로드를 불러오지 못했습니다.")}</p>`;
-      }
+    } catch {
+      // 조회 실패는 관리자 화면에서 확인합니다. 공개 화면에 오류 문구를 남기지 않습니다.
     }
   };
-
-  function bindUploadForm() {
-    const uploadForm = document.querySelector("[data-archive-upload-form]");
-    const uploadStatus = document.querySelector("[data-archive-upload-status]");
-    uploadForm?.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const formData = new FormData(uploadForm);
-      const files = Array.from(uploadForm.querySelector("input[type='file']")?.files || []).slice(0, 4);
-      const button = uploadForm.querySelector("button[type='submit']");
-      if (!files.length) {
-        setText(uploadStatus, "사진을 1장 이상 올려주세요.", true);
-        return;
-      }
-      if (button) button.disabled = true;
-      setText(uploadStatus, "사진을 압축하고 저장하는 중입니다.");
-      try {
-        const images = await Promise.all(files.map(compressImage));
-        const payload = {
-          authorName: String(formData.get("authorName") || ""),
-          date: String(formData.get("date") || ""),
-          title: String(formData.get("title") || ""),
-          location: String(formData.get("location") || ""),
-          people: String(formData.get("people") || ""),
-          summary: String(formData.get("summary") || ""),
-          images
-        };
-        const response = await fetch(apiBase(), {
-          method: "POST",
-          headers: { "Accept": "application/json", "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || "아카이브 신청을 저장하지 못했습니다.");
-        uploadForm.reset();
-        setText(uploadStatus, "신청이 접수됐습니다. 관리자 확인 후 공개됩니다.");
-      } catch (error) {
-        setText(uploadStatus, error.message || "아카이브 신청을 저장하지 못했습니다.", true);
-      } finally {
-        if (button) button.disabled = false;
-      }
-    });
-  }
 
   // 섹션이 나중에 삽입되므로 위임으로 새로고침 버튼을 처리합니다.
   document.addEventListener("click", (event) => {

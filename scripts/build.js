@@ -8,8 +8,10 @@
 // Cloudflare Pages Functions(`functions/`)는 정적 자산이 아니라 빌드 시 번들되므로
 // `dist/`에 넣지 않습니다.
 
+const crypto = require("node:crypto");
 const fs = require("node:fs");
 const path = require("node:path");
+const { runChecks } = require("./check.js");
 
 const root = path.resolve(__dirname, "..");
 const outDir = path.join(root, "dist");
@@ -19,6 +21,7 @@ const rootAllowlist = [
   { file: "index.html", required: true },
   { file: "404.html", required: false },
   { file: "main.js", required: true },
+  { file: "data.js", required: true },
   { file: "style.css", required: true },
   { file: "_routes.json", required: true },
   { file: "_headers", required: false },
@@ -69,11 +72,13 @@ const cloudflareTombstoneDirectories = [
 ];
 
 // 이미지 참조를 찾을 소스입니다.
-const referenceSources = ["index.html", "main.js", "style.css"];
+const referenceSources = ["index.html", "main.js", "data.js", "style.css"];
 const imageReferencePattern = /images\/[A-Za-z0-9][A-Za-z0-9._-]*\.(?:jpe?g|png|webp|avif|svg)/gi;
 
-// main.js의 thumbSource()가 `-display` 경로에서 `-thumb`을 유도하므로 짝을 함께 담습니다.
-const thumbCounterpart = (reference) => reference.replace(/-display\.(jpe?g|png|webp|avif)$/i, "-thumb.$1");
+// main.js의 thumbSource()/cardSource()가 `-display` 경로에서 `-thumb`, `-card`를 유도하므로 짝을 함께 담습니다.
+const derivedCounterparts = (reference) => ["thumb", "card"].map((suffix) =>
+  reference.replace(/-display\.(jpe?g|png|webp|avif)$/i, `-${suffix}.$1`)
+);
 
 const collectReferencedImages = () => {
   const references = new Set();
@@ -83,7 +88,7 @@ const collectReferencedImages = () => {
     const content = fs.readFileSync(sourcePath, "utf8");
     for (const match of content.match(imageReferencePattern) || []) {
       references.add(match);
-      references.add(thumbCounterpart(match));
+      derivedCounterparts(match).forEach((counterpart) => references.add(counterpart));
     }
   }
   return [...references].sort();
@@ -129,7 +134,39 @@ const writeCloudflareTombstones = () => {
   return files.size;
 };
 
-const build = () => {
+// 브라우저가 예전 CSS/JS를 붙잡지 않도록 dist 안의 참조에 내용 해시(?v=)를 붙입니다.
+// 손으로 버전 번호를 올릴 필요가 없습니다.
+const contentHash = (relativePath) =>
+  crypto.createHash("sha256").update(fs.readFileSync(path.join(outDir, relativePath))).digest("hex").slice(0, 10);
+
+const stampAssetVersions = () => {
+  const replaceInFile = (relativePath, replacements) => {
+    const target = path.join(outDir, relativePath);
+    let content = fs.readFileSync(target, "utf8");
+    for (const [pattern, value] of replacements) {
+      if (!pattern.test(content)) throw new Error(`${relativePath}에서 ${pattern} 참조를 찾지 못했습니다.`);
+      content = content.replace(pattern, value);
+    }
+    fs.writeFileSync(target, content, "utf8");
+  };
+
+  // main.js가 data.js를 import하므로 data.js 해시를 먼저 main.js에 넣고, 그 결과로 main.js 해시를 냅니다.
+  replaceInFile("main.js", [[/from "\.\/data\.js"/, `from "./data.js?v=${contentHash("data.js")}"`]]);
+  replaceInFile("index.html", [
+    [/href="\.\/style\.css"/, `href="./style.css?v=${contentHash("style.css")}"`],
+    [/src="\.\/main\.js"/, `src="./main.js?v=${contentHash("main.js")}"`]
+  ]);
+};
+
+const build = async () => {
+  const errors = await runChecks();
+  if (errors.length) {
+    console.error(`[build] 배포 전 점검 실패 ${errors.length}건 — 배포하지 않습니다.\n- ${errors.join("\n- ")}`);
+    process.exitCode = 1;
+    return;
+  }
+  console.log("[build] 문법·데이터 점검 통과");
+
   fs.rmSync(outDir, { recursive: true, force: true });
   fs.mkdirSync(outDir, { recursive: true });
 
@@ -158,6 +195,7 @@ const build = () => {
     imageCount += 1;
   }
 
+  stampAssetVersions();
   const tombstoneCount = writeCloudflareTombstones();
 
   if (missingRequired.length) {
@@ -172,9 +210,13 @@ const build = () => {
   console.log(`[build] 이미지 ${imageCount}개 복사`);
   if (tombstoneCount) console.log(`[build] Cloudflare 캐시 무효화 tombstone ${tombstoneCount}개 생성`);
   if (missingImages.length) {
-    // 참조는 있는데 파일이 없으면 화면이 깨지므로 눈에 띄게 알립니다.
-    console.warn(`[build] 참조되었지만 파일이 없는 이미지 ${missingImages.length}개: ${missingImages.join(", ")}`);
+    // 참조는 있는데 파일이 없으면 화면이 깨지므로 배포를 멈춥니다.
+    process.exitCode = 1;
+    console.error(`[build] 참조되었지만 파일이 없는 이미지 ${missingImages.length}개: ${missingImages.join(", ")}`);
   }
 };
 
-build();
+build().catch((error) => {
+  console.error(`[build] 실패: ${error.message}`);
+  process.exitCode = 1;
+});

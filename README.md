@@ -8,9 +8,10 @@
 - 홈페이지 진단: [`HOMEPAGE_REVIEW.md`](./HOMEPAGE_REVIEW.md)
 
 - 배포 URL: https://moogun-jeong.github.io/kolongolf/ (방명록·댓글 API는 https://kolongolf.pages.dev)
-- 구조: `index.html`, `main.js`, `style.css`, `images/`
+- 구조: `index.html`, `data.js`(내용), `main.js`(화면·동작, ES Module), `style.css`, `images/`
 - 빌드: `npm run build`가 공개 파일만 `dist/`로 모으고, 배포는 `dist/`만 사용합니다
-- 주요 수정 지점: 회원/일정/아카이브 데이터는 `main.js`, 화면 톤과 반응형은 `style.css`
+- 주요 수정 지점: 회원·핸디/다음 일정/지난 기록/대표 사진은 **`data.js`만** 고치면 됩니다. 화면 톤과 반응형은 `style.css`
+- 배포 전 점검: `npm run check` (문법, 날짜·핸디 형식, 사진 파일 존재). `npm run build`가 항상 먼저 실행하며 실패하면 배포가 멈춥니다.
 
 ## 배포 범위
 
@@ -22,10 +23,11 @@
 | Cloudflare Pages | `wrangler.toml`의 `pages_build_output_dir = "dist"`. 빌드 명령은 `npm run build` |
 | GitHub Pages | `.github/workflows/pages.yml`이 `dist/`만 업로드 |
 
-`dist/`에 들어가는 것은 `index.html`, `main.js`, `style.css`, `_routes.json`, `_headers`,
+`dist/`에 들어가는 것은 `index.html`, `main.js`, `data.js`, `style.css`, `_routes.json`, `_headers`,
 `robots.txt`, `sitemap.xml`, `.nojekyll`, 그리고 소스에서 실제로 참조하는 `images/` 자산뿐입니다.
-새 이미지를 추가할 때 별도 등록은 필요 없습니다. 빌드가 `index.html`/`main.js`/`style.css`의
-참조를 훑어 `-display`와 짝이 되는 `-thumb`까지 함께 복사합니다.
+새 이미지를 추가할 때 별도 등록은 필요 없습니다. 빌드가 `index.html`/`main.js`/`data.js`/`style.css`의
+참조를 훑어 `-display`와 짝이 되는 `-card`, `-thumb`까지 함께 복사합니다.
+CSS/JS의 `?v=` 캐시 버전은 빌드가 파일 내용 해시로 자동으로 붙이므로 손으로 올리지 않습니다.
 
 > **GitHub Pages 최초 1회 설정**: 저장소 Settings > Pages > Source를 **GitHub Actions**로 바꿔야
 > `dist/`만 배포됩니다. "Deploy from a branch"로 두면 예전처럼 저장소 전체가 공개됩니다.
@@ -66,14 +68,15 @@ ADMIN_TOKEN = "local-dev-admin-token"
 
 ## 사진 추가 방법
 
-브라우저가 받는 용량을 줄이기 위해 원본을 그대로 참조하지 않고 파생본 두 종류를 사용합니다.
+브라우저가 받는 용량을 줄이기 위해 원본을 그대로 참조하지 않고 파생본 세 종류를 사용합니다.
 
-- `*-display.jpg` — 긴 변 1800px. 히어로, 아카이브 카드, 라이트박스 본 사진용
+- `*-display.jpg` — 긴 변 1800px. 라이트박스(크게 보기), 고해상도 화면용
+- `*-card.jpg` — 가로 900px. 홈 화면 카드·대표 사진 기본값 (`srcset`으로 화면 크기에 맞게 선택)
 - `*-thumb.jpg` — 긴 변 400px. 라이트박스 썸네일용 (`main.js`의 `thumbSource()`가 경로를 자동으로 유도)
 
 1. 원본을 `images/archive-<연도>-<월>-<번호>.jpg` 규칙으로 넣습니다.
 2. `npm run images`를 실행해 파생본을 생성합니다.
-3. `main.js`의 `archives` 배열에는 **`-display` 경로**를 적습니다.
+3. `data.js`의 `archives` 배열에는 **`-display` 경로**를 적습니다.
 4. 파생본을 확인했으면 원본은 저장소에 남기지 않아도 됩니다(git 이력에 보존됩니다).
 
 ## 일정 문구 업데이트
