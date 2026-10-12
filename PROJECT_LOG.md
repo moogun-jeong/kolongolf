@@ -4,6 +4,13 @@
 
 ---
 
+### **[2026-10-12] Cloudflare Pages 간헐적 배포 실패 기록**
+
+- GitHub check-runs API로 운영 배포 결과를 커밋별로 확인: `dc36f6b` 성공, `9e239df` 실패, `756dac0` 성공, `f148376` 성공, `f5c5b1d` 실패.
+- 실패한 경우에도 빌드 단계(`Building`)는 통과하고 업로드·배포 단계(`Deploying`)에서 실패. 같은 내용의 PR 미리보기는 성공하거나(#13) 운영은 성공(#14)하는 등 내용과 무관하게 발생.
+- 실패 사례가 모두 PR 미리보기 빌드 직후 곧바로 머지한 경우라 동시 배포 충돌 가능성이 있음(추정). 이후에는 PR 미리보기 체크가 끝난 뒤 머지하고, 실패하면 Cloudflare 대시보드 → Deployments → **Retry deployment**로 재시도.
+- 운영 배포 결과 확인 명령: `curl -s https://api.github.com/repos/moogun-jeong/kolongolf/commits/main/check-runs`
+
 ### **[2026-10-12] 캘린더 추가·D-day, 단체 사진 메인 로테이션, 인물 중심 크롭**
 
 - **캘린더 추가**: 다음 라운드 카드에 "내 캘린더에 추가"(.ics 파일, iPhone·갤럭시·Outlook)와 "Google 캘린더" 버튼 추가. 시간이 없으면 하루 종일 일정, `startTime`이 있으면 Asia/Seoul 기준 시간 일정. 하루 전 알림 포함, RFC 5545 75바이트 줄 접기 적용.
