@@ -134,7 +134,16 @@ const heroSlideInfo = (slide) => {
     caption: slide.caption || archive?.title || ""
   };
 };
-const heroSlideData = heroSlides.map(heroSlideInfo);
+// 방문할 때마다 대표 사진 순서를 무작위로 섞습니다(Fisher–Yates). 이후에는 섞인 순서대로 돌아갑니다.
+const shuffled = (items) => {
+  const result = [...items];
+  for (let index = result.length - 1; index > 0; index -= 1) {
+    const pick = Math.floor(Math.random() * (index + 1));
+    [result[index], result[pick]] = [result[pick], result[index]];
+  }
+  return result;
+};
+const heroSlideData = shuffled(heroSlides).map(heroSlideInfo);
 
 const startOfToday = () => {
   const today = new Date();
