@@ -68,7 +68,7 @@ const checkImage = (reference, where, errors) => {
   }
 };
 
-const checkData = ({ members, archives, heroSlides, photoFocus = {}, upcomingEvents }, errors) => {
+const checkData = ({ members, archives, heroSlides, photoFocus = {}, upcomingEvents, rounds = [], handicapRule }, errors) => {
   const handles = new Set();
   members.forEach((member, index) => {
     const where = `members[${index}] ${member.name || ""}`;
@@ -76,8 +76,8 @@ const checkData = ({ members, archives, heroSlides, photoFocus = {}, upcomingEve
     if (handles.has(member.handle)) errors.push(`${where}: 닉네임이 중복됩니다 (${member.handle})`);
     handles.add(member.handle);
     if (!roles.has(member.role)) errors.push(`${where}: 역할은 ${[...roles].join("/")} 중 하나여야 합니다 (${member.role})`);
-    if (member.handicap !== undefined && !(Number.isInteger(member.handicap) && member.handicap >= -10 && member.handicap <= 60)) {
-      errors.push(`${where}: 핸디는 -10~60 사이 정수이거나 비워 두어야 합니다 (${member.handicap})`);
+    if (member.handicap !== undefined) {
+      errors.push(`${where}: 핸디는 이제 rounds 스코어에서 자동 계산됩니다. members의 handicap 값을 지우고 스코어를 rounds에 넣어주세요`);
     }
   });
 
@@ -100,6 +100,48 @@ const checkData = ({ members, archives, heroSlides, photoFocus = {}, upcomingEve
     }
     if (!Array.isArray(archive.images) || !archive.images.length) errors.push(`${where}: 사진이 1장 이상 필요합니다`);
     else archive.images.forEach((image, imageIndex) => checkImage(image, `${where} 사진 ${imageIndex + 1}`, errors));
+  });
+
+  // 스코어 기록: 이름 오타·숫자 형식·날짜·종류를 확인합니다(이름 오타는 핸디가 엉뚱한 사람에게 가지 않도록 막습니다).
+  if (!handicapRule || !(Number.isInteger(handicapRule.recentRounds) && handicapRule.recentRounds >= 1)) {
+    errors.push("handicapRule.recentRounds는 1 이상의 정수여야 합니다");
+  }
+  const memberNameSet = new Set(members.map((member) => member.name));
+  const roundIds = new Set();
+  let previousDate = "";
+  rounds.forEach((round, index) => {
+    const where = `rounds[${index}] ${round.id || ""}`;
+    if (!round.id || !/^[a-z0-9-]+$/.test(round.id)) errors.push(`${where}: id는 영문 소문자·숫자·하이픈으로 적어주세요 (${round.id})`);
+    if (roundIds.has(round.id)) errors.push(`${where}: id가 중복됩니다`);
+    roundIds.add(round.id);
+    if (!["필드", "스크린"].includes(round.type)) errors.push(`${where}: type은 "필드" 또는 "스크린"이어야 합니다 (${round.type})`);
+    if (round.date) {
+      if (!isoDatePattern.test(round.date)) errors.push(`${where}: date는 YYYY-MM-DD 형식이거나 ""(비움)이어야 합니다 (${round.date})`);
+      else {
+        const [year, month, day] = round.date.split("-").map(Number);
+        if (!isValidDate(year, month, day)) errors.push(`${where}: 존재하지 않는 날짜입니다 (${round.date})`);
+        if (previousDate && round.date > previousDate) {
+          errors.push(`${where}: rounds는 최신이 맨 위여야 합니다 (${round.date}가 위쪽 ${previousDate}보다 늦음)`);
+        }
+        previousDate = round.date;
+      }
+    }
+    if (round.archiveId && !archives.some((archive) => archive.id === round.archiveId)) {
+      errors.push(`${where}: archiveId가 지난 기록에 없습니다 (${round.archiveId})`);
+    }
+    const scores = round.scores || {};
+    const guests = round.guests || {};
+    if (!Object.keys(scores).length) errors.push(`${where}: scores에 회원 스코어가 1개 이상 필요합니다`);
+    const validScore = (value) => Number.isInteger(value) && value >= -20 && value <= 90;
+    Object.entries(scores).forEach(([name, score]) => {
+      if (!memberNameSet.has(name)) errors.push(`${where}: "${name}"은 회원명부에 없는 이름입니다 — 오타이거나 초대손님이면 guests에 넣어주세요`);
+      if (!validScore(score)) errors.push(`${where} ${name}: 스코어는 -20~90 사이 정수여야 합니다 (${JSON.stringify(score)})`);
+    });
+    Object.entries(guests).forEach(([name, score]) => {
+      if (memberNameSet.has(name)) errors.push(`${where}: "${name}"은 회원입니다 — guests가 아니라 scores에 넣어주세요`);
+      if (Object.prototype.hasOwnProperty.call(scores, name)) errors.push(`${where}: "${name}"이 scores와 guests에 모두 있습니다`);
+      if (!validScore(score)) errors.push(`${where} 초대손님 ${name}: 스코어는 -20~90 사이 정수여야 합니다 (${JSON.stringify(score)})`);
+    });
   });
 
   heroSlides.forEach((slide, index) => {

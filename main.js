@@ -1,4 +1,49 @@
-import { members, handicapSource, archives, heroSlides, photoFocus, upcomingEvents } from "./data.js";
+import { members, rounds, handicapRule, archives, heroSlides, photoFocus, upcomingEvents } from "./data.js";
+
+// ── 스코어 → 핸디·시즌 기록 계산 ───────────────────────────────────────────
+// rounds는 최신이 맨 위입니다. 필드와 스크린은 절대 합산하지 않고 종류별로 따로 계산합니다.
+const roundTypes = ["필드", "스크린"];
+const memberNames = new Set(members.map((member) => member.name));
+const oneDecimal = (value) => Math.round(value * 10) / 10;
+const formatScore = (value) => `${value > 0 ? "+" : ""}${value}`;
+const formatHandicap = (value) => (Number.isInteger(value) ? String(value) : value.toFixed(1));
+const roundLabel = (round) => [round.date ? round.date.replaceAll("-", ".") : "날짜 미기재", round.course || `${round.type} 라운드`].join(" · ");
+
+const buildPlayerStats = (type) => {
+  const stats = new Map();
+  rounds
+    .filter((round) => round.type === type)
+    .forEach((round) => {
+      Object.entries(round.scores || {}).forEach(([name, score]) => {
+        if (!memberNames.has(name)) return;
+        if (!stats.has(name)) stats.set(name, { name, history: [] });
+        stats.get(name).history.push({ score, round });
+      });
+    });
+  stats.forEach((player) => {
+    const recent = player.history.slice(0, handicapRule.recentRounds).map((entry) => entry.score);
+    player.handicap = oneDecimal(recent.reduce((sum, score) => sum + score, 0) / recent.length);
+    player.recentCount = recent.length;
+    player.best = Math.min(...player.history.map((entry) => entry.score));
+    player.rounds = player.history.length;
+  });
+  return stats;
+};
+const playerStats = Object.fromEntries(roundTypes.map((type) => [type, buildPlayerStats(type)]));
+
+// 핸디가 낮을수록 위, 같으면 라운드가 많은 순, 그다음 베스트가 좋은 순입니다.
+const leaderboardFor = (type) => [...playerStats[type].values()]
+  .sort((left, right) => left.handicap - right.handicap || right.rounds - left.rounds || left.best - right.best);
+
+// 라운드 안 순위(같은 스코어는 같은 순위). 초대손님도 그 라운드 기록에는 함께 표시합니다.
+const roundStandings = (round) => {
+  const entries = [
+    ...Object.entries(round.scores || {}).map(([name, score]) => ({ name, score, guest: false })),
+    ...Object.entries(round.guests || {}).map(([name, score]) => ({ name, score, guest: true }))
+  ].sort((left, right) => left.score - right.score);
+  return entries.map((entry) => ({ ...entry, rank: entries.findIndex((other) => other.score === entry.score) + 1 }));
+};
+const roundForArchive = (archiveId) => rounds.find((round) => round.archiveId === archiveId);
 
 const rolePriority = {
   회장: 1,
@@ -354,6 +399,7 @@ class KolonSiteHeader extends HTMLElement {
           <nav class="main-nav" aria-label="메인 메뉴">
             <a href="#features">동호회</a>
             <a href="#schedule">일정</a>
+            <a href="#leaderboard">순위</a>
             <a href="#archive">기록</a>
             <a href="#members">회원</a>
             <a href="#guestbook">방명록</a>
@@ -366,6 +412,7 @@ class KolonSiteHeader extends HTMLElement {
         <nav class="mobile-panel" id="mobileNav" aria-label="모바일 메뉴">
           <a href="#features">동호회</a>
           <a href="#schedule">일정</a>
+          <a href="#leaderboard">순위</a>
           <a href="#archive">기록</a>
           <a href="#members">회원</a>
           <a href="#guestbook">방명록</a>
@@ -492,6 +539,93 @@ class KolonSchedule extends HTMLElement {
       </section>`;
   }
 }
+class KolonLeaderboard extends HTMLElement {
+  connectedCallback() {
+    if (this.dataset.ready) return;
+    this.dataset.ready = "true";
+    const handleOf = new Map(members.map((member) => [member.name, member.handle]));
+
+    const renderTable = (type) => {
+      const board = leaderboardFor(type);
+      if (!board.length) {
+        return `<p class="leaderboard-empty">아직 ${type} 스코어 기록이 없어요. 라운드가 끝나면 스코어카드를 올려주세요.</p>`;
+      }
+      const rows = board.map((player, index) => {
+        const rank = board.findIndex((other) => other.handicap === player.handicap) + 1;
+        const recent = player.history.slice(0, handicapRule.recentRounds)
+          .map((entry) => `<span class="score-chip" title="${roundLabel(entry.round)}">${formatScore(entry.score)}</span>`).join("");
+        return `
+          <li class="leaderboard-row${rank <= 3 ? ` is-top is-rank-${rank}` : ""}"${index >= 10 ? " data-extra-row hidden" : ""}>
+            <span class="leaderboard-rank">${rank}</span>
+            <span class="leaderboard-player"><strong>${handleOf.get(player.name) || player.name}</strong><small>${player.name}</small></span>
+            <span class="leaderboard-hcp"><small>핸디</small><strong>${formatHandicap(player.handicap)}</strong></span>
+            <span class="leaderboard-recent"><small>최근 ${player.recentCount}라운드</small><span>${recent}</span></span>
+            <span class="leaderboard-best"><small>베스트</small><strong>${formatScore(player.best)}</strong></span>
+            <span class="leaderboard-count"><small>라운드</small><strong>${player.rounds}</strong></span>
+          </li>`;
+      }).join("");
+      const more = board.length > 10
+        ? `<button class="line-button small leaderboard-more" type="button" data-leaderboard-more aria-expanded="false">전체 ${board.length}명 보기 ＋</button>`
+        : "";
+      return `<ol class="leaderboard-list">${rows}</ol>${more}`;
+    };
+
+    const renderRounds = (type) => {
+      const list = rounds.filter((round) => round.type === type);
+      if (!list.length) return "";
+      return `
+        <div class="round-log">
+          <h3 class="round-log-title">반영된 ${type} 라운드 ${list.length}회</h3>
+          <ul>
+            ${list.map((round) => {
+              const standings = roundStandings(round);
+              const top = standings.slice(0, 3).map((entry) => `${entry.rank}위 ${entry.name}${entry.guest ? "(초대)" : ""} ${formatScore(entry.score)}`).join(" · ");
+              const archiveIndex = round.archiveId ? archiveIndexById(round.archiveId) : -1;
+              const guestCount = Object.keys(round.guests || {}).length;
+              return `<li>
+                <div><strong>${roundLabel(round)}</strong><span>${Object.keys(round.scores || {}).length}명${guestCount ? ` + 초대 ${guestCount}명` : ""}${round.memo ? ` · ${round.memo}` : ""}</span></div>
+                <p>${top}</p>
+                ${archiveIndex >= 0 ? `<button class="text-button" type="button" data-archive-index="${archiveIndex}">사진 보기 <span aria-hidden="true">→</span></button>` : ""}
+              </li>`;
+            }).join("")}
+          </ul>
+        </div>`;
+    };
+
+    this.innerHTML = `
+      <section class="leaderboard-section site-section" aria-labelledby="leaderboardTitle">
+        <div class="section-heading" data-reveal>
+          <div><p class="eyebrow">Season Leaderboard</p><h2 id="leaderboardTitle">시즌 순위.</h2></div>
+          <p>스코어카드 기록으로 핸디를 자동 계산합니다. 핸디는 최근 ${handicapRule.recentRounds}라운드 평균이며, 필드와 스크린은 따로 셉니다.</p>
+        </div>
+        <div class="leaderboard-card" data-reveal>
+          <div class="leaderboard-tabs" role="tablist" aria-label="라운드 종류">
+            ${roundTypes.map((type, index) => `<button type="button" role="tab" id="leaderboardTab-${index}" aria-controls="leaderboardPanel-${index}" aria-selected="${index === 0}" tabindex="${index === 0 ? 0 : -1}" data-leaderboard-tab="${index}">${type}<span>${playerStats[type].size}명</span></button>`).join("")}
+          </div>
+          ${roundTypes.map((type, index) => `
+            <div class="leaderboard-panel" role="tabpanel" id="leaderboardPanel-${index}" aria-labelledby="leaderboardTab-${index}"${index === 0 ? "" : " hidden"}>
+              ${renderTable(type)}
+              ${renderRounds(type)}
+            </div>`).join("")}
+          <p class="leaderboard-foot">스코어는 파 대비 타수(+는 오버파)입니다. 초대손님은 라운드 기록에만 표시하고 순위·핸디에는 넣지 않습니다.</p>
+        </div>
+      </section>`;
+  }
+}
+
+// 회원 카드: 필드 핸디는 항상 칸을 보여주고(기록 없으면 빈칸), 스크린 핸디는 기록이 있을 때만 덧붙입니다.
+const memberHandicapHtml = (member) => {
+  const field = playerStats["필드"].get(member.name);
+  const screen = playerStats["스크린"].get(member.name);
+  const fieldHtml = field
+    ? `<p class="member-handicap" title="필드 최근 ${field.recentCount}라운드 평균"><span>핸디</span><strong>${formatHandicap(field.handicap)}</strong></p>`
+    : `<p class="member-handicap is-empty"><span>핸디</span><strong aria-label="기록 없음"></strong></p>`;
+  const screenHtml = screen
+    ? `<p class="member-handicap is-screen" title="스크린 최근 ${screen.recentCount}라운드 평균"><span>스크린</span><strong>${formatHandicap(screen.handicap)}</strong></p>`
+    : "";
+  return `<div class="member-handicaps">${fieldHtml}${screenHtml}</div>`;
+};
+
 class KolonMembers extends HTMLElement {
   connectedCallback() {
     if (this.dataset.ready) return;
@@ -504,9 +638,7 @@ class KolonMembers extends HTMLElement {
           <div class="member-identity">
             <h3>${member.handle}</h3>
             <p>${member.name}${variant ? ` · ${member.note}` : ""}</p>
-            ${Number.isFinite(member.handicap)
-              ? `<p class="member-handicap"><span>핸디</span><strong>${member.handicap}</strong></p>`
-              : `<p class="member-handicap is-empty"><span>핸디</span><strong aria-label="기록 없음"></strong></p>`}
+            ${memberHandicapHtml(member)}
           </div>
           <span class="member-role" data-role="${member.role}">${member.role}</span>
         </article>
@@ -548,12 +680,20 @@ class KolonMembers extends HTMLElement {
         <div class="member-grid" id="memberGrid" aria-label="회원" data-reveal>
           ${memberItems}
         </div>
-        <p class="member-handicap-note">핸디: ${handicapSource} · 기록이 없는 회원은 칸만 비워 두었습니다.</p>
+        <p class="member-handicap-note">핸디: 필드 최근 ${handicapRule.recentRounds}라운드 평균(스크린은 따로 계산) · 기록이 없는 회원은 칸만 비워 두었습니다. <a href="#leaderboard">시즌 순위 보기</a></p>
         <div class="collection-footer"><p id="memberResult" role="status">함께하는 회원 ${members.length}명</p><button class="line-button" type="button" id="memberMore" aria-expanded="false" aria-controls="memberGrid">회원 모두 보기 ＋</button></div>
       </section>
     `;
   }
 }
+
+const roundWinnerChip = (archive) => {
+  const round = roundForArchive(archive.id);
+  if (!round) return "";
+  const winners = roundStandings(round).filter((entry) => entry.rank === 1);
+  if (!winners.length) return "";
+  return `<p class="archive-winner"><span aria-hidden="true">🏆</span> 이날 1위 ${winners.map((entry) => `${entry.name}${entry.guest ? "(초대)" : ""}`).join(", ")} <strong>${formatScore(winners[0].score)}</strong></p>`;
+};
 
 class KolonArchive extends HTMLElement {
   connectedCallback() {
@@ -565,7 +705,7 @@ class KolonArchive extends HTMLElement {
     const archiveItems = archives.slice(1).map((archive, index) => `
       <article class="archive-card" data-archive-year="${archive.date.slice(0, 4)}" data-reveal>
         <button class="archive-photo" type="button" data-archive-index="${index + 1}" aria-label="${archive.title} 사진 ${archive.images.length}장 보기"><img ${responsiveImageAttrs(archive.images[0], "card")} alt="${archive.title} 대표 사진" width="800" height="600" loading="lazy" decoding="async" /><span class="archive-chip">${archive.label}</span>${photoCue(archive)}</button>
-        <div class="archive-body"><p class="archive-meta"><time>${archive.date}</time></p><h3>${archive.title}</h3><p class="archive-summary">${archive.summary}</p>${renderDetails(archive)}<div class="archive-foot"><span>${archive.location}</span><span>${archive.people}</span></div></div>
+        <div class="archive-body"><p class="archive-meta"><time>${archive.date}</time></p><h3>${archive.title}</h3><p class="archive-summary">${archive.summary}</p>${roundWinnerChip(archive)}${renderDetails(archive)}<div class="archive-foot"><span>${archive.location}</span><span>${archive.people}</span></div></div>
       </article>`).join("");
     const years = [...new Set(archives.map((archive) => archive.date.slice(0, 4)))];
     this.innerHTML = `
@@ -575,7 +715,7 @@ class KolonArchive extends HTMLElement {
           <div class="archive-toolbar" data-reveal><div class="archive-filters" role="group" aria-label="라운드 연도 필터"><button type="button" data-archive-filter="all" aria-pressed="true">전체</button>${years.map((year) => `<button type="button" data-archive-filter="${year}" aria-pressed="false">${year}</button>`).join("")}</div><p id="archiveResult" role="status">총 ${archives.length}개의 라운드</p></div>
           <article class="featured-round" data-archive-year="${featured.date.slice(0, 4)}" data-reveal>
             <button class="featured-photo" type="button" data-archive-index="0" aria-label="${featured.title} 사진 ${featured.images.length}장 보기"><img ${responsiveImageAttrs(featured.images[0], "featured")} alt="${featured.title} 대표 사진" width="1000" height="750" loading="lazy" decoding="async" /><span class="archive-chip accent">Latest</span>${photoCue(featured)}</button>
-            <div class="featured-body"><p class="archive-meta"><time>${featured.date}</time> · ${featured.label}</p><h3>${featured.title}</h3><p class="archive-summary">${featured.summary}</p>${featured.highlights?.length ? `<ul class="archive-tags" aria-label="주요 기록">${featured.highlights.map((tag) => `<li>${tag}</li>`).join("")}</ul>` : ""}${renderDetails(featured)}<div class="archive-foot"><span>${featured.location}</span><span>${featured.people}</span></div></div>
+            <div class="featured-body"><p class="archive-meta"><time>${featured.date}</time> · ${featured.label}</p><h3>${featured.title}</h3><p class="archive-summary">${featured.summary}</p>${roundWinnerChip(featured)}${featured.highlights?.length ? `<ul class="archive-tags" aria-label="주요 기록">${featured.highlights.map((tag) => `<li>${tag}</li>`).join("")}</ul>` : ""}${renderDetails(featured)}<div class="archive-foot"><span>${featured.location}</span><span>${featured.people}</span></div></div>
           </article>
           <div class="archive-grid">${archiveItems}</div>
           <div class="collection-footer"><p>지난 기록은 연도별로 모아볼 수 있어요.</p><button class="line-button" type="button" id="archiveMore" aria-expanded="false">이전 라운드 더 보기 ＋</button></div>
@@ -742,6 +882,7 @@ class KolonFooter extends HTMLElement {
           <nav aria-label="푸터 메뉴">
             <a href="#features">동호회</a>
             <a href="#schedule">일정</a>
+            <a href="#leaderboard">순위</a>
             <a href="#archive">기록</a>
             <a href="#members">회원</a>
             <a href="#guestbook">방명록</a>
@@ -761,6 +902,7 @@ defineElement("kolon-site-header", KolonSiteHeader);
 defineElement("kolon-hero", KolonHero);
 defineElement("kolon-intro", KolonIntro);
 defineElement("kolon-schedule", KolonSchedule);
+defineElement("kolon-leaderboard", KolonLeaderboard);
 defineElement("kolon-members", KolonMembers);
 defineElement("kolon-archive", KolonArchive);
 defineElement("kolon-guestbook", KolonGuestbook);
@@ -777,7 +919,7 @@ const initHeader = () => {
   const menuToggle = document.querySelector(".menu-toggle");
   const mobilePanel = document.getElementById("mobileNav");
   const navLinks = Array.from(document.querySelectorAll(".main-nav a, .mobile-panel a"));
-  const sections = ["features", "schedule", "members", "archive", "guestbook"]
+  const sections = ["features", "schedule", "leaderboard", "members", "archive", "guestbook"]
     .map((id) => document.getElementById(id))
     .filter(Boolean);
 
@@ -987,6 +1129,36 @@ const initHeroSlider = () => {
   // 첫 화면이 다 뜬 뒤 다음 장을 미리 받아 둡니다.
   window.addEventListener("load", () => ensureLoaded(1), { once: true });
   schedule();
+};
+
+const initLeaderboard = () => {
+  const tabs = Array.from(document.querySelectorAll("[data-leaderboard-tab]"));
+  const select = (tab) => {
+    tabs.forEach((other) => {
+      const active = other === tab;
+      other.setAttribute("aria-selected", String(active));
+      other.tabIndex = active ? 0 : -1;
+      document.getElementById(other.getAttribute("aria-controls")).hidden = !active;
+    });
+  };
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => select(tab));
+    tab.addEventListener("keydown", (event) => {
+      if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+      const next = tabs[(index + (event.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length];
+      select(next);
+      next.focus();
+    });
+  });
+  document.querySelectorAll("[data-leaderboard-more]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const panel = button.closest(".leaderboard-panel");
+      const expanded = button.getAttribute("aria-expanded") !== "true";
+      panel.querySelectorAll("[data-extra-row]").forEach((row) => { row.hidden = !expanded; });
+      button.setAttribute("aria-expanded", String(expanded));
+      button.textContent = expanded ? "상위 10명만 보기 −" : `전체 ${panel.querySelectorAll(".leaderboard-row").length}명 보기 ＋`;
+    });
+  });
 };
 
 const initCalendarButtons = () => {
@@ -1928,6 +2100,7 @@ const initPage = () => {
   initMemberSearch();
   initHeroSlider();
   initCalendarButtons();
+  initLeaderboard();
   initModals();
   initLightbox();
   initMessages();
