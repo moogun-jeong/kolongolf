@@ -1,4 +1,4 @@
-// 홈페이지 내용 데이터입니다. 회원·핸디·지난 기록·대표 사진·다음 일정은 이 파일만 고치면 됩니다.
+// 홈페이지 내용 데이터입니다. 회원·스코어(핸디)·지난 기록·대표 사진·다음 일정은 이 파일만 고치면 됩니다.
 // 화면 코드는 main.js에 있고, 이 파일은 `npm run build` 전에 scripts/check.js가 형식을 검사합니다.
 //
 // 사진 추가 순서
@@ -7,32 +7,71 @@
 //   2. 아래 archives의 images에 -display 경로를 적습니다.
 
 export const members = [
-  { handle: "덕충안길", name: "권순노", handicap: 21, role: "정회원", note: "페이드 장인" },
-  { handle: "살려줘제바알", name: "김경수", handicap: 27, role: "정회원", note: "벙커 탈출 1위" },
-  { handle: "오!건이", name: "김무건", handicap: 20, role: "정회원", note: "파 세이브 감각" },
+  { handle: "덕충안길", name: "권순노", role: "정회원", note: "페이드 장인" },
+  { handle: "살려줘제바알", name: "김경수", role: "정회원", note: "벙커 탈출 1위" },
+  { handle: "오!건이", name: "김무건", role: "정회원", note: "파 세이브 감각" },
   { handle: "인생무생", name: "김무생", role: "정회원", note: "후반 집중력" },
   { handle: "울산땡주", name: "김영주", role: "정회원", note: "파3 스페셜" },
-  { handle: "원조가가멜", name: "김정훈", handicap: 8, role: "정회원", note: "백스핀 컨트롤" },
-  { handle: "백돌이깬다", name: "김태연", handicap: 17, role: "정회원", note: "정확한 어프로치" },
-  { handle: "준빵", name: "김효준", handicap: 26, role: "정회원", note: "스윙 템포" },
-  { handle: "빽스윙쫌만더", name: "서무환", handicap: 15, role: "회장", note: "클럽 리딩", email: "pleaselove@kolon.com" },
-  { handle: "날아라호", name: "심재호", handicap: 20, role: "정회원", note: "탄도 조절" },
+  { handle: "원조가가멜", name: "김정훈", role: "정회원", note: "백스핀 컨트롤" },
+  { handle: "백돌이깬다", name: "김태연", role: "정회원", note: "정확한 어프로치" },
+  { handle: "준빵", name: "김효준", role: "정회원", note: "스윙 템포" },
+  { handle: "빽스윙쫌만더", name: "서무환", role: "회장", note: "클럽 리딩", email: "pleaselove@kolon.com" },
+  { handle: "날아라호", name: "심재호", role: "정회원", note: "탄도 조절" },
   { handle: "오프로672", name: "오상택", role: "정회원", note: "코스 매니지먼트" },
-  { handle: "필드난폭자", name: "윤석현", handicap: 18, role: "정회원", note: "공격적 플레이" },
-  { handle: "타키온", name: "이동수", handicap: 19, role: "정회원", note: "퍼팅 스트로크" },
-  { handle: "무근정", name: "정무근", handicap: 24, role: "총무", note: "운영 관리", email: "moogunjeong@kolon.com" },
-  { handle: "울산정쁘로", name: "정성원", handicap: 29, role: "정회원", note: "아이언 정밀도" },
+  { handle: "필드난폭자", name: "윤석현", role: "정회원", note: "공격적 플레이" },
+  { handle: "타키온", name: "이동수", role: "정회원", note: "퍼팅 스트로크" },
+  { handle: "무근정", name: "정무근", role: "총무", note: "운영 관리", email: "moogunjeong@kolon.com" },
+  { handle: "울산정쁘로", name: "정성원", role: "정회원", note: "아이언 정밀도" },
   { handle: "원펀쓰리강냉", name: "천기준", role: "정회원", note: "파워 스윙" },
   { handle: "무적부대", name: "추정술", role: "정회원", note: "위기 탈출" },
   { handle: "장금이에이스", name: "하선재", role: "정회원", note: "정교한 퍼터" },
-  { handle: "서승규", name: "서승규", handicap: 35, role: "신입회원", note: "침착한 코스 리딩" },
+  { handle: "서승규", name: "서승규", role: "신입회원", note: "침착한 코스 리딩" },
   { handle: "안상욱", name: "안상욱", role: "신입회원", note: "강한 임팩트" },
   { handle: "박동성", name: "박동성", role: "신입회원", note: "클러치 퍼팅" }
 ];
 
-// 핸디는 직전 라운드 단체 스코어카드의 SCORE(파 대비 타수)를 그대로 씁니다.
-// 기록이 없는 회원은 handicap을 비워 두면 숫자 없이 빈 핸디 칸만 표시합니다.
-export const handicapSource = "최근 라운드 단체 스코어카드 기준";
+// ─────────────────────────────────────────────────────────────────────────────
+// 스코어 기록 (시즌 리더보드와 회원 핸디가 여기서 자동 계산됩니다)
+//
+// ▶ 새 라운드를 넣는 법 — GitHub에서 data.js 연필(✏️) 버튼 → 아래 rounds 맨 위에 한 덩어리 추가 → Commit
+//   {
+//     id: "2026-11-bomun",          // 영문·숫자·하이픈으로 된 고유 이름(겹치지 않게)
+//     type: "필드",                  // "필드" 또는 "스크린" — 핸디·순위는 둘을 따로 계산합니다
+//     date: "2026-11-01",           // 모르면 "" (비워 두기)
+//     course: "경주 보문CC",          // 모르면 ""
+//     archiveId: "",                // 사진 기록과 연결할 때만 archives의 id, 아니면 ""
+//     scores: { 김정훈: 10, 서무환: 18 },   // 회원 실명: 스코어카드 SCORE(파 대비 타수, 예: +10 → 10)
+//     guests: { 홍길동: 30 }          // 초대손님(핸디·순위 계산 제외, 라운드 기록에만 표시). 없으면 {}
+//   },
+//
+// ▶ 규칙
+//   - rounds는 최신 라운드가 맨 위입니다. 핸디는 이 순서로 "최근"을 판단합니다.
+//   - 핸디 = 같은 종류(필드/스크린) 최근 3라운드 SCORE 평균(소수 첫째 자리). 기록이 없으면 빈칸.
+//   - 이름 오타, 숫자가 아닌 스코어, 잘못된 날짜가 있으면 배포 전 자동 점검에서 멈추고 이유를 알려줍니다.
+// ─────────────────────────────────────────────────────────────────────────────
+export const handicapRule = { recentRounds: 3 };
+
+export const rounds = [
+  {
+    id: "field-scorecard-1",
+    type: "필드",
+    date: "",
+    course: "",
+    archiveId: "",
+    memo: "단체 스코어카드 캡처의 1~8위만 확인됨",
+    scores: { 서무환: 15, 김무건: 20, 심재호: 20, 권순노: 21, 정무근: 24, 김효준: 26, 김경수: 27, 정성원: 29 },
+    guests: {}
+  },
+  {
+    id: "2026-08-mauna-ocean",
+    type: "필드",
+    date: "2026-08-15",
+    course: "마우나오션CC",
+    archiveId: "2026-08-mauna-ocean",
+    scores: { 김정훈: 8, 김태연: 17, 윤석현: 18, 이동수: 19, 김효준: 25, 서무환: 25, 김경수: 30, 정무근: 32, 김무건: 33, 서승규: 35, 정성원: 37 },
+    guests: { 전형준: 28 }
+  }
+];
 
 export const archives = [
   {
