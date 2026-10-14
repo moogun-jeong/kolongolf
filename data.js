@@ -53,16 +53,6 @@ export const handicapRule = { recentRounds: 3 };
 
 export const rounds = [
   {
-    id: "field-scorecard-1",
-    type: "필드",
-    date: "",
-    course: "",
-    archiveId: "",
-    memo: "단체 스코어카드 캡처의 1~8위만 확인됨",
-    scores: { 서무환: 15, 김무건: 20, 심재호: 20, 권순노: 21, 정무근: 24, 김효준: 26, 김경수: 27, 정성원: 29 },
-    guests: {}
-  },
-  {
     id: "2026-08-mauna-ocean",
     type: "필드",
     date: "2026-08-15",
